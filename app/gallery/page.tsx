@@ -4,7 +4,8 @@ import VisionGallery from "@/components/VisionGallery";
 
 // 갤러리 이미지 목록
 const galleryImages = [
-  // 2023 봄 (4월~5월)
+  // 2023년
+  // 봄 (3월~5월)
   {
     src: "/gallery/image1.jpg",
     alt: "웨딩 사진 1",
@@ -26,15 +27,14 @@ const galleryImages = [
     season: "spring",
     seasonKr: "봄",
   },
-
-  // 2023 여름 (6월~8월)
   {
     src: "/gallery/image4.jpg",
     alt: "웨딩 사진 4",
     year: 2023,
-    season: "summer",
-    seasonKr: "여름",
+    season: "spring",
+    seasonKr: "봄",
   },
+  // 여름 (6월~8월)
   {
     src: "/gallery/image5.jpg",
     alt: "웨딩 사진 5",
@@ -56,15 +56,14 @@ const galleryImages = [
     season: "summer",
     seasonKr: "여름",
   },
-
-  // 2023 가을 (9월~11월)
   {
     src: "/gallery/image8.jpg",
     alt: "웨딩 사진 8",
     year: 2023,
-    season: "autumn",
-    seasonKr: "가을",
+    season: "summer",
+    seasonKr: "여름",
   },
+  // 가을 (9월~11월)
   {
     src: "/gallery/image9.jpg",
     alt: "웨딩 사진 9",
@@ -86,15 +85,14 @@ const galleryImages = [
     season: "autumn",
     seasonKr: "가을",
   },
-
-  // 2023 겨울 (12월)
   {
     src: "/gallery/image12.jpg",
     alt: "웨딩 사진 12",
     year: 2023,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "autumn",
+    seasonKr: "가을",
   },
+  // 겨울 (12월~2월)
   {
     src: "/gallery/image13.jpg",
     alt: "웨딩 사진 13",
@@ -109,75 +107,253 @@ const galleryImages = [
     season: "winter",
     seasonKr: "겨울",
   },
-
-  // 2024 겨울 (1월~2월)
   {
     src: "/gallery/image15.jpg",
     alt: "웨딩 사진 15",
-    year: 2024,
+    year: 2023,
     season: "winter",
     seasonKr: "겨울",
   },
   {
     src: "/gallery/image16.jpg",
     alt: "웨딩 사진 16",
-    year: 2024,
+    year: 2023,
     season: "winter",
     seasonKr: "겨울",
   },
+
+  // 2024년
+  // 봄 (3월~5월)
   {
     src: "/gallery/image17.jpg",
     alt: "웨딩 사진 17",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "spring",
+    seasonKr: "봄",
   },
   {
     src: "/gallery/image18.jpg",
     alt: "웨딩 사진 18",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "spring",
+    seasonKr: "봄",
   },
   {
     src: "/gallery/image19.jpg",
     alt: "웨딩 사진 19",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "spring",
+    seasonKr: "봄",
   },
   {
     src: "/gallery/image20.jpg",
     alt: "웨딩 사진 20",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "spring",
+    seasonKr: "봄",
   },
+  // 여름 (6월~8월)
   {
     src: "/gallery/image21.jpg",
     alt: "웨딩 사진 21",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "summer",
+    seasonKr: "여름",
   },
   {
     src: "/gallery/image22.jpg",
     alt: "웨딩 사진 22",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "summer",
+    seasonKr: "여름",
   },
   {
     src: "/gallery/image23.jpg",
     alt: "웨딩 사진 23",
     year: 2024,
-    season: "winter",
-    seasonKr: "겨울",
+    season: "summer",
+    seasonKr: "여름",
   },
   {
     src: "/gallery/image24.jpg",
     alt: "웨딩 사진 24",
     year: 2024,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  // 가을 (9월~11월)
+  {
+    src: "/gallery/image25.jpg",
+    alt: "웨딩 사진 25",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    src: "/gallery/image26.jpg",
+    alt: "웨딩 사진 26",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    src: "/gallery/image27.jpg",
+    alt: "웨딩 사진 27",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    src: "/gallery/image28.jpg",
+    alt: "웨딩 사진 28",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  // 겨울 (12월~2월)
+  {
+    src: "/gallery/image29.jpg",
+    alt: "웨딩 사진 29",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    src: "/gallery/image30.jpg",
+    alt: "웨딩 사진 30",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    src: "/gallery/image31.jpg",
+    alt: "웨딩 사진 31",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    src: "/gallery/image32.jpg",
+    alt: "웨딩 사진 32",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+
+  // 2025년
+  // 봄 (3월~5월)
+  {
+    src: "/gallery/image33.jpg",
+    alt: "웨딩 사진 33",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    src: "/gallery/image34.jpg",
+    alt: "웨딩 사진 34",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    src: "/gallery/image35.jpg",
+    alt: "웨딩 사진 35",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    src: "/gallery/image36.jpg",
+    alt: "웨딩 사진 36",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  // 여름 (6월~8월)
+  {
+    src: "/gallery/image37.jpg",
+    alt: "웨딩 사진 37",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    src: "/gallery/image38.jpg",
+    alt: "웨딩 사진 38",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    src: "/gallery/image39.jpg",
+    alt: "웨딩 사진 39",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    src: "/gallery/image40.jpg",
+    alt: "웨딩 사진 40",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  // 가을 (9월~11월)
+  {
+    src: "/gallery/image41.jpg",
+    alt: "웨딩 사진 41",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    src: "/gallery/image42.jpg",
+    alt: "웨딩 사진 42",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    src: "/gallery/image43.jpg",
+    alt: "웨딩 사진 43",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    src: "/gallery/image44.jpg",
+    alt: "웨딩 사진 44",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  // 겨울 (12월~2월)
+  {
+    src: "/gallery/image45.jpg",
+    alt: "웨딩 사진 45",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    src: "/gallery/image46.jpg",
+    alt: "웨딩 사진 46",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    src: "/gallery/image47.jpg",
+    alt: "웨딩 사진 47",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    src: "/gallery/image48.jpg",
+    alt: "웨딩 사진 48",
+    year: 2025,
     season: "winter",
     seasonKr: "겨울",
   },

@@ -198,6 +198,83 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
           </div>
         )}
 
+      {/* 선택된 연도의 계절별 썸네일 그리드 */}
+      {selectedYear !== null && selectedSeason === null && (
+        <div>
+          {/* 계절 그리드 */}
+          <div className="w-full min-h-screen p-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+              {seasons.map((season) => {
+                const seasonImage = images.find(
+                  (img) => img.year === selectedYear && img.season === season.id
+                );
+                const hasImages = images.some(
+                  (img) => img.year === selectedYear && img.season === season.id
+                );
+
+                if (!hasImages) return null;
+
+                return (
+                  <motion.div
+                    key={season.id}
+                    className="relative aspect-[3/4] rounded-3xl overflow-hidden group cursor-pointer"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                    onClick={() => setSelectedSeason(season.id)}
+                  >
+                    {seasonImage && (
+                      <Image
+                        src={seasonImage.src}
+                        alt={`${selectedYear}년 ${season.name} 사진`}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-300">
+                      <div className="absolute bottom-6 left-6">
+                        <span className="text-2xl font-semibold text-white">
+                          {season.name}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 선택된 연도의 모든 사진 */}
+          <div
+            ref={containerRef}
+            className="w-full h-screen overflow-x-scroll overflow-y-hidden whitespace-nowrap cursor-grab active:cursor-grabbing scrollbar-hide"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <div className="inline-flex gap-4 p-8 h-full items-center">
+              {filteredImages.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="relative h-[80vh] aspect-[3/4] rounded-3xl overflow-hidden"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 80vw, 50vw"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 계절별 썸네일 그리드 */}
       {selectedSeason === null && selectedView === "seasons" && (
         <div className="w-full min-h-screen p-8">
@@ -234,55 +311,6 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
           </div>
         </div>
       )}
-
-      {/* 선택된 계절의 연도별 썸네일 그리드 */}
-      {selectedSeason !== null &&
-        selectedYear === null &&
-        selectedView === "seasons" && (
-          <div className="w-full min-h-screen p-8">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-              {yearThumbnails.map((item) => {
-                const hasImagesForSeason = images.some(
-                  (img) =>
-                    img.year === item.year && img.season === selectedSeason
-                );
-
-                if (!hasImagesForSeason) return null;
-
-                const seasonImage = images.find(
-                  (img) =>
-                    img.year === item.year && img.season === selectedSeason
-                );
-
-                return (
-                  <motion.div
-                    key={item.year}
-                    className="relative aspect-[3/4] rounded-3xl overflow-hidden group cursor-pointer"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => setSelectedYear(item.year)}
-                  >
-                    {seasonImage && (
-                      <Image
-                        src={seasonImage.src}
-                        alt={`${item.year}년 사진`}
-                        fill
-                        className="object-cover"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-300">
-                      <div className="absolute bottom-6 left-6">
-                        <span className="text-2xl font-semibold text-white">
-                          {item.year}
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
       {/* 필터 메뉴 */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-10">

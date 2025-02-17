@@ -171,6 +171,96 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 우리의 이야기 섹션 */}
+      <section className="w-full py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-2xl font-serif text-center mb-4">Our Story</h2>
+          <p className="text-gray-500 text-center mb-12 font-light">
+            태호와 성혜의 설레는 이야기
+          </p>
+          <div className="space-y-12">
+            {/* 첫 번째 질문 */}
+            <div className="bg-neutral-50 rounded-3xl p-8 shadow-sm">
+              <p className="text-lg font-medium text-rose-500 mb-6">
+                첫 만남의 설렘이 아직도 생생해요 💝
+              </p>
+              <div className="space-y-6 text-gray-700 leading-relaxed">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {`2022년 여름, 공통 친구의 소개로 처음 만났어요.
+                    카페에서 마주 앉아 이야기를 나누는데, 성혜가 웃을 때마다 
+                    주변이 환해지는 것 같았죠. 그때의 설렘이 지금도 생생합니다.`}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {`처음 본 순간부터 태호의 따뜻한 미소가 인상적이었어요.
+                    대화를 나누면서 서로의 가치관이 잘 맞는다는 걸 느꼈고,
+                    이야기를 나눌수록 시간 가는 줄 몰랐던 기억이 나요.`}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 두 번째 질문 */}
+            <div className="bg-neutral-50 rounded-3xl p-8 shadow-sm">
+              <p className="text-lg font-medium text-rose-500 mb-6">
+                서로가 서로에게 반한 순간들 ✨
+              </p>
+              <div className="space-y-6 text-gray-700 leading-relaxed">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {`성혜는 늘 긍정적이고 다정한 마음을 가졌어요.
+                    힘든 순간에도 서로를 생각하며 웃을 수 있게 해주죠.
+                    그런 성혜를 보면서 '이런 사람과 함께라면 어떤 어려움도 이겨낼 수 있겠다'는 
+                    확신이 들었어요.`}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {`태호는 책임감이 강하고 성실해요.
+                    무엇보다 서로를 향한 믿음과 존중하는 마음이 크답니다.
+                    작은 일상에서도 늘 배려하는 모습을 보여주는 태호를 보며
+                    '평생 함께하고 싶다'는 마음이 커져갔어요.`}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 세 번째 질문 */}
+            <div className="bg-neutral-50 rounded-3xl p-8 shadow-sm">
+              <p className="text-lg font-medium text-rose-500 mb-6">
+                우리의 특별한 순간 ❤️
+              </p>
+              <div className="space-y-6 text-gray-700 leading-relaxed">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {`함께한 시간 동안의 작은 순간들이 모여 큰 확신이 되었어요.
+                    퇴근 후 늦은 저녁을 함께 먹으며 나눈 대화들,
+                    주말 아침 커피 한 잔을 나누며 꾸린 소소한 계획들...
+                    성혜와 함께라면 어떤 미래도 행복할 거라 믿게 되었죠.`}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {`서로를 더 깊이 이해하고 아끼는 마음이 자라날수록,
+                    자연스럽게 '이 사람과 함께 나이 들어가고 싶다'는 생각이 들었어요.
+                    태호와 함께 보낸 평범한 날들이 특별해지고,
+                    일상의 작은 순간들이 소중한 추억이 되어갔죠.`}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 연락처 섹션 */}
       <section className="w-full py-8 bg-white">
         <div className="max-w-3xl mx-auto px-4">
