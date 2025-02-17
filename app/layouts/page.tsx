@@ -17,7 +17,7 @@ export default function LayoutsPage() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    fetch("/layouts")
+    fetch("/api/layouts")
       .then((res) => res.json())
       .then((data) => {
         setLayouts(data);
