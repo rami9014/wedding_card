@@ -3,6 +3,8 @@
 import VisionGallery from "@/components/VisionGallery";
 
 // 갤러리 이미지 목록
+const getRandomImageNumber = () => Math.floor(Math.random() * 24) + 1;
+
 const galleryImages = [
   // 2023년
   // 봄 (3월~5월)
@@ -243,116 +245,116 @@ const galleryImages = [
   // 2025년
   // 봄 (3월~5월)
   {
-    src: "/gallery/image33.jpg",
-    alt: "웨딩 사진 33",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "spring",
     seasonKr: "봄",
   },
   {
-    src: "/gallery/image34.jpg",
-    alt: "웨딩 사진 34",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "spring",
     seasonKr: "봄",
   },
   {
-    src: "/gallery/image35.jpg",
-    alt: "웨딩 사진 35",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "spring",
     seasonKr: "봄",
   },
   {
-    src: "/gallery/image36.jpg",
-    alt: "웨딩 사진 36",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "spring",
     seasonKr: "봄",
   },
   // 여름 (6월~8월)
   {
-    src: "/gallery/image37.jpg",
-    alt: "웨딩 사진 37",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "summer",
     seasonKr: "여름",
   },
   {
-    src: "/gallery/image38.jpg",
-    alt: "웨딩 사진 38",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "summer",
     seasonKr: "여름",
   },
   {
-    src: "/gallery/image39.jpg",
-    alt: "웨딩 사진 39",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "summer",
     seasonKr: "여름",
   },
   {
-    src: "/gallery/image40.jpg",
-    alt: "웨딩 사진 40",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "summer",
     seasonKr: "여름",
   },
   // 가을 (9월~11월)
   {
-    src: "/gallery/image41.jpg",
-    alt: "웨딩 사진 41",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "autumn",
     seasonKr: "가을",
   },
   {
-    src: "/gallery/image42.jpg",
-    alt: "웨딩 사진 42",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "autumn",
     seasonKr: "가을",
   },
   {
-    src: "/gallery/image43.jpg",
-    alt: "웨딩 사진 43",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "autumn",
     seasonKr: "가을",
   },
   {
-    src: "/gallery/image44.jpg",
-    alt: "웨딩 사진 44",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "autumn",
     seasonKr: "가을",
   },
   // 겨울 (12월~2월)
   {
-    src: "/gallery/image45.jpg",
-    alt: "웨딩 사진 45",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "winter",
     seasonKr: "겨울",
   },
   {
-    src: "/gallery/image46.jpg",
-    alt: "웨딩 사진 46",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "winter",
     seasonKr: "겨울",
   },
   {
-    src: "/gallery/image47.jpg",
-    alt: "웨딩 사진 47",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "winter",
     seasonKr: "겨울",
   },
   {
-    src: "/gallery/image48.jpg",
-    alt: "웨딩 사진 48",
+    src: `/gallery/image${getRandomImageNumber()}.jpg`,
+    alt: ((num) => `웨딩 사진 ${num}`)(getRandomImageNumber()),
     year: 2025,
     season: "winter",
     seasonKr: "겨울",
