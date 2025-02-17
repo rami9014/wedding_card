@@ -293,7 +293,7 @@ export default function Home() {
               <div className="space-y-4">
                 <div>
                   <p className="text-gray-600 mb-1">아버지</p>
-                  <p className="text-gray-800 font-medium mb-2">이인수</p>
+                  <p className="text-gray-800 font-medium mb-2">이름1</p>
                   <a
                     href="tel:010-6226-1157"
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
@@ -317,7 +317,7 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="text-gray-600 mb-1">어머니</p>
-                  <p className="text-gray-800 font-medium mb-2">신성림</p>
+                  <p className="text-gray-800 font-medium mb-2">이름2</p>
                   <a
                     href="tel:010-7777-6402"
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
