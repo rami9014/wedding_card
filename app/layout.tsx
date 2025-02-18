@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import { Noto_Serif_KR, Gowun_Batang, Inter } from "next/font/google";
+import { Noto_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const notoSerifKr = Noto_Serif_KR({
+const notoSans = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-noto-serif",
-});
-
-const gowunBatang = Gowun_Batang({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-gowun-batang",
+  variable: "--font-noto-sans",
 });
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -29,9 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body
-        className={`${notoSerifKr.variable} ${gowunBatang.variable} ${inter.variable} font-serif`}
-      >
+      <body className={`${notoSans.variable} ${inter.variable} font-sans`}>
         {children}
         <SpeedInsights />
       </body>

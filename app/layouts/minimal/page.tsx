@@ -8,6 +8,20 @@ import Map from "@/components/Map";
 
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
 
+interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+const galleryImages: GalleryImage[] = [
+  { src: "/gallery/image1.jpg", alt: "웨딩 사진 1" },
+  { src: "/gallery/image2.jpg", alt: "웨딩 사진 2" },
+  { src: "/gallery/image3.jpg", alt: "웨딩 사진 3" },
+  { src: "/gallery/image4.jpg", alt: "웨딩 사진 4" },
+  { src: "/gallery/image5.jpg", alt: "웨딩 사진 5" },
+  { src: "/gallery/image6.jpg", alt: "웨딩 사진 6" },
+];
+
 export default function MinimalLayout() {
   const [timeLeft, setTimeLeft] = React.useState({
     days: 0,
@@ -43,364 +57,196 @@ export default function MinimalLayout() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA]">
+    <main className="min-h-screen bg-white">
       {/* 메인 섹션 */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center space-y-12 max-w-2xl mx-auto"
-        >
-          <div className="space-y-6">
-            <h1 className="text-4xl font-light tracking-widest">
-              이태호 & 박성혜
-            </h1>
-            <p className="text-lg text-gray-600">
-              2025년 7월 19일 토요일 오전 11시 30분
-            </p>
-            <p className="text-gray-500">당산 그랜드컨벤션센터 5층</p>
-          </div>
-
-          <div className="w-px h-16 bg-gray-200 mx-auto" />
-
-          <div className="flex justify-center gap-8 text-sm">
-            <div>
-              <div className="text-3xl font-light text-gray-900 mb-1">
-                {timeLeft.days}
-              </div>
-              <div className="text-gray-500">DAYS</div>
-            </div>
-            <div>
-              <div className="text-3xl font-light text-gray-900 mb-1">
-                {timeLeft.hours}
-              </div>
-              <div className="text-gray-500">HOURS</div>
-            </div>
-            <div>
-              <div className="text-3xl font-light text-gray-900 mb-1">
-                {timeLeft.minutes}
-              </div>
-              <div className="text-gray-500">MINUTES</div>
-            </div>
-          </div>
-        </motion.div>
+      <section className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0">
+          <Image
+            src="/main-minimal.jpg"
+            alt="메인 이미지"
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-black/20" />
+        </div>
+        <div className="relative text-center text-white px-4">
+          <p className="text-sm sm:text-base tracking-widest mb-4 sm:mb-6">
+            2025. 07. 19. SAT AM 11:30
+          </p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-wider mb-4 sm:mb-6">
+            이태호 & 박성혜
+          </h1>
+          <p className="text-sm sm:text-base tracking-wide">
+            당산 그랜드컨벤션센터 5층
+          </p>
+        </div>
       </section>
 
       {/* 초대글 섹션 */}
-      <section className="py-24 bg-white">
-        <div className="max-w-2xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-12"
-          >
-            <div className="space-y-8">
-              <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                {`서로가 마주보며 다져온 사랑을
-                이제 함께 한 곳을 바라보며
-                걸어가고자 합니다.
-                
-                저희 두 사람이 사랑으로 만나
-                진실과 이해로써 하나 되는 날입니다.
-                
-                오셔서 축복해 주시면
-                감사하겠습니다.`}
-              </p>
-            </div>
-          </motion.div>
+      <section className="py-12 sm:py-16">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm sm:text-base">
+            {`서로가 마주보며 다져온 사랑을
+            이제 함께 한 곳을 바라보며
+            걸어가고자 합니다.
+            
+            저희 두 사람이 사랑으로 만나
+            진실과 이해로써 하나 되는 날입니다.
+            
+            오셔서 축복해 주시면
+            감사하겠습니다.`}
+          </p>
         </div>
       </section>
 
       {/* 갤러리 섹션 */}
-      <section className="py-24 bg-[#FAFAFA]">
-        <div className="max-w-5xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-12"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
-              {[1, 2, 3, 4].map((index) => (
-                <div key={index} className="relative aspect-[4/5]">
-                  <Image
-                    src={`/gallery/image${index}.jpg`}
-                    alt={`웨딩 사진 ${index}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <Link
-                href="/gallery"
-                className="inline-flex items-center text-sm tracking-widest hover:text-gray-600 transition-colors"
+      <section className="py-12 sm:py-16 bg-neutral-50">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Gallery
+          </h2>
+          <div className="grid grid-cols-2 gap-2 sm:gap-4">
+            {galleryImages.slice(0, 6).map((image, index) => (
+              <div
+                key={index}
+                className="relative aspect-[3/4] cursor-pointer group overflow-hidden"
               >
-                <span>VIEW MORE PHOTOS</span>
-                <svg
-                  className="w-4 h-4 ml-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 연락처 섹션 추가 */}
-      <section className="py-24 bg-white">
-        <div className="max-w-2xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-16"
-          >
-            <div className="flex justify-center gap-16">
-              <div className="text-center space-y-8">
-                <div>
-                  <p className="text-gray-600 mb-2 text-sm tracking-widest">
-                    GROOM
-                  </p>
-                  <p className="text-gray-800 font-light mb-2">이태호</p>
-                  <a
-                    href="tel:010-6226-1157"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                    aria-label="신랑에게 전화하기"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-600 mb-1 text-sm tracking-widest">
-                      FATHER
-                    </p>
-                    <p className="text-gray-800 font-light mb-2">이름1</p>
-                    <a
-                      href="tel:010-6226-1157"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                      aria-label="신랑 아버지께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div>
-                    <p className="text-gray-600 mb-1 text-sm tracking-widest">
-                      MOTHER
-                    </p>
-                    <p className="text-gray-800 font-light mb-2">이름2</p>
-                    <a
-                      href="tel:010-7777-6402"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                      aria-label="신랑 어머니께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
               </div>
-              <div className="text-center space-y-8">
-                <div>
-                  <p className="text-gray-600 mb-2 text-sm tracking-widest">
-                    BRIDE
-                  </p>
-                  <p className="text-gray-800 font-light mb-2">박성혜</p>
-                  <a
-                    href="tel:010-2662-5517"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                    aria-label="신부에게 전화하기"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-600 mb-1 text-sm tracking-widest">
-                      FATHER
-                    </p>
-                    <p className="text-gray-800 font-light mb-2">아무개</p>
-                    <a
-                      href="tel:010-6226-1157"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                      aria-label="신부 아버지께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div>
-                    <p className="text-gray-600 mb-1 text-sm tracking-widest">
-                      MOTHER
-                    </p>
-                    <p className="text-gray-800 font-light mb-2">홍길동</p>
-                    <a
-                      href="tel:010-7777-6402"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                      aria-label="신부 어머니께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 지도 섹션 추가 */}
-      <section className="py-24 bg-[#FAFAFA]">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-12"
-          >
-            <h2 className="text-sm tracking-widest text-gray-600 text-center">
-              LOCATION
-            </h2>
-            <Map
-              latitude={37.5266}
-              longitude={126.8961}
-              address="서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터"
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 계좌번호 섹션 추가 */}
-      <section className="py-24 bg-white">
-        <div className="max-w-md mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <h2 className="text-sm tracking-widest text-gray-600 text-center">
-              GIFT
-            </h2>
-            <div className="bg-[#FAFAFA] p-6 space-y-4">
-              <div>
-                <p className="text-gray-600 mb-2 text-sm">신랑측 계좌번호</p>
-                <div className="flex justify-between items-center">
-                  <p className="text-gray-800 font-light">
-                    신한은행 111-455-555555
-                  </p>
-                  <button
-                    onClick={() => copyToClipboard("111-455-555555")}
-                    className="text-gray-500 hover:text-gray-700 transition-colors text-sm"
-                  >
-                    복사
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 푸터 */}
-      <footer className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center space-y-4">
-            <div className="text-sm tracking-widest text-gray-500">
-              TAEHO & SUNGHYE
-            </div>
-            <div className="text-xs text-gray-400">2025.07.19 SAT AM 11:30</div>
+            ))}
+          </div>
+          <div className="text-center mt-6 sm:mt-8">
+            <Link
+              href="/gallery"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-colors text-xs sm:text-sm uppercase tracking-wider"
+            >
+              <span>더 많은 사진 보기</span>
+              <svg
+                className="w-4 h-4 sm:w-5 sm:h-5 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </Link>
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* 연락처 섹션 */}
+      <section className="py-12 sm:py-16">
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Contact
+          </h2>
+          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16">
+            <div className="text-center space-y-6">
+              <div>
+                <p className="text-sm sm:text-base font-medium mb-2">신랑</p>
+                <p className="text-sm sm:text-base text-gray-600 mb-1">
+                  이태호
+                </p>
+                <a
+                  href="tel:010-1234-5678"
+                  className="text-xs sm:text-sm text-blue-500 hover:text-blue-600 uppercase tracking-wider"
+                >
+                  010-1234-5678
+                </a>
+              </div>
+              <div>
+                <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
+                  신랑측 혼주
+                </p>
+                <p className="text-sm sm:text-base mb-1">
+                  <span className="text-gray-500">아버지</span> 이아버지
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="text-gray-500">어머니</span> 이어머니
+                </p>
+              </div>
+            </div>
+            <div className="text-center space-y-6">
+              <div>
+                <p className="text-sm sm:text-base font-medium mb-2">신부</p>
+                <p className="text-sm sm:text-base text-gray-600 mb-1">
+                  박성혜
+                </p>
+                <a
+                  href="tel:010-8765-4321"
+                  className="text-xs sm:text-sm text-blue-500 hover:text-blue-600 uppercase tracking-wider"
+                >
+                  010-8765-4321
+                </a>
+              </div>
+              <div>
+                <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
+                  신부측 혼주
+                </p>
+                <p className="text-sm sm:text-base mb-1">
+                  <span className="text-gray-500">아버지</span> 박아버지
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="text-gray-500">어머니</span> 박어머니
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 지도 섹션 */}
+      <section className="py-12 sm:py-16 bg-neutral-50">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Location
+          </h2>
+          <Map
+            latitude={37.5266}
+            longitude={126.8961}
+            address="서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터"
+          />
+        </div>
+      </section>
+
+      {/* 계좌번호 섹션 */}
+      <section className="py-12 sm:py-16">
+        <div className="max-w-md mx-auto px-4">
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Gift
+          </h2>
+          <div className="bg-neutral-50 rounded-lg p-4 sm:p-6">
+            <div className="mb-4">
+              <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
+                신랑측 계좌번호
+              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm sm:text-base">신한은행 111-455-555555</p>
+                <button
+                  onClick={() => copyToClipboard("111-455-555555")}
+                  className="text-xs sm:text-sm text-blue-500 hover:text-blue-600 uppercase tracking-wider"
+                >
+                  복사
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

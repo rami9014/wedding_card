@@ -43,25 +43,29 @@ export default function ExclusiveLayout() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F5F5F3]">
+    <main className="min-h-screen bg-white">
       {/* 헤더 섹션 */}
       <header className="fixed top-0 left-0 w-full z-50 px-8 py-6 bg-white/80 backdrop-blur-md">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <h1 className="text-2xl font-light tracking-widest">WEDDING</h1>
-          <span className="text-sm font-light tracking-wider">2025.07.19</span>
+          <h1 className="text-2xl font-light tracking-[0.2em] uppercase">
+            Wedding
+          </h1>
+          <span className="text-sm font-light tracking-[0.15em]">
+            2025.07.19
+          </span>
         </div>
       </header>
 
       {/* 메인 섹션 */}
-      <section className="min-h-screen pt-24 px-8">
-        <div className="grid grid-cols-12 gap-8 max-w-7xl mx-auto">
+      <section className="min-h-screen pt-32 px-4 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto">
           {/* 왼쪽 컬럼 */}
-          <div className="col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-8 hidden lg:block">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="aspect-[3/4] relative rounded-lg overflow-hidden"
+              className="aspect-[3/4] relative rounded-none overflow-hidden"
             >
               <Image
                 src="/gallery/image1.jpg"
@@ -74,7 +78,7 @@ export default function ExclusiveLayout() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="aspect-square relative rounded-lg overflow-hidden"
+              className="aspect-square relative rounded-none overflow-hidden"
             >
               <Image
                 src="/gallery/image2.jpg"
@@ -83,11 +87,30 @@ export default function ExclusiveLayout() {
                 className="object-cover"
               />
             </motion.div>
+            <div className="py-8 border-t border-b border-gray-200">
+              <div className="text-2xl font-light tracking-[0.15em] text-rose-500 mb-4">
+                D-{timeLeft.days}
+              </div>
+              <div className="flex gap-8 text-gray-600">
+                <div className="flex flex-col items-center">
+                  <span className="text-xl font-light">{timeLeft.days}</span>
+                  <span className="text-xs tracking-[0.1em] mt-1">DAYS</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-xl font-light">{timeLeft.hours}</span>
+                  <span className="text-xs tracking-[0.1em] mt-1">HOURS</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-xl font-light">{timeLeft.minutes}</span>
+                  <span className="text-xs tracking-[0.1em] mt-1">MINUTES</span>
+                </div>
+              </div>
+            </div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="aspect-[4/3] relative rounded-lg overflow-hidden"
+              className="aspect-[4/3] relative rounded-none overflow-hidden"
             >
               <Image
                 src="/gallery/image3.jpg"
@@ -96,30 +119,17 @@ export default function ExclusiveLayout() {
                 className="object-cover"
               />
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="aspect-[3/4] relative rounded-lg overflow-hidden"
-            >
-              <Image
-                src="/gallery/image5.jpg"
-                alt="웨딩 사진 5"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
           </div>
 
           {/* 중앙 컬럼 */}
-          <div className="col-span-5">
+          <div className="lg:col-span-5">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
-              className="sticky top-32 space-y-12"
+              className="lg:sticky lg:top-32 space-y-12"
             >
-              <div className="aspect-[3/4] relative rounded-lg overflow-hidden">
+              <div className="aspect-[3/4] relative rounded-none overflow-hidden">
                 <Image
                   src="/gallery/image4.jpg"
                   alt="메인 웨딩 사진"
@@ -128,8 +138,8 @@ export default function ExclusiveLayout() {
                   priority
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="aspect-square relative rounded-lg overflow-hidden">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
                     src="/gallery/image6.jpg"
                     alt="웨딩 사진 6"
@@ -137,7 +147,7 @@ export default function ExclusiveLayout() {
                     className="object-cover"
                   />
                 </div>
-                <div className="aspect-square relative rounded-lg overflow-hidden">
+                <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
                     src="/gallery/image7.jpg"
                     alt="웨딩 사진 7"
@@ -150,16 +160,16 @@ export default function ExclusiveLayout() {
           </div>
 
           {/* 오른쪽 컬럼 */}
-          <div className="col-span-3">
-            <div className="sticky top-32 space-y-12">
+          <div className="lg:col-span-3">
+            <div className="lg:sticky lg:top-32 space-y-12">
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 className="space-y-8"
               >
-                <div className="space-y-4">
-                  <h2 className="text-5xl font-light tracking-wide leading-tight">
+                <div className="space-y-6">
+                  <h2 className="text-3xl lg:text-5xl font-light tracking-[0.1em] leading-tight">
                     우리의
                     <br />
                     결혼식에
@@ -167,41 +177,18 @@ export default function ExclusiveLayout() {
                     초대합니다
                   </h2>
                   <div className="w-12 h-0.5 bg-gray-900" />
-                  <p className="text-lg text-gray-600">이태호 ❤️ 박성혜</p>
-                  <p className="text-gray-500 tracking-wider">
-                    2025년 7월 19일 토요일
-                    <br />
-                    오전 11시 30분
-                  </p>
-                  <p className="text-gray-500">당산 그랜드컨벤션센터 5층</p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="space-y-4"
-              >
-                <div className="text-3xl font-light tracking-widest text-rose-500">
-                  D-{timeLeft.days}
-                </div>
-                <div className="flex gap-6 text-gray-600">
-                  <div className="flex flex-col items-center">
-                    <span className="text-2xl font-light">{timeLeft.days}</span>
-                    <span className="text-xs tracking-wider">DAYS</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-2xl font-light">
-                      {timeLeft.hours}
-                    </span>
-                    <span className="text-xs tracking-wider">HOURS</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-2xl font-light">
-                      {timeLeft.minutes}
-                    </span>
-                    <span className="text-xs tracking-wider">MINUTES</span>
+                  <div className="space-y-4">
+                    <p className="text-base lg:text-lg text-gray-600 tracking-[0.1em]">
+                      이태호 ❤️ 박성혜
+                    </p>
+                    <p className="text-sm lg:text-base text-gray-500 tracking-[0.05em] leading-relaxed">
+                      2025년 7월 19일 토요일
+                      <br />
+                      오전 11시 30분
+                    </p>
+                    <p className="text-sm lg:text-base text-gray-500 tracking-[0.05em]">
+                      당산 그랜드컨벤션센터 5층
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -214,11 +201,11 @@ export default function ExclusiveLayout() {
               >
                 <Link
                   href="/gallery"
-                  className="inline-flex items-center px-8 py-4 bg-[#2A2A2A] text-white rounded-full hover:bg-black transition-colors text-sm tracking-wider"
+                  className="inline-flex items-center px-8 py-4 bg-black text-white hover:bg-gray-900 transition-colors text-sm tracking-[0.15em] uppercase"
                 >
-                  <span>VIEW MORE PHOTOS</span>
+                  <span>View Gallery</span>
                   <svg
-                    className="w-5 h-5 ml-2"
+                    className="w-4 h-4 ml-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -237,7 +224,7 @@ export default function ExclusiveLayout() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="aspect-[3/4] relative rounded-lg overflow-hidden"
+                className="aspect-[3/4] relative rounded-none overflow-hidden hidden lg:block"
               >
                 <Image
                   src="/gallery/image8.jpg"
@@ -252,25 +239,27 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 매거진 스타일 갤러리 섹션 */}
-      <section className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-8">
+      <section className="py-40 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-16"
+            className="space-y-20"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-widest">OUR STORY</h2>
-              <p className="text-gray-500 tracking-wider">
+              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
+                Our Story
+              </h2>
+              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
                 The Journey of Love
               </p>
             </div>
 
-            <div className="grid grid-cols-12 gap-8">
-              <div className="col-span-8">
-                <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-8">
+                <div className="aspect-[16/9] relative rounded-none overflow-hidden">
                   <Image
                     src="/gallery/image9.jpg"
                     alt="웨딩 스토리 1"
@@ -279,8 +268,8 @@ export default function ExclusiveLayout() {
                   />
                 </div>
               </div>
-              <div className="col-span-4 space-y-8">
-                <div className="aspect-square relative rounded-lg overflow-hidden">
+              <div className="lg:col-span-4 space-y-8">
+                <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
                     src="/gallery/image10.jpg"
                     alt="웨딩 스토리 2"
@@ -288,7 +277,7 @@ export default function ExclusiveLayout() {
                     className="object-cover"
                   />
                 </div>
-                <div className="aspect-square relative rounded-lg overflow-hidden">
+                <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
                     src="/gallery/image11.jpg"
                     alt="웨딩 스토리 3"
@@ -303,28 +292,36 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 연락처 섹션 */}
-      <section className="py-32 bg-[#F5F5F3]">
-        <div className="max-w-7xl mx-auto px-8">
+      <section className="py-40 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-16"
+            className="space-y-20"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-widest">CONTACT</h2>
-              <p className="text-gray-500 tracking-wider">Get in Touch</p>
+              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
+                Contact
+              </h2>
+              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
+                Get in Touch
+              </p>
             </div>
 
-            <div className="flex justify-center gap-16">
+            <div className="flex flex-col sm:flex-row justify-center gap-16">
               <div className="text-center space-y-8">
                 <div>
-                  <p className="text-gray-600 mb-2">신랑</p>
-                  <p className="text-gray-800 font-medium mb-2">이태호</p>
+                  <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
+                    신랑
+                  </p>
+                  <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
+                    이태호
+                  </p>
                   <a
                     href="tel:010-6226-1157"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
                     aria-label="신랑에게 전화하기"
                   >
                     <svg
@@ -344,11 +341,15 @@ export default function ExclusiveLayout() {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-gray-600 mb-1">아버지</p>
-                    <p className="text-gray-800 font-medium mb-2">이름1</p>
+                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
+                      아버지
+                    </p>
+                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
+                      이름1
+                    </p>
                     <a
                       href="tel:010-6226-1157"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
                       aria-label="신랑 아버지께 전화하기"
                     >
                       <svg
@@ -367,11 +368,15 @@ export default function ExclusiveLayout() {
                     </a>
                   </div>
                   <div>
-                    <p className="text-gray-600 mb-1">어머니</p>
-                    <p className="text-gray-800 font-medium mb-2">이름2</p>
+                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
+                      어머니
+                    </p>
+                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
+                      이름2
+                    </p>
                     <a
                       href="tel:010-7777-6402"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
                       aria-label="신랑 어머니께 전화하기"
                     >
                       <svg
@@ -393,11 +398,15 @@ export default function ExclusiveLayout() {
               </div>
               <div className="text-center space-y-8">
                 <div>
-                  <p className="text-gray-600 mb-2">신부</p>
-                  <p className="text-gray-800 font-medium mb-2">박성혜</p>
+                  <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
+                    신부
+                  </p>
+                  <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
+                    박성혜
+                  </p>
                   <a
                     href="tel:010-2662-5517"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
                     aria-label="신부에게 전화하기"
                   >
                     <svg
@@ -417,11 +426,15 @@ export default function ExclusiveLayout() {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-gray-600 mb-1">아버지</p>
-                    <p className="text-gray-800 font-medium mb-2">아무개</p>
+                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
+                      아버지
+                    </p>
+                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
+                      아무개
+                    </p>
                     <a
                       href="tel:010-6226-1157"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
                       aria-label="신부 아버지께 전화하기"
                     >
                       <svg
@@ -440,11 +453,15 @@ export default function ExclusiveLayout() {
                     </a>
                   </div>
                   <div>
-                    <p className="text-gray-600 mb-1">어머니</p>
-                    <p className="text-gray-800 font-medium mb-2">홍길동</p>
+                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
+                      어머니
+                    </p>
+                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
+                      홍길동
+                    </p>
                     <a
                       href="tel:010-7777-6402"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
                       aria-label="신부 어머니께 전화하기"
                     >
                       <svg
@@ -470,18 +487,22 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 지도 섹션 */}
-      <section className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-8">
+      <section className="py-40 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-16"
+            className="space-y-20"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-widest">LOCATION</h2>
-              <p className="text-gray-500 tracking-wider">Where to Find Us</p>
+              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
+                Location
+              </h2>
+              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
+                Where to Find Us
+              </p>
             </div>
 
             <Map
@@ -494,30 +515,38 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 계좌번호 섹션 */}
-      <section className="py-32 bg-[#F5F5F3]">
-        <div className="max-w-7xl mx-auto px-8">
+      <section className="py-40 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-16"
+            className="space-y-20"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-widest">GIFT</h2>
-              <p className="text-gray-500 tracking-wider">With Gratitude</p>
+              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
+                Gift
+              </h2>
+              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
+                With Gratitude
+              </p>
             </div>
 
-            <div className="bg-[#F5F5F3] rounded-2xl p-6 space-y-4">
-              <div>
-                <p className="text-gray-600 mb-2">신랑측 계좌번호</p>
+            <div className="max-w-lg mx-auto">
+              <div className="bg-white p-8 space-y-4">
+                <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
+                  신랑측 계좌번호
+                </p>
                 <div className="flex justify-between items-center">
-                  <p className="text-gray-800">신한은행 111-455-555555</p>
+                  <p className="text-gray-800 tracking-[0.05em]">
+                    신한은행 111-455-555555
+                  </p>
                   <button
                     onClick={() => copyToClipboard("111-455-555555")}
-                    className="text-rose-500 hover:text-rose-600 transition-colors"
+                    className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
                   >
-                    복사
+                    Copy
                   </button>
                 </div>
               </div>
@@ -527,8 +556,8 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 푸터 */}
-      <footer className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-8 text-center">
+      <footer className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -536,10 +565,12 @@ export default function ExclusiveLayout() {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            <p className="text-2xl font-light tracking-widest">
-              TAEHO & SUNGHYE
+            <p className="text-2xl font-light tracking-[0.2em] uppercase">
+              Taeho & Sunghye
             </p>
-            <p className="text-gray-500 tracking-wider">19 JULY 2025</p>
+            <p className="text-gray-500 tracking-[0.15em] uppercase text-sm">
+              19 July 2025
+            </p>
           </motion.div>
         </div>
       </footer>

@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface GalleryImage {
   src: string;
@@ -19,6 +19,7 @@ interface VisionGalleryProps {
 
 export default function VisionGallery({ images }: VisionGalleryProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedSeason, setSelectedSeason] = useState<string | null>(null);
@@ -158,32 +159,57 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
     });
   }, [selectedImage, filteredImages.length]);
 
+  const handleClose = () => {
+    // 현재 경로에서 이전 레이아웃 경로 추출
+    const layoutPath = pathname.split("/gallery")[0];
+    router.push(layoutPath || "/layouts");
+  };
+
   return (
     <div className="w-full min-h-screen bg-black text-white relative">
-      {/* 닫기 버튼 */}
-      <button
-        onClick={() => router.push("/")}
-        className="fixed top-8 right-8 z-20 w-12 h-12 rounded-full bg-[#4A4A4A] bg-opacity-80 backdrop-blur-md flex items-center justify-center text-white hover:bg-opacity-100 transition-all"
-      >
-        <span className="text-2xl">×</span>
-      </button>
+      {/* 헤더 */}
+      <div className="fixed top-0 left-0 right-0 z-20 bg-black/50 backdrop-blur-md">
+        <div className="flex justify-between items-center px-4 py-4">
+          <div className="text-sm font-light tracking-wider">GALLERY</div>
+          <button
+            onClick={handleClose}
+            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
+          >
+            <span className="text-lg">×</span>
+          </button>
+        </div>
+      </div>
 
       {/* 메인 스크롤 갤러리 */}
       {(selectedView === "all" ||
         (selectedYear !== null && selectedSeason !== null)) && (
         <div
           ref={containerRef}
-          className="w-full h-screen overflow-x-scroll overflow-y-hidden whitespace-nowrap cursor-grab active:cursor-grabbing scrollbar-hide"
+          className="w-full h-screen overflow-x-scroll overflow-y-hidden whitespace-nowrap cursor-grab active:cursor-grabbing scrollbar-hide pt-16"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          onTouchStart={(e) => {
+            setIsDragging(true);
+            setStartX(e.touches[0].clientX);
+            setScrollLeft(containerRef.current?.scrollLeft || 0);
+          }}
+          onTouchMove={(e) => {
+            if (!isDragging) return;
+            const x = e.touches[0].clientX;
+            const walk = (x - startX) * 2;
+            if (containerRef.current) {
+              containerRef.current.scrollLeft = scrollLeft - walk;
+            }
+          }}
+          onTouchEnd={() => setIsDragging(false)}
         >
-          <div className="inline-flex gap-4 p-8 h-full items-center">
+          <div className="inline-flex gap-3 p-4 h-full items-center">
             {filteredImages.map((image, index) => (
               <motion.div
                 key={index}
-                className="relative h-[80vh] aspect-[3/4] rounded-3xl overflow-hidden"
+                className="relative h-[85vh] aspect-[3/4] rounded-2xl overflow-hidden"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
                 onClick={() => setSelectedImage(index)}
@@ -193,7 +219,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
                   alt={image.alt}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 80vw, 50vw"
+                  sizes="(max-width: 768px) 90vw, 50vw"
                 />
               </motion.div>
             ))}
@@ -205,12 +231,12 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
       {selectedYear === null &&
         selectedSeason === null &&
         selectedView === "years" && (
-          <div className="w-full min-h-screen p-8">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div className="w-full min-h-screen pt-16 px-4">
+            <div className="grid grid-cols-2 gap-3">
               {yearThumbnails.map((item) => (
                 <motion.div
                   key={item.year}
-                  className="relative aspect-[3/4] rounded-3xl overflow-hidden group cursor-pointer"
+                  className="relative aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                   onClick={() => setSelectedYear(item.year)}
@@ -224,8 +250,8 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
                     />
                   )}
                   <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-300">
-                    <div className="absolute bottom-6 left-6">
-                      <span className="text-2xl font-semibold text-white">
+                    <div className="absolute bottom-4 left-4">
+                      <span className="text-xl font-semibold text-white">
                         {item.year}
                       </span>
                     </div>
@@ -273,15 +299,15 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
 
       {/* 계절별 썸네일 그리드 (Seasons 초기 뷰) */}
       {selectedSeason === null && selectedView === "seasons" && (
-        <div className="w-full min-h-screen p-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="w-full min-h-screen pt-16 px-4">
+          <div className="grid grid-cols-2 gap-3">
             {seasonThumbnails.map((item) => {
               if (!item.hasImages) return null;
 
               return (
                 <motion.div
                   key={item.id}
-                  className="relative aspect-[3/4] rounded-3xl overflow-hidden group cursor-pointer"
+                  className="relative aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                   onClick={() => setSelectedSeason(item.id)}
@@ -295,8 +321,8 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
                     />
                   )}
                   <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-300">
-                    <div className="absolute bottom-6 left-6">
-                      <span className="text-2xl font-semibold text-white">
+                    <div className="absolute bottom-4 left-4">
+                      <span className="text-xl font-semibold text-white">
                         {item.name}
                       </span>
                     </div>
@@ -344,21 +370,21 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
         )}
 
       {/* 필터 메뉴 */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-10">
-        <div className="bg-[#4A4A4A] bg-opacity-80 backdrop-blur-md rounded-full px-6 py-3 flex gap-6">
+      <div className="fixed bottom-6 left-0 right-0 px-4 z-10">
+        <div className="bg-[#4A4A4A] bg-opacity-80 backdrop-blur-md rounded-full px-4 py-2.5 flex gap-2 max-w-sm mx-auto">
           <button
             onClick={() => {
               setSelectedYear(null);
               setSelectedSeason(null);
               setSelectedView("all");
             }}
-            className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
+            className={`flex-1 px-3 py-1.5 rounded-full text-xs transition-colors ${
               selectedView === "all"
                 ? "bg-white text-black"
                 : "text-white hover:bg-white/10"
             }`}
           >
-            All Photos
+            All
           </button>
           <button
             onClick={() => {
@@ -366,7 +392,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
               setSelectedSeason(null);
               setSelectedView("years");
             }}
-            className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
+            className={`flex-1 px-3 py-1.5 rounded-full text-xs transition-colors ${
               selectedView === "years"
                 ? "bg-white text-black"
                 : "text-white hover:bg-white/10"
@@ -380,7 +406,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
               setSelectedSeason(null);
               setSelectedView("seasons");
             }}
-            className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
+            className={`flex-1 px-3 py-1.5 rounded-full text-xs transition-colors ${
               selectedView === "seasons"
                 ? "bg-white text-black"
                 : "text-white hover:bg-white/10"
@@ -398,21 +424,21 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black z-50 flex items-center justify-center"
             onClick={() => setSelectedImage(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full h-full md:w-4/5 md:h-4/5"
+              className="relative w-full h-full"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-4 right-4 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
+                className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                 onClick={() => setSelectedImage(null)}
               >
-                ×
+                <span className="text-lg">×</span>
               </button>
               <div className="relative w-full h-full">
                 <Image

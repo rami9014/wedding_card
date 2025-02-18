@@ -13,8 +13,8 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        serif: ["var(--font-noto-serif)", "var(--font-gowun-batang)", "serif"],
-        sans: ["var(--font-inter)", "sans-serif"],
+        sans: ["var(--font-noto-sans)", "sans-serif"],
+        inter: ["var(--font-inter)", "sans-serif"],
       },
     },
   },
