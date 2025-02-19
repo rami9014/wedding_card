@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Map from "@/components/Map";
 
+const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
+
 interface GalleryImage {
   src: string;
   alt: string;
@@ -20,14 +22,13 @@ const galleryImages: GalleryImage[] = [
   { src: "/gallery/image6.jpg", alt: "웨딩 사진 6" },
 ];
 
-const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
-
-export default function ClassicLayout() {
+export default function MinimalLayout() {
   const [timeLeft, setTimeLeft] = React.useState({
     days: 0,
     hours: 0,
     minutes: 0,
   });
+  const [isMobileView, setIsMobileView] = React.useState(false);
 
   React.useEffect(() => {
     const calculateTimeLeft = () => {
@@ -57,35 +58,111 @@ export default function ClassicLayout() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
+    <main
+      className={`min-h-screen bg-white ${
+        isMobileView ? "max-w-[430px] mx-auto shadow-2xl relative" : ""
+      }`}
+    >
+      {/* 네비게이션 버튼 */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">메인</span>
+          </Link>
+
+          <Link
+            href="/minimal"
+            className="bg-black text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+          >
+            <span className="text-sm">미니멀</span>
+          </Link>
+
+          <Link
+            href="/classic"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">클래식</span>
+          </Link>
+
+          <Link
+            href="/exclusive"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">익스클루시브</span>
+          </Link>
+        </div>
+
+        <button
+          onClick={() => setIsMobileView(!isMobileView)}
+          className="bg-black text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+            />
+          </svg>
+          <span className="text-sm">
+            {isMobileView ? "데스크톱으로 보기" : "모바일로 보기"}
+          </span>
+        </button>
+      </div>
+
       {/* 메인 섹션 */}
       <section className="relative min-h-screen flex items-center justify-center">
-        <div className="absolute inset-0">
-          <Image
-            src="/main-classic.jpg"
-            alt="메인 이미지"
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-black/30" />
+        {/* 모바일에서는 상하로, 데스크탑에서는 좌우로 이미지 배치 */}
+        <div className="absolute inset-0 flex md:flex-row flex-col">
+          <div className="flex-1 relative">
+            <Image
+              src="/gallery/f1.jpg"
+              alt="메인 이미지 1"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-black/20" />
+          </div>
+          <div className="flex-1 relative">
+            <Image
+              src="/gallery/f.jpg"
+              alt="메인 이미지 2"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-black/20" />
+          </div>
         </div>
-        <div className="relative text-center text-white px-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 sm:mb-6">
-            이태호 & 박성혜
-          </h1>
-          <p className="text-lg sm:text-xl mb-2 sm:mb-3">
+
+        <div className="relative text-center text-white px-4 z-10">
+          <p className="text-sm sm:text-base tracking-widest mb-4 sm:mb-6">
             2025. 07. 19. SAT AM 11:30
           </p>
-          <p className="text-base sm:text-lg">당산 그랜드컨벤션센터 5층</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-wider mb-4 sm:mb-6">
+            아이언맨 & 찰칵맨
+          </h1>
+          <p className="text-sm sm:text-base tracking-wide">
+            당산 그랜드컨벤션센터 5층
+          </p>
         </div>
       </section>
 
       {/* 초대글 섹션 */}
-      <section className="py-12 sm:py-16 bg-neutral-50">
+      <section className="py-12 sm:py-16">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm sm:text-base">
+          <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm sm:text-base">
             {`서로가 마주보며 다져온 사랑을
             이제 함께 한 곳을 바라보며
             걸어가고자 합니다.
@@ -99,52 +176,17 @@ export default function ClassicLayout() {
         </div>
       </section>
 
-      {/* D-day 섹션 */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <h2 className="text-3xl font-serif mb-12">Wedding Day</h2>
-            <div className="flex justify-center gap-12">
-              <div className="w-24">
-                <div className="text-4xl font-light text-rose-500 mb-2">
-                  {timeLeft.days}
-                </div>
-                <div className="text-gray-500">Days</div>
-              </div>
-              <div className="w-24">
-                <div className="text-4xl font-light text-rose-500 mb-2">
-                  {timeLeft.hours}
-                </div>
-                <div className="text-gray-500">Hours</div>
-              </div>
-              <div className="w-24">
-                <div className="text-4xl font-light text-rose-500 mb-2">
-                  {timeLeft.minutes}
-                </div>
-                <div className="text-gray-500">Minutes</div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* 갤러리 섹션 */}
-      <section className="py-12 sm:py-16">
+      <section className="py-12 sm:py-16 bg-neutral-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-serif text-center mb-6 sm:mb-8">
-            GALLERY
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Gallery
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
+          <div className="grid grid-cols-2 gap-2 sm:gap-4">
             {galleryImages.slice(0, 6).map((image, index) => (
               <div
                 key={index}
-                className="relative aspect-[3/4] cursor-pointer group overflow-hidden rounded-lg sm:rounded-xl"
+                className="relative aspect-[3/4] cursor-pointer group overflow-hidden"
               >
                 <Image
                   src={image.src}
@@ -160,7 +202,7 @@ export default function ClassicLayout() {
           <div className="text-center mt-6 sm:mt-8">
             <Link
               href="/gallery"
-              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-neutral-800 text-white rounded-full hover:bg-neutral-700 transition-colors text-sm sm:text-base"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-colors text-xs sm:text-sm uppercase tracking-wider"
             >
               <span>더 많은 사진 보기</span>
               <svg
@@ -182,27 +224,27 @@ export default function ClassicLayout() {
       </section>
 
       {/* 연락처 섹션 */}
-      <section className="py-12 sm:py-16 bg-neutral-50">
+      <section className="py-12 sm:py-16">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-serif text-center mb-6 sm:mb-8">
-            CONTACT
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Contact
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16">
             <div className="text-center space-y-6">
               <div>
-                <p className="text-base sm:text-lg font-medium mb-2">신랑</p>
+                <p className="text-sm sm:text-base font-medium mb-2">신랑</p>
                 <p className="text-sm sm:text-base text-gray-600 mb-1">
                   이태호
                 </p>
                 <a
                   href="tel:010-1234-5678"
-                  className="text-sm sm:text-base text-blue-500 hover:text-blue-600"
+                  className="text-xs sm:text-sm text-blue-500 hover:text-blue-600 uppercase tracking-wider"
                 >
                   010-1234-5678
                 </a>
               </div>
               <div>
-                <p className="text-sm sm:text-base text-gray-600 mb-1">
+                <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
                   신랑측 혼주
                 </p>
                 <p className="text-sm sm:text-base mb-1">
@@ -215,19 +257,19 @@ export default function ClassicLayout() {
             </div>
             <div className="text-center space-y-6">
               <div>
-                <p className="text-base sm:text-lg font-medium mb-2">신부</p>
+                <p className="text-sm sm:text-base font-medium mb-2">신부</p>
                 <p className="text-sm sm:text-base text-gray-600 mb-1">
                   박성혜
                 </p>
                 <a
                   href="tel:010-8765-4321"
-                  className="text-sm sm:text-base text-blue-500 hover:text-blue-600"
+                  className="text-xs sm:text-sm text-blue-500 hover:text-blue-600 uppercase tracking-wider"
                 >
                   010-8765-4321
                 </a>
               </div>
               <div>
-                <p className="text-sm sm:text-base text-gray-600 mb-1">
+                <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
                   신부측 혼주
                 </p>
                 <p className="text-sm sm:text-base mb-1">
@@ -243,10 +285,10 @@ export default function ClassicLayout() {
       </section>
 
       {/* 지도 섹션 */}
-      <section className="py-12 sm:py-16">
+      <section className="py-12 sm:py-16 bg-neutral-50">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-serif text-center mb-6 sm:mb-8">
-            LOCATION
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Location
           </h2>
           <Map
             latitude={37.5266}
@@ -257,23 +299,21 @@ export default function ClassicLayout() {
       </section>
 
       {/* 계좌번호 섹션 */}
-      <section className="py-12 sm:py-16 bg-neutral-50">
+      <section className="py-12 sm:py-16">
         <div className="max-w-md mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-serif text-center mb-6 sm:mb-8">
-            GIFT
+          <h2 className="text-base sm:text-lg uppercase tracking-widest text-center mb-6 sm:mb-8">
+            Gift
           </h2>
-          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+          <div className="bg-neutral-50 rounded-lg p-4 sm:p-6">
             <div className="mb-4">
-              <p className="text-gray-600 mb-2 text-sm sm:text-base">
+              <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
                 신랑측 계좌번호
               </p>
               <div className="flex justify-between items-center">
-                <p className="text-gray-800 text-sm sm:text-base">
-                  신한은행 111-455-555555
-                </p>
+                <p className="text-sm sm:text-base">신한은행 111-455-555555</p>
                 <button
                   onClick={() => copyToClipboard("111-455-555555")}
-                  className="text-blue-500 hover:text-blue-600 text-sm"
+                  className="text-xs sm:text-sm text-blue-500 hover:text-blue-600 uppercase tracking-wider"
                 >
                   복사
                 </button>
@@ -282,15 +322,6 @@ export default function ClassicLayout() {
           </div>
         </div>
       </section>
-
-      {/* 푸터 */}
-      <footer className="py-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 text-center text-gray-500">
-          <p>이태호 ❤️ 박성혜</p>
-          <p className="mt-2">2025년 7월 19일 토요일 오전 11시 30분</p>
-          <p>당산 그랜드컨벤션센터 5층</p>
-        </div>
-      </footer>
     </main>
   );
 }

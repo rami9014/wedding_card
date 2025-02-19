@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Map from "@/components/Map";
 import Gallery from "@/components/Gallery";
+import Link from "next/link";
 
 // 갤러리 이미지 목록
 const galleryImages = [
@@ -58,6 +59,39 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
+      {/* 네비게이션 버튼 */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/"
+            className="bg-black text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+          >
+            <span className="text-sm">메인</span>
+          </Link>
+
+          <Link
+            href="/minimal"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">미니멀</span>
+          </Link>
+
+          <Link
+            href="/classic"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">클래식</span>
+          </Link>
+
+          <Link
+            href="/exclusive"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">익스클루시브</span>
+          </Link>
+        </div>
+      </div>
+
       {/* 메인 섹션 */}
       <section className="w-full min-h-screen flex flex-col items-center justify-between">
         <div className="relative w-full h-[60vh] sm:h-[70vh]">

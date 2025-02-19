@@ -160,9 +160,8 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
   }, [selectedImage, filteredImages.length]);
 
   const handleClose = () => {
-    // 현재 경로에서 이전 레이아웃 경로 추출
-    const layoutPath = pathname.split("/gallery")[0];
-    router.push(layoutPath || "/layouts");
+    // 이전 페이지로 돌아가기
+    router.back();
   };
 
   return (
