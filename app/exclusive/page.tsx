@@ -79,6 +79,13 @@ export default function ExclusiveLayout() {
           >
             <span className="text-sm">익스클루시브</span>
           </Link>
+
+          <Link
+            href="/magazine"
+            className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
+          >
+            <span className="text-sm">매거진</span>
+          </Link>
         </div>
 
         <button

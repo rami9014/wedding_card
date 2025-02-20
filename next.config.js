@@ -5,7 +5,7 @@ const path = require("path");
 
 // Remove this if you're not using Fullcalendar features
 
-module.exports = {
+const nextConfig = {
   transpilePackages: ["@mui/x-charts"],
   // sourceMap 사용안함
   productionBrowserSourceMaps: false,
@@ -14,34 +14,8 @@ module.exports = {
     minimumCacheTTL: 600,
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "",
-      },
-      {
         protocol: "https",
-        hostname: "cdn.sanity.io",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "*.*.inuscomm.co.kr",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "*.popply.co.kr",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "*.s3.ap-northeast-2.amazonaws.com",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "d8nffddmkwqeq.cloudfront.net",
-        port: "",
+        hostname: "**",
       },
     ],
   },
@@ -67,3 +41,5 @@ module.exports = {
     ignoreBuildErrors: true,
   },
 };
+
+module.exports = nextConfig;
