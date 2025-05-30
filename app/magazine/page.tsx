@@ -12,12 +12,12 @@ interface GalleryImage {
 }
 
 const galleryImages: GalleryImage[] = [
-  { src: "/gallery/image1.jpg", alt: "웨딩 사진 1" },
-  { src: "/gallery/image2.jpg", alt: "웨딩 사진 2" },
-  { src: "/gallery/image3.jpg", alt: "웨딩 사진 3" },
-  { src: "/gallery/image4.jpg", alt: "웨딩 사진 4" },
-  { src: "/gallery/image5.jpg", alt: "웨딩 사진 5" },
-  { src: "/gallery/image6.jpg", alt: "웨딩 사진 6" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg", alt: "웨딩 사진 1" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg", alt: "웨딩 사진 2" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg", alt: "웨딩 사진 3" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg", alt: "웨딩 사진 4" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg", alt: "웨딩 사진 5" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg", alt: "웨딩 사진 6" },
 ];
 
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
@@ -179,7 +179,7 @@ export default function MagazineLayout() {
               {/* 전신 이미지 - 상단 좌측 */}
               <div className="absolute top-[5%] left-[5%] w-[60%] h-[50%]">
                 <Image
-                  src="/gallery/f1.jpg"
+                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/f1.jpg"
                   alt="전신 이미지"
                   fill
                   className="object-cover object-center"
@@ -189,7 +189,7 @@ export default function MagazineLayout() {
               {/* 클로즈업 이미지 - 가운데 우측 */}
               <div className="absolute top-[15%] right-[5%] w-[55%] h-[45%] z-10">
                 <Image
-                  src="/gallery/f.jpg"
+                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/f.jpg"
                   alt="클로즈업 이미지"
                   fill
                   className="object-cover object-center"
@@ -199,7 +199,7 @@ export default function MagazineLayout() {
               {/* 제품 이미지 - 하단 중앙 */}
               <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[40%] aspect-square">
                 <Image
-                  src="/gallery/image6.jpg"
+                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg"
                   alt="제품 이미지"
                   fill
                   className="object-contain"
@@ -219,7 +219,7 @@ export default function MagazineLayout() {
           <div className="relative h-screen w-full snap-start overflow-hidden">
             <div className="absolute inset-0">
               <Image
-                src="/gallery/image2.jpg"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg"
                 alt="중간 이미지"
                 fill
                 className="object-cover"
@@ -240,7 +240,7 @@ export default function MagazineLayout() {
           <div className="relative h-screen w-full snap-start">
             <div className="absolute inset-0">
               <Image
-                src="/gallery/image3.jpg"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg"
                 alt="큰 이미지"
                 fill
                 className="object-cover"

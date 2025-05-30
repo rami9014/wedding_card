@@ -14,12 +14,30 @@ interface GalleryImage {
 }
 
 const galleryImages: GalleryImage[] = [
-  { src: "/gallery/image1.jpg", alt: "웨딩 사진 1" },
-  { src: "/gallery/image2.jpg", alt: "웨딩 사진 2" },
-  { src: "/gallery/image3.jpg", alt: "웨딩 사진 3" },
-  { src: "/gallery/image4.jpg", alt: "웨딩 사진 4" },
-  { src: "/gallery/image5.jpg", alt: "웨딩 사진 5" },
-  { src: "/gallery/image6.jpg", alt: "웨딩 사진 6" },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg",
+    alt: "웨딩 사진 1",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg",
+    alt: "웨딩 사진 2",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg",
+    alt: "웨딩 사진 3",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg",
+    alt: "웨딩 사진 4",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg",
+    alt: "웨딩 사진 5",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg",
+    alt: "웨딩 사진 6",
+  },
 ];
 
 export default function MinimalLayout() {
@@ -82,6 +100,33 @@ export default function MinimalLayout() {
               >
                 <span className="text-sm">미니멀</span>
               </Link>
+              {/* 메인 섹션 */}
+              {/* 모바일에서는 상하로, 데스크탑에서는 좌우로 이미지 배치 */}
+              {/* <section className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0 flex md:flex-row flex-col">
+          <div className="flex-1 relative">
+            <Image
+              src="https://d11ay48rmhjgmh.cloudfront.net/wedding/f1.jpg"
+              alt="메인 이미지 1"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-black/20" />
+          </div>
+          <div className="flex-1 relative">
+            <Image
+              src="https://d11ay48rmhjgmh.cloudfront.net/wedding/f.jpg"
+              alt="메인 이미지 2"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-black/20" />
+          </div>
+        </div> */}
 
               <Link
                 href="/classic"

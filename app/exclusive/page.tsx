@@ -141,7 +141,7 @@ export default function ExclusiveLayout() {
               className="aspect-[3/4] relative rounded-none overflow-hidden"
             >
               <Image
-                src="/gallery/image1.jpg"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg"
                 alt="웨딩 사진 1"
                 fill
                 className="object-cover"
@@ -154,7 +154,7 @@ export default function ExclusiveLayout() {
               className="aspect-square relative rounded-none overflow-hidden"
             >
               <Image
-                src="/gallery/image2.jpg"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg"
                 alt="웨딩 사진 2"
                 fill
                 className="object-cover"
@@ -180,14 +180,14 @@ export default function ExclusiveLayout() {
               </div>
             </div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="aspect-[4/3] relative rounded-none overflow-hidden"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="aspect-[3/4] relative rounded-none overflow-hidden hidden lg:block"
             >
               <Image
-                src="/gallery/image3.jpg"
-                alt="웨딩 사진 3"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image8.jpg"
+                alt="웨딩 사진 8"
                 fill
                 className="object-cover"
               />
@@ -204,7 +204,7 @@ export default function ExclusiveLayout() {
             >
               <div className="aspect-[3/4] relative rounded-none overflow-hidden">
                 <Image
-                  src="/gallery/image4.jpg"
+                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg"
                   alt="메인 웨딩 사진"
                   fill
                   className="object-cover"
@@ -214,7 +214,7 @@ export default function ExclusiveLayout() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
-                    src="/gallery/image6.jpg"
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg"
                     alt="웨딩 사진 6"
                     fill
                     className="object-cover"
@@ -222,7 +222,7 @@ export default function ExclusiveLayout() {
                 </div>
                 <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
-                    src="/gallery/image7.jpg"
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image7.jpg"
                     alt="웨딩 사진 7"
                     fill
                     className="object-cover"
@@ -300,7 +300,7 @@ export default function ExclusiveLayout() {
                 className="aspect-[3/4] relative rounded-none overflow-hidden hidden lg:block"
               >
                 <Image
-                  src="/gallery/image8.jpg"
+                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image8.jpg"
                   alt="웨딩 사진 8"
                   fill
                   className="object-cover"
@@ -334,7 +334,7 @@ export default function ExclusiveLayout() {
               <div className="lg:col-span-8">
                 <div className="aspect-[16/9] relative rounded-none overflow-hidden">
                   <Image
-                    src="/gallery/image9.jpg"
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg"
                     alt="웨딩 스토리 1"
                     fill
                     className="object-cover"
@@ -344,7 +344,7 @@ export default function ExclusiveLayout() {
               <div className="lg:col-span-4 space-y-8">
                 <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
-                    src="/gallery/image10.jpg"
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg"
                     alt="웨딩 스토리 2"
                     fill
                     className="object-cover"
@@ -352,7 +352,7 @@ export default function ExclusiveLayout() {
                 </div>
                 <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
-                    src="/gallery/image11.jpg"
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image11.jpg"
                     alt="웨딩 스토리 3"
                     fill
                     className="object-cover"

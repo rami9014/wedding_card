@@ -9,12 +9,12 @@ import MapSection from "@/components/MapSection";
 
 // 갤러리 이미지 목록
 const galleryImages = [
-  { src: "/gallery/image1.jpg", alt: "웨딩 사진 1" },
-  { src: "/gallery/image2.jpg", alt: "웨딩 사진 2" },
-  { src: "/gallery/image3.jpg", alt: "웨딩 사진 3" },
-  { src: "/gallery/image4.jpg", alt: "웨딩 사진 4" },
-  { src: "/gallery/image5.jpg", alt: "웨딩 사진 5" },
-  { src: "/gallery/image6.jpg", alt: "웨딩 사진 6" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg", alt: "웨딩 사진 1" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg", alt: "웨딩 사진 2" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg", alt: "웨딩 사진 3" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg", alt: "웨딩 사진 4" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg", alt: "웨딩 사진 5" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg", alt: "웨딩 사진 6" },
 ];
 
 // 결혼식 날짜 설정
@@ -341,8 +341,8 @@ export default function Home() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-600 mb-1">아버지</p>
-                  <p className="text-gray-800 font-medium mb-2">이름1</p>
+                  <p className="text-gray-600 mb-1">신랑 아버지</p>
+                  <p className="text-gray-800 font-medium mb-2">이인수</p>
                   <a
                     href="tel:010-6226-1157"
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
@@ -365,8 +365,8 @@ export default function Home() {
                   </a>
                 </div>
                 <div>
-                  <p className="text-gray-600 mb-1">어머니</p>
-                  <p className="text-gray-800 font-medium mb-2">이름2</p>
+                  <p className="text-gray-600 mb-1">신랑 어머니</p>
+                  <p className="text-gray-800 font-medium mb-2">신성림</p>
                   <a
                     href="tel:010-7777-6402"
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
@@ -417,8 +417,8 @@ export default function Home() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-600 mb-1">아버지</p>
-                  <p className="text-gray-800 font-medium mb-2">아무개</p>
+                  <p className="text-gray-600 mb-1">신부 아버지</p>
+                  <p className="text-gray-800 font-medium mb-2">박범수</p>
                   <a
                     href="tel:010-6226-1157"
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
@@ -441,8 +441,8 @@ export default function Home() {
                   </a>
                 </div>
                 <div>
-                  <p className="text-gray-600 mb-1">어머니</p>
-                  <p className="text-gray-800 font-medium mb-2">홍길동</p>
+                  <p className="text-gray-600 mb-1">신부 어머니</p>
+                  <p className="text-gray-800 font-medium mb-2">박정옥</p>
                   <a
                     href="tel:010-7777-6402"
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
@@ -486,10 +486,26 @@ export default function Home() {
               </p>
               <div className="flex justify-between items-center">
                 <p className="text-gray-800 text-sm sm:text-base">
-                  신한은행 111-455-555555
+                  신한은행 110-452-570231
                 </p>
                 <button
-                  onClick={() => copyToClipboard("111-455-555555")}
+                  onClick={() => copyToClipboard("110-452-570231")}
+                  className="text-blue-500 hover:text-blue-600 text-sm"
+                >
+                  복사
+                </button>
+              </div>
+            </div>
+            <div className="mb-4">
+              <p className="text-gray-600 mb-2 text-sm sm:text-base">
+                신부측 계좌번호
+              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-gray-800 text-sm sm:text-base">
+                  국민은행 010-7777-6402
+                </p>
+                <button
+                  onClick={() => copyToClipboard("010-7777-6402")}
                   className="text-blue-500 hover:text-blue-600 text-sm"
                 >
                   복사
