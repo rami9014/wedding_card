@@ -445,8 +445,8 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
                   alt={filteredImages[selectedImage].alt}
                   fill
                   className="object-contain"
-                  sizes="100vw"
-                  priority
+                  // sizes="100vw"                  
+                   sizes="(max-width: 768px) 90vw, 50vw"
                 />
               </div>
             </motion.div>
