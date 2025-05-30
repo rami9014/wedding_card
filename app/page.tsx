@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import Map from "@/components/Map";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
+import MapSection from "@/components/MapSection";
 
 // 갤러리 이미지 목록
 const galleryImages = [
@@ -470,18 +471,7 @@ export default function Home() {
       </section>
 
       {/* 지도 섹션 */}
-      <section className="w-full py-12 sm:py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-serif text-center mb-6 sm:mb-8">
-            오시는 길
-          </h2>
-          <Map
-            latitude={37.5266}
-            longitude={126.8961}
-            address="서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터"
-          />
-        </div>
-      </section>
+      <MapSection />
 
       {/* 계좌번호 섹션 */}
       <section className="w-full py-12 sm:py-16 bg-gray-50">

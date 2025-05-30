@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Map from "@/components/Map";
+import MapSection from "@/components/MapSection";
 
 interface GalleryImage {
   src: string;
@@ -21,6 +21,50 @@ const galleryImages: GalleryImage[] = [
 ];
 
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
+
+// 위치 정보
+const LOCATION = {
+  latitude: 37.5266,
+  longitude: 126.8961,
+  address: "서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터",
+};
+
+// 인터뷰 데이터
+const interviews = [
+  {
+    question: "서로의 첫인상은 어땠나요?",
+    groomAnswer:
+      "처음 봤을 때 밝은 미소가 너무 인상적이었어요. 그 미소에 반했죠.",
+    brideAnswer:
+      "차분하고 신중한 모습이 믿음직스러웠어요. 말씀하시는 게 참 따뜻했어요.",
+  },
+  {
+    question: "언제 결혼을 결심하게 되었나요?",
+    groomAnswer:
+      "서로를 더 깊이 알아갈수록 평생을 함께하고 싶다는 마음이 커졌어요.",
+    brideAnswer:
+      "힘들 때 항상 곁에서 힘이 되어주는 모습을 보며 이 사람이구나 생각했어요.",
+  },
+  {
+    question: "앞으로의 신혼 생활 계획은?",
+    groomAnswer: "서로 배려하고 이해하며 행복한 가정을 만들어가고 싶어요.",
+    brideAnswer: "작은 일상의 순간들을 소중히 여기며 함께 성장해나가고 싶어요.",
+  },
+];
+
+// 계좌번호 정보
+const accounts = [
+  {
+    bank: "신한은행",
+    number: "110-123-456789",
+    holder: "이태호",
+  },
+  {
+    bank: "국민은행",
+    number: "123-12-123456",
+    holder: "박성혜",
+  },
+];
 
 export default function MagazineLayout() {
   const [timeLeft, setTimeLeft] = React.useState({
@@ -60,7 +104,7 @@ export default function MagazineLayout() {
   return (
     <main
       className={`min-h-screen bg-[#D0BCA4] ${
-        isMobileView ? "max-w-[430px] mx-auto shadow-2xl relative" : ""
+        isMobileView ? "max-w-[428px] mx-auto shadow-2xl relative" : ""
       }`}
     >
       {/* 네비게이션 버튼 */}
@@ -274,47 +318,76 @@ export default function MagazineLayout() {
         </div>
       </section>
 
-      {/* 연락처 섹션 */}
-      <section className="py-20 bg-[#D0BCA4]">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-light text-center mb-12">Contact</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="text-center">
-              <h3 className="text-xl mb-6">신랑</h3>
-              <p className="text-gray-600 mb-2">이태호</p>
-              <a
-                href="tel:010-1234-5678"
-                className="text-blue-500 hover:text-blue-600"
-              >
-                010-1234-5678
-              </a>
-              <div className="mt-6">
-                <p className="text-gray-500 mb-2">신랑측 혼주</p>
-                <p className="text-gray-600">
-                  <span className="text-gray-500">아버지</span> 이아버지
-                </p>
-                <p className="text-gray-600">
-                  <span className="text-gray-500">어머니</span> 이어머니
-                </p>
+      {/* 인터뷰 섹션 */}
+      <section className="py-20 px-4 bg-[#D0BCA4]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-light text-center mb-4 text-gray-800">
+            Our Story
+          </h2>
+          <p className="text-gray-600 text-center mb-12 font-light">
+            태호와 성혜의 설레는 이야기
+          </p>
+          <div className="space-y-8 sm:space-y-12">
+            {/* 첫 번째 질문 */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-base sm:text-lg font-medium text-rose-500 mb-4 sm:mb-6">
+                서로의 첫인상은 어땠나요? 💝
+              </p>
+              <div className="space-y-4 sm:space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {interviews[0].groomAnswer}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {interviews[0].brideAnswer}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="text-center">
-              <h3 className="text-xl mb-6">신부</h3>
-              <p className="text-gray-600 mb-2">박성혜</p>
-              <a
-                href="tel:010-8765-4321"
-                className="text-blue-500 hover:text-blue-600"
-              >
-                010-8765-4321
-              </a>
-              <div className="mt-6">
-                <p className="text-gray-500 mb-2">신부측 혼주</p>
-                <p className="text-gray-600">
-                  <span className="text-gray-500">아버지</span> 박아버지
-                </p>
-                <p className="text-gray-600">
-                  <span className="text-gray-500">어머니</span> 박어머니
-                </p>
+
+            {/* 두 번째 질문 */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-base sm:text-lg font-medium text-rose-500 mb-4 sm:mb-6">
+                언제 결혼을 결심하게 되었나요? ✨
+              </p>
+              <div className="space-y-4 sm:space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {interviews[1].groomAnswer}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {interviews[1].brideAnswer}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 세 번째 질문 */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-base sm:text-lg font-medium text-rose-500 mb-4 sm:mb-6">
+                앞으로의 신혼 생활 계획은? ❤️
+              </p>
+              <div className="space-y-4 sm:space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {interviews[2].groomAnswer}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {interviews[2].brideAnswer}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -322,34 +395,39 @@ export default function MagazineLayout() {
       </section>
 
       {/* 지도 섹션 */}
-      <section className="py-20 bg-[#D0BCA4]">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-light text-center mb-12">Location</h2>
-          <Map
-            latitude={37.5266}
-            longitude={126.8961}
-            address="서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터"
-          />
-        </div>
-      </section>
+      <MapSection />
 
-      {/* 계좌번호 섹션 */}
-      <section className="py-20 bg-[#D0BCA4]">
-        <div className="max-w-md mx-auto px-4">
-          <h2 className="text-3xl font-light text-center mb-12">Gift</h2>
-          <div className="bg-white/50 rounded-lg p-6">
-            <div className="mb-4">
-              <p className="text-gray-600 mb-2">신랑측 계좌번호</p>
-              <div className="flex justify-between items-center">
-                <p className="text-gray-800">신한은행 111-455-555555</p>
-                <button
-                  onClick={() => copyToClipboard("111-455-555555")}
-                  className="text-blue-500 hover:text-blue-600"
-                >
-                  복사
-                </button>
-              </div>
-            </div>
+      {/* 마음 전하실 곳 섹션 */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl font-light text-center mb-12">
+            마음 전하실 곳
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {accounts.map((account, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="bg-gray-50 p-6 rounded-lg"
+              >
+                <p className="text-sm text-gray-500 mb-2">{account.holder}</p>
+                <p className="font-medium mb-2">{account.bank}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-700">{account.number}</p>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(account.number);
+                      alert("계좌번호가 복사되었습니다.");
+                    }}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    복사
+                  </button>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

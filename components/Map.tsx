@@ -38,9 +38,29 @@ export default function Map({ latitude, longitude, address }: MapProps) {
 
   return (
     <div className="w-full">
-      <div id="map" className="w-full h-[400px] rounded-lg shadow-md" />
-      <div className="mt-4 text-center">
-        <p className="text-gray-600">{address}</p>
+      <div id="map" className="w-full h-[500px] rounded-lg shadow-md" />
+      <div className="mt-6">
+        <div className="text-center">
+          <p className="text-gray-600 text-sm sm:text-base">{address}</p>
+        </div>
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <a
+            href="https://map.naver.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#2DB400] text-white text-center py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+          >
+            네이버 지도
+          </a>
+          <a
+            href="https://map.kakao.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#FEE500] text-black text-center py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+          >
+            카카오 지도
+          </a>
+        </div>
       </div>
     </div>
   );

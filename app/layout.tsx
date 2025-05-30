@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { Noto_Sans, Inter } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const notoSans = Noto_Sans({
+const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-noto-sans",
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "이태호 ❤️ 박성혜 결혼식에 초대합니다",
@@ -22,11 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className={`${notoSans.variable} ${inter.variable} font-sans`}>
-        {children}
-        <SpeedInsights />
-      </body>
+    <html lang="ko" className={notoSansKr.className}>
+      <body>{children}</body>
+      <SpeedInsights />
     </html>
   );
 }
