@@ -6,7 +6,10 @@ interface MapSectionProps {
 
 export default function MapSection({ title = "LOCATION" }: MapSectionProps) {
   return (
-    <section className="w-full py-12 sm:py-16 bg-gray-50">
+    <section
+      className="w-full py-12 sm:py-16 bg-gray-50"
+      suppressHydrationWarning={true}
+    >
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-xl sm:text-2xl font-serif text-center mb-6 sm:mb-8">
           {title}

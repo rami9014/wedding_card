@@ -6,26 +6,65 @@ import Map from "@/components/Map";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import MapSection from "@/components/MapSection";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import dynamic from "next/dynamic";
+
+// dayjs 플러그인 로드
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // 갤러리 이미지 목록
 const galleryImages = [
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg", alt: "웨딩 사진 1" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg", alt: "웨딩 사진 2" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg", alt: "웨딩 사진 3" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg", alt: "웨딩 사진 4" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg", alt: "웨딩 사진 5" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg", alt: "웨딩 사진 6" },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg",
+    alt: "웨딩 사진 1",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg",
+    alt: "웨딩 사진 2",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg",
+    alt: "웨딩 사진 3",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg",
+    alt: "웨딩 사진 4",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg",
+    alt: "웨딩 사진 5",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg",
+    alt: "웨딩 사진 6",
+  },
 ];
 
 // 결혼식 날짜 설정
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
 
-export default function Home() {
+function HomeComponent() {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
   });
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
+  const [attendanceInfo, setAttendanceInfo] = useState({
+    name: "",
+    phone: "",
+    attendCount: 1,
+    willAttend: null as boolean | null,
+  });
+  const [mounted, setMounted] = useState(false);
+
+  // 클라이언트에서만 실행되도록 보장
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -54,12 +93,228 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  // 참석 여부 체크 모달 관리 - 클라이언트에서만 실행
+  useEffect(() => {
+    if (!mounted) return; // 마운트되기 전에는 실행하지 않음
+
+    const hasCheckedAttendance = localStorage.getItem("hasCheckedAttendance");
+    if (!hasCheckedAttendance) {
+      // 페이지 로드 후 1초 뒤에 모달 표시
+      setTimeout(() => {
+        setShowAttendanceModal(true);
+      }, 1000);
+    }
+  }, [mounted]);
+
+  const handleAttendanceSubmit = async (
+    submissionData?: typeof attendanceInfo
+  ) => {
+    const dataToSubmit = submissionData || attendanceInfo;
+
+    if (dataToSubmit.willAttend !== null) {
+      // Device ID 생성 (브라우저 fingerprint 기반)
+      const generateDeviceId = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx!.textBaseline = "top";
+        ctx!.font = "14px Arial";
+        ctx!.fillText("Device fingerprint", 2, 2);
+
+        const fingerprint = [
+          navigator.userAgent,
+          navigator.language,
+          screen.width + "x" + screen.height,
+          new Date().getTimezoneOffset(),
+          canvas.toDataURL(),
+        ].join("|");
+
+        // 간단한 해시 생성
+        let hash = 0;
+        for (let i = 0; i < fingerprint.length; i++) {
+          const char = fingerprint.charCodeAt(i);
+          hash = (hash << 5) - hash + char;
+          hash = hash & hash; // 32bit 정수로 변환
+        }
+        return Math.abs(hash).toString(36);
+      };
+
+      // Google Sheets에 데이터 전송
+      try {
+        const response = await fetch("/api/submit-attendance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            timestamp: dayjs().tz("Asia/Seoul").format("YYYY-MM-DD HH:mm:ss"),
+            name: dataToSubmit.name || "익명",
+            phone: dataToSubmit.phone || "",
+            willAttend: dataToSubmit.willAttend,
+            attendCount: dataToSubmit.willAttend ? dataToSubmit.attendCount : 0,
+            userAgent: navigator.userAgent,
+            deviceId: generateDeviceId(),
+          }),
+        });
+
+        if (response.ok) {
+          // 로컬 스토리지에 참석 정보 저장
+          localStorage.setItem("hasCheckedAttendance", "true");
+          localStorage.setItem("attendanceInfo", JSON.stringify(dataToSubmit));
+
+          setShowAttendanceModal(false);
+
+          // 성공 메시지 표시
+          alert(
+            dataToSubmit.willAttend
+              ? `참석 의사를 전달해주셔서 감사합니다! 💕 (${dataToSubmit.attendCount}명 참석)`
+              : "알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝"
+          );
+        } else {
+          throw new Error("서버 오류");
+        }
+      } catch (error) {
+        console.error("참석 정보 전송 실패:", error);
+        alert("참석 정보 전송에 실패했습니다. 다시 시도해주세요.");
+      }
+    } else {
+      alert("참석 여부를 선택해주세요.");
+    }
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
 
+  // 마운트되기 전에는 아무것도 렌더링하지 않음
+  if (!mounted) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-between">
+        <div className="w-full h-screen flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-500">로딩 중...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
+      {/* 참석 여부 체크 모달 - 클라이언트에서만 표시 */}
+      {mounted && showAttendanceModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full relative">
+            <button
+              onClick={() => setShowAttendanceModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <div className="text-center mb-6">
+              <h2 className="text-xl font-serif mb-2">참석 여부 체크</h2>
+              <p className="text-sm text-gray-600">이태호 💕 박성혜</p>
+              <p className="text-xs text-gray-500 mt-2">
+                2025년 07월 19일 토요일 AM 11시 30분
+              </p>
+              <p className="text-xs text-gray-500">당산 그랜드컨벤션센터</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  참석 인원
+                </label>
+                <select
+                  value={attendanceInfo.attendCount}
+                  onChange={(e) =>
+                    setAttendanceInfo((prev) => ({
+                      ...prev,
+                      attendCount: parseInt(e.target.value),
+                    }))
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                >
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}명
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mt-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  참석 여부 <span className="text-rose-500">*</span>
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    onClick={async () => {
+                      // 불참석으로 설정하고 바로 제출
+                      const updatedInfo = {
+                        ...attendanceInfo,
+                        willAttend: false,
+                      };
+                      setAttendanceInfo(updatedInfo);
+
+                      // 바로 제출 처리
+                      await handleAttendanceSubmit(updatedInfo);
+                    }}
+                    className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
+                      attendanceInfo.willAttend === false
+                        ? "bg-gray-500 text-white border-gray-500"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    불참석
+                  </button>
+                  <button
+                    onClick={async () => {
+                      // 참석으로 설정하고 바로 제출
+                      const updatedInfo = {
+                        ...attendanceInfo,
+                        willAttend: true,
+                      };
+                      setAttendanceInfo(updatedInfo);
+
+                      // 바로 제출 처리
+                      await handleAttendanceSubmit(updatedInfo);
+                    }}
+                    className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
+                      attendanceInfo.willAttend === true
+                        ? "bg-rose-500 text-white border-rose-500"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-rose-300"
+                    }`}
+                  >
+                    참석
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <p className="text-xs text-gray-500 text-center mb-4">
+                  특별한날 귀하신 그 발걸음을
+                  <br />
+                  참석 여부로 전달해 주세요.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 네비게이션 버튼 */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
         <div className="flex flex-col gap-2">
@@ -518,3 +773,7 @@ export default function Home() {
     </main>
   );
 }
+
+export default dynamic(() => Promise.resolve(HomeComponent), {
+  ssr: false,
+});

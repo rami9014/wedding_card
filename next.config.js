@@ -6,12 +6,11 @@ const path = require("path");
 // Remove this if you're not using Fullcalendar features
 
 const nextConfig = {
-  
   // sourceMap 사용안함
   productionBrowserSourceMaps: false,
   // 이미지 형식 변경
   images: {
-    domains: ['d11ay48rmhjgmh.cloudfront.net'],
+    domains: ["d11ay48rmhjgmh.cloudfront.net"],
     minimumCacheTTL: 600,
     remotePatterns: [
       {
@@ -21,11 +20,10 @@ const nextConfig = {
     ],
   },
 
-  
   // trailingSlash: true,
   reactStrictMode: false,
   webpack: (config) => {
-    config.experiments = { ...config.experiments};
+    config.experiments = { ...config.experiments };
     config.resolve.alias = {
       ...config.resolve.alias,
     };
@@ -37,6 +35,12 @@ const nextConfig = {
   },
   typescript: {
     ignoreBuildErrors: false,
+  },
+  experimental: {
+    esmExternals: false,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? true : false,
   },
 };
 

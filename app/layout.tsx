@@ -20,7 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={notoSansKr.className}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <div id="portal"></div>
+      </body>
       <SpeedInsights />
     </html>
   );

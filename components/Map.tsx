@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Script from "next/script";
+import dynamic from "next/dynamic";
 
 interface MapProps {
   latitude: number;
@@ -9,7 +10,9 @@ interface MapProps {
   address: string;
 }
 
-export default function Map({ latitude, longitude, address }: MapProps) {
+function MapComponent({ latitude, longitude, address }: MapProps) {
+  const [mapLoaded, setMapLoaded] = useState(false);
+
   useEffect(() => {
     const mapScript = document.createElement("script");
     mapScript.async = true;
@@ -19,15 +22,18 @@ export default function Map({ latitude, longitude, address }: MapProps) {
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
         const container = document.getElementById("map");
-        const options = {
-          center: new window.kakao.maps.LatLng(latitude, longitude),
-          level: 3,
-        };
-        const map = new window.kakao.maps.Map(container, options);
-        const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(latitude, longitude),
-        });
-        marker.setMap(map);
+        if (container) {
+          const options = {
+            center: new window.kakao.maps.LatLng(latitude, longitude),
+            level: 3,
+          };
+          const map = new window.kakao.maps.Map(container, options);
+          const marker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(latitude, longitude),
+          });
+          marker.setMap(map);
+          setMapLoaded(true);
+        }
       });
     };
 
@@ -37,7 +43,7 @@ export default function Map({ latitude, longitude, address }: MapProps) {
   }, [latitude, longitude]);
 
   return (
-    <div className="w-full">
+    <div className="w-full" suppressHydrationWarning={true}>
       <div id="map" className="w-full h-[500px] rounded-lg shadow-md" />
       <div className="mt-6">
         <div className="text-center">
@@ -65,3 +71,14 @@ export default function Map({ latitude, longitude, address }: MapProps) {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(MapComponent), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full">
+      <div className="w-full h-[500px] rounded-lg shadow-md bg-gray-200 flex items-center justify-center">
+        <p className="text-gray-500">지도 로딩 중...</p>
+      </div>
+    </div>
+  ),
+});

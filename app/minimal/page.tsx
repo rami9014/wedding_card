@@ -81,7 +81,7 @@ export default function MinimalLayout() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white" suppressHydrationWarning={true}>
       <div className="max-w-[800px] mx-auto shadow-xl">
         {/* 네비게이션 버튼 */}
         {mounted && (
@@ -180,7 +180,7 @@ export default function MinimalLayout() {
           <div className="absolute inset-0 flex md:flex-row flex-col">
             <div className="flex-1 relative">
               <Image
-                src="/gallery/f1.jpg"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/f1.jpg"
                 alt="메인 이미지 1"
                 fill
                 className="object-cover"
@@ -191,7 +191,7 @@ export default function MinimalLayout() {
             </div>
             <div className="flex-1 relative">
               <Image
-                src="/gallery/f.jpg"
+                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/f.jpg"
                 alt="메인 이미지 2"
                 fill
                 className="object-cover"
