@@ -23,13 +23,17 @@ export async function GET() {
     console.log("스프레드시트 메타데이터 요청 중...");
     // 먼저 스프레드시트 정보를 가져와서 첫 번째 시트 이름 확인
     const metadataResponse = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?timestamp=${Date.now()}`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}`,
       {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Cache-Control": "no-cache",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
           Pragma: "no-cache",
+          Expires: "0",
+          "If-None-Match": "*",
         },
+        cache: "no-store",
       }
     );
 
@@ -47,16 +51,20 @@ export async function GET() {
     console.log("첫 번째 시트 이름:", firstSheetName);
 
     const range = `${firstSheetName}!A2:G1000`; // 헤더 제외하고 데이터만 가져오기 (G열까지 확장)
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?timestamp=${Date.now()}&nocache=true`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`;
     console.log("데이터 요청 URL:", url);
 
     console.log("시트 데이터 요청 중...");
     const response = await fetch(url, {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "Cache-Control": "no-cache",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
         Pragma: "no-cache",
+        Expires: "0",
+        "If-None-Match": "*",
       },
+      cache: "no-store",
     });
 
     console.log("시트 데이터 응답 상태:", response.status);
