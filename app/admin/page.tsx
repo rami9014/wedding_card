@@ -32,8 +32,27 @@ export default function AdminPage() {
 
   const fetchAttendanceData = async () => {
     try {
-      const response = await fetch("/api/get-attendance");
+      console.log("API 호출 시작...");
+      const response = await fetch("/api/get-attendance", {
+        method: "GET",
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+        cache: "no-store", // Next.js fetch 캐시 비활성화
+      });
+      console.log("API 응답 상태:", response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API 응답 오류:", errorText);
+        throw new Error(`API 오류: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log("받은 데이터:", data);
+      console.log("참석자 수:", data.attendance?.length || 0);
+
       setAttendanceData(data.attendance);
 
       // 요약 정보 계산
@@ -48,6 +67,15 @@ export default function AdminPage() {
         0
       );
 
+      console.log(
+        "참석자:",
+        attendees.length,
+        "불참석자:",
+        declined.length,
+        "총 인원:",
+        totalPeople
+      );
+
       setSummary({
         totalAttendees: attendees.length,
         totalDeclined: declined.length,
@@ -55,6 +83,8 @@ export default function AdminPage() {
       });
     } catch (error) {
       console.error("데이터 로드 실패:", error);
+      // 사용자에게도 에러 표시
+      alert(`데이터 로드 실패: ${error}`);
     }
   };
 
@@ -64,6 +94,16 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold mb-8 text-center">
           결혼식 참석자 관리
         </h1>
+
+        {/* 새로고침 버튼 */}
+        <div className="text-center mb-6">
+          <button
+            onClick={fetchAttendanceData}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+          >
+            데이터 새로고침
+          </button>
+        </div>
 
         {/* 요약 카드 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

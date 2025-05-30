@@ -60,16 +60,36 @@ export async function GET() {
       deviceId: row[6] || "", // G열에서 device ID 가져오기
     }));
 
-    return NextResponse.json({
-      success: true,
-      attendance,
-      total: attendance.length,
-    });
+    // 캐시 방지 헤더와 함께 응답 반환
+    return new NextResponse(
+      JSON.stringify({
+        success: true,
+        attendance,
+        total: attendance.length,
+        timestamp: new Date().toISOString(), // 응답 시간 추가
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+          ETag: `"${Date.now()}"`, // 동적 ETag 생성
+        },
+      }
+    );
   } catch (error) {
     console.error("참석자 데이터 조회 실패:", error);
-    return NextResponse.json(
-      { error: "데이터 조회에 실패했습니다" },
-      { status: 500 }
+    return new NextResponse(
+      JSON.stringify({ error: "데이터 조회에 실패했습니다" }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
+      }
     );
   }
 }
