@@ -28,16 +28,26 @@ export default function Gallery({ images }: GalleryProps) {
 
   const handlePrevImage = useCallback(() => {
     if (selectedImage === null) return;
-    setSelectedImage((prev) =>
-      prev !== null && prev === 0 ? images.length - 1 : prev - 1
-    );
+    setSelectedImage((prev) => {
+      if (prev === null) return null;
+      return prev === 0 ? images.length - 1 : prev - 1;
+    });
   }, [selectedImage, images.length]);
+
+  // const handlePrev = useCallback(() => {
+
+  //   if (selectedImage === null) return;
+  //   setSelectedImage((prev) =>
+  //     prev !== null && prev === 0 ? images.length - 1 : prev - 1
+  //   );
+  // }, [selectedImage, images.length]);
 
   const handleNextImage = useCallback(() => {
     if (selectedImage === null) return;
-    setSelectedImage((prev) =>
-      prev !== null && prev === images.length - 1 ? 0 : prev + 1
-    );
+    setSelectedImage((prev) => {
+      if (prev === null) return null;
+      return prev === images.length - 1 ? 0 : prev + 1;
+    });
   }, [selectedImage, images.length]);
 
   const handleKeyDown = useCallback(
