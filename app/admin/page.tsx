@@ -25,9 +25,12 @@ export default function AdminPage() {
     totalDeclined: 0,
     totalPeople: 0,
   });
+  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     fetchAttendanceData();
+    fetchDebugInfo();
   }, []);
 
   const fetchAttendanceData = async () => {
@@ -88,6 +91,16 @@ export default function AdminPage() {
     }
   };
 
+  const fetchDebugInfo = async () => {
+    try {
+      const response = await fetch("/api/debug");
+      const data = await response.json();
+      setDebugInfo(data);
+    } catch (error) {
+      console.error("디버그 정보 로드 실패:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto">
@@ -99,11 +112,49 @@ export default function AdminPage() {
         <div className="text-center mb-6">
           <button
             onClick={fetchAttendanceData}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors mr-4"
           >
             데이터 새로고침
           </button>
+          <button
+            onClick={() => setShowDebug(!showDebug)}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors"
+          >
+            {showDebug ? "디버그 숨기기" : "디버그 정보"}
+          </button>
         </div>
+
+        {/* 디버그 정보 */}
+        {showDebug && debugInfo && (
+          <div className="bg-gray-100 p-4 rounded-lg mb-6">
+            <h3 className="text-lg font-semibold mb-4">디버그 정보</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <strong>환경:</strong> {debugInfo.environment}
+              </div>
+              <div>
+                <strong>시간:</strong> {debugInfo.timestamp}
+              </div>
+              <div>
+                <strong>Google Sheet ID:</strong>{" "}
+                {debugInfo.hasGoogleSheetId ? "✅ 존재" : "❌ 누락"} (
+                {debugInfo.googleSheetIdLength}자)
+              </div>
+              <div>
+                <strong>서비스 계정 이메일:</strong>{" "}
+                {debugInfo.hasServiceAccountEmail ? "✅ 존재" : "❌ 누락"} (
+                {debugInfo.serviceAccountEmailDomain})
+              </div>
+              <div>
+                <strong>Private Key:</strong>{" "}
+                {debugInfo.hasPrivateKey ? "✅ 존재" : "❌ 누락"}
+              </div>
+              <div>
+                <strong>Private Key 시작:</strong> {debugInfo.privateKeyPrefix}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 요약 카드 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
