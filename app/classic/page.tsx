@@ -12,12 +12,12 @@ interface GalleryImage {
 }
 
 const galleryImages: GalleryImage[] = [
-  { src: "/gallery/image1.jpg", alt: "웨딩 사진 1" },
-  { src: "/gallery/image2.jpg", alt: "웨딩 사진 2" },
-  { src: "/gallery/image3.jpg", alt: "웨딩 사진 3" },
-  { src: "/gallery/image4.jpg", alt: "웨딩 사진 4" },
-  { src: "/gallery/image5.jpg", alt: "웨딩 사진 5" },
-  { src: "/gallery/image6.jpg", alt: "웨딩 사진 6" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg", alt: "웨딩 사진 1" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg", alt: "웨딩 사진 2" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg", alt: "웨딩 사진 3" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg", alt: "웨딩 사진 4" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg", alt: "웨딩 사진 5" },
+  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg", alt: "웨딩 사진 6" },
 ];
 
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
@@ -129,7 +129,7 @@ export default function ClassicLayout() {
       <section className="relative min-h-screen flex items-center justify-center">
         <div className="absolute inset-0">
           <Image
-            src="/gallery/image6.jpg"
+            src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg"
             alt="메인 이미지"
             fill
             className="object-cover"
