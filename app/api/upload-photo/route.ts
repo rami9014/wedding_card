@@ -3,11 +3,8 @@ import { uploadToS3 } from "@/lib/s3";
 import { getGoogleAccessToken } from "@/lib/google-auth";
 import dayjs from "dayjs";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// Next.js App Router에서는 이 설정이 자동으로 처리됩니다
+// export const config는 더 이상 필요하지 않습니다
 
 export async function POST(request: NextRequest) {
   try {
