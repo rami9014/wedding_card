@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Map from "@/components/Map";
+import MapSection from "@/components/MapSection";
 
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
 
@@ -311,6 +312,86 @@ export default function ExclusiveLayout() {
         </div>
       </section>
 
+      <section className="w-full py-12 sm:py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-xl sm:text-2xl font-serif text-center mb-3 sm:mb-4">
+            Our Story
+          </h2>
+          <p className="text-gray-500 text-center mb-8 sm:mb-12 font-light text-sm sm:text-base">
+            태호와 성혜의 설레는 이야기
+          </p>
+          <div className="space-y-8 sm:space-y-12">
+            {/* 첫 번째 질문 */}
+            <div className="bg-neutral-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-base sm:text-lg font-medium text-rose-500 mb-4 sm:mb-6">
+                첫 만남의 설렘이 아직도 생생해요 💝
+              </p>
+              <div className="space-y-4 sm:space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {`2022년 여름, 공통 친구의 소개로 처음 만났어요.
+                    그때의 설렘이 지금도 생생합니다.`}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {`처음 본 순간부터 태호의 따뜻한 미소가 인상적이었어요.`}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 두 번째 질문 */}
+            <div className="bg-neutral-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-base sm:text-lg font-medium text-rose-500 mb-4 sm:mb-6">
+                서로가 서로에게 반한 순간들 ✨
+              </p>
+              <div className="space-y-4 sm:space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {`성혜는 늘 긍정적이고 다정한 마음을 가졌어요.
+                    힘든 순간에도 서로를 생각하며 웃을 수 있게 해주죠.`}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {`태호는 책임감이 강하고 성실해요.
+                    무엇보다 서로를 향한 믿음과 존중하는 마음이 크답니다.`}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 세 번째 질문 */}
+            <div className="bg-neutral-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-base sm:text-lg font-medium text-rose-500 mb-4 sm:mb-6">
+                우리의 특별한 순간 ❤️
+              </p>
+              <div className="space-y-4 sm:space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">태호</p>
+                  <p className="whitespace-pre-line">
+                    {`함께한 작은 순간들이 모여 큰 확신이 되었어요.
+                    성혜와 함께라면 어떤 미래도 행복할 거라 믿게 되었죠.`}
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-rose-200">
+                  <p className="text-rose-500 font-medium mb-2">성혜</p>
+                  <p className="whitespace-pre-line">
+                    {`태호와 함께 보낸 평범한 날들이 특별해지고,
+                    일상의 작은 순간들이 소중한 추억이 되어갔죠.`}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 매거진 스타일 갤러리 섹션 */}
       <section className="py-40 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -383,7 +464,7 @@ export default function ExclusiveLayout() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-16">
+            <div className="flex flex-row justify-center gap-8 sm:gap-16">
               <div className="text-center space-y-8">
                 <div>
                   <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
@@ -418,7 +499,7 @@ export default function ExclusiveLayout() {
                       아버지
                     </p>
                     <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      이름1
+                      이인수
                     </p>
                     <a
                       href="tel:010-6226-1157"
@@ -445,7 +526,7 @@ export default function ExclusiveLayout() {
                       어머니
                     </p>
                     <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      이름2
+                      신성림
                     </p>
                     <a
                       href="tel:010-7777-6402"
@@ -503,7 +584,7 @@ export default function ExclusiveLayout() {
                       아버지
                     </p>
                     <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      아무개
+                      박범수
                     </p>
                     <a
                       href="tel:010-6226-1157"
@@ -530,7 +611,7 @@ export default function ExclusiveLayout() {
                       어머니
                     </p>
                     <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      홍길동
+                      박정옥
                     </p>
                     <a
                       href="tel:010-7777-6402"
@@ -560,32 +641,7 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 지도 섹션 */}
-      <section className="py-40 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-20"
-          >
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
-                Location
-              </h2>
-              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
-                Where to Find Us
-              </p>
-            </div>
-
-            <Map
-              latitude={37.5266}
-              longitude={126.8961}
-              address="서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터"
-            />
-          </motion.div>
-        </div>
-      </section>
+      <MapSection />
 
       {/* 계좌번호 섹션 */}
       <section className="py-40 bg-neutral-50">
