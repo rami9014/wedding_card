@@ -11,6 +11,8 @@ const nextConfig = {
   // 이미지 형식 변경
   images: {
     domains: ["d11ay48rmhjgmh.cloudfront.net"],
+    // formats: ["image/webp", "image/avif"],
+    // minimumCacheTTL: 31536000, // 1년 캐시
     minimumCacheTTL: 600,
     remotePatterns: [
       {
