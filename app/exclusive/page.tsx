@@ -1,48 +1,348 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Map from "@/components/Map";
 import MapSection from "@/components/MapSection";
+import PhotoUploadButton from "../../components/PhotoUploadButton";
+import WeddingLiveButton from "../../components/WeddingLiveButton";
+import PhotoUploadModal from "../../components/PhotoUploadModal";
+import UploadedPhotosGallery from "../../components/UploadedPhotosGallery";
+import { usePhotoUpload } from "../../hooks/usePhotoUpload";
+import {
+  CloseIcon,
+  MobileIcon,
+  ArrowRightIcon,
+  PhoneIcon,
+  MessageIcon,
+  PhoneSmallIcon,
+  MessageSmallIcon,
+} from "../../components/Icons";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import ContactSection from "../../components/ContactSection";
 
-const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
+// dayjs 플러그인 로드
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// 결혼식 날짜 설정
+const WEDDING_DATE = dayjs.tz("2025-05-19 11:30", "Asia/Seoul");
+
+// 연락처 정보
+const contactData = {
+  groomFamily: {
+    title: "신랑",
+    main: { name: "이태호", phone: "010-6226-1157" },
+    father: { name: "이인수", phone: "010-6226-1157" },
+    mother: { name: "신성림", phone: "010-7777-6402" },
+  },
+  brideFamily: {
+    title: "신부",
+    main: { name: "박성혜", phone: "010-2662-5517" },
+    father: { name: "박범수", phone: "010-6226-1157" },
+    mother: { name: "박정옥", phone: "010-7777-6402" },
+  },
+};
 
 export default function ExclusiveLayout() {
-  const [timeLeft, setTimeLeft] = React.useState({
+  const [isWeddingTime, setIsWeddingTime] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
+    seconds: 0,
   });
   const [isMobileView, setIsMobileView] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
+  const [attendanceInfo, setAttendanceInfo] = useState({
+    name: "",
+    phone: "",
+    willAttend: null as boolean | null,
+  });
 
-  React.useEffect(() => {
+  const {
+    showUploadModal,
+    setShowUploadModal,
+    selectedFiles,
+    isUploading,
+    uploadedPhotos,
+    isLoadingPhotos,
+    handlePhotoUpload,
+    handleFileSelect,
+    removeFile,
+    closeModal,
+  } = usePhotoUpload(isWeddingTime);
+
+  // 클라이언트에서만 실행되도록 보장
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     const calculateTimeLeft = () => {
-      const now = new Date();
-      const difference = WEDDING_DATE.getTime() - now.getTime();
+      const now = dayjs();
+      const difference = WEDDING_DATE.diff(now, "ms");
+
+      // 결혼식 시간 체크 (7월 19일 오전 11시 30분)
+      setIsWeddingTime(now.isAfter(WEDDING_DATE));
 
       if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60)
-        );
+        const days = WEDDING_DATE.diff(now, "day");
+        const hours = WEDDING_DATE.diff(now, "hour") % 24;
+        const minutes = WEDDING_DATE.diff(now, "minute") % 60;
+        const seconds = WEDDING_DATE.diff(now, "second") % 60;
 
-        setTimeLeft({ days, hours, minutes });
+        setTimeLeft({ days, hours, minutes, seconds });
       }
     };
 
+    // 초기 계산
     calculateTimeLeft();
-    const timer = setInterval(calculateTimeLeft, 60000);
+
+    // 1초마다 업데이트
+    const timer = setInterval(calculateTimeLeft, 1000);
+
     return () => clearInterval(timer);
   }, []);
+
+  // 참석 여부 체크 모달 관리 - 결혼식 이전에만 표시
+  useEffect(() => {
+    if (!mounted) return; // 마운트되기 전에는 실행하지 않음
+
+    // 결혼식 이전에만 참석 여부 체크 모달 표시
+    if (!isWeddingTime) {
+      const hasCheckedAttendance = localStorage.getItem("hasCheckedAttendance");
+
+      // 기존 참석 정보가 있으면 불러오기
+      const savedAttendanceInfo = localStorage.getItem("attendanceInfo");
+      const savedName = localStorage.getItem("attendeeName");
+      const savedPhone = localStorage.getItem("attendeePhone");
+
+      if (savedAttendanceInfo) {
+        try {
+          const parsedInfo = JSON.parse(savedAttendanceInfo);
+          setAttendanceInfo(parsedInfo);
+        } catch (error) {
+          console.log("저장된 참석 정보 파싱 실패:", error);
+        }
+      } else if (savedName) {
+        // 이전 버전 호환성을 위해 개별 저장된 정보도 확인
+        setAttendanceInfo((prev) => ({
+          ...prev,
+          name: savedName,
+          phone: savedPhone || "",
+        }));
+      }
+
+      if (!hasCheckedAttendance) {
+        // 페이지 로드 후 1초 뒤에 모달 표시
+        setTimeout(() => {
+          setShowAttendanceModal(true);
+        }, 1000);
+      }
+    }
+  }, [mounted, isWeddingTime]);
+
+  // 결혼식 후 자동으로 업로드 모달 표시
+  useEffect(() => {
+    if (mounted && isWeddingTime) {
+      // 결혼식 이후에는 바로 업로드 모달 표시 (참석 체크 여부와 관계없이)
+      const timer = setTimeout(() => {
+        setShowUploadModal(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted, isWeddingTime, setShowUploadModal]);
+
+  const handleAttendanceSubmit = async (
+    submissionData?: typeof attendanceInfo
+  ) => {
+    const dataToSubmit = submissionData || attendanceInfo;
+
+    if (dataToSubmit.willAttend !== null) {
+      // Device ID 생성 (강화된 브라우저 fingerprint 기반)
+      const generateDeviceId = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx!.textBaseline = "top";
+        ctx!.font = "14px Arial";
+        ctx!.fillText("Device fingerprint", 2, 2);
+
+        // 추가 브라우저 정보 수집
+        const getAdditionalFingerprint = () => {
+          const additional = [];
+
+          // 플랫폼 정보
+          additional.push(navigator.platform || "unknown");
+
+          // 하드웨어 동시성 (CPU 코어 수)
+          additional.push(navigator.hardwareConcurrency || "unknown");
+
+          // 메모리 정보 (있는 경우)
+          additional.push((navigator as any).deviceMemory || "unknown");
+
+          // 색상 깊이
+          additional.push(screen.colorDepth || "unknown");
+
+          // 픽셀 비율
+          additional.push(window.devicePixelRatio || "unknown");
+
+          // 사용 가능한 화면 크기
+          additional.push(`${screen.availWidth}x${screen.availHeight}`);
+
+          // 브라우저 플러그인 수 (있는 경우)
+          additional.push(navigator.plugins?.length || "unknown");
+
+          // 터치 지원 여부
+          additional.push("ontouchstart" in window ? "touch" : "no-touch");
+
+          // WebGL 정보
+          try {
+            const gl =
+              canvas.getContext("webgl") ||
+              canvas.getContext("experimental-webgl");
+            if (gl && gl instanceof WebGLRenderingContext) {
+              const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+              if (debugInfo) {
+                additional.push(
+                  gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || "unknown"
+                );
+                additional.push(
+                  gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) ||
+                    "unknown"
+                );
+              }
+            }
+          } catch (e) {
+            additional.push("webgl-error");
+          }
+
+          return additional.join("|");
+        };
+
+        const fingerprint = [
+          navigator.userAgent,
+          navigator.language,
+          screen.width + "x" + screen.height,
+          new Date().getTimezoneOffset(),
+          canvas.toDataURL(),
+          getAdditionalFingerprint(),
+          // 세션 시작 시간도 추가 (같은 세션 내에서는 동일)
+          sessionStorage.getItem("sessionStart") || Date.now().toString(),
+        ].join("|");
+
+        // 세션 시작 시간 저장 (처음 방문시에만)
+        if (!sessionStorage.getItem("sessionStart")) {
+          sessionStorage.setItem("sessionStart", Date.now().toString());
+        }
+
+        // 간단한 해시 생성
+        let hash = 0;
+        for (let i = 0; i < fingerprint.length; i++) {
+          const char = fingerprint.charCodeAt(i);
+          hash = (hash << 5) - hash + char;
+          hash = hash & hash; // 32bit 정수로 변환
+        }
+        return Math.abs(hash).toString(36);
+      };
+
+      const currentDeviceId = generateDeviceId();
+
+      // 중복 참석 체크
+      try {
+        const checkResponse = await fetch("/api/check-duplicate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: dataToSubmit.name,
+            phone: dataToSubmit.phone,
+            deviceId: currentDeviceId,
+          }),
+        });
+
+        if (checkResponse.ok) {
+          const checkResult = await checkResponse.json();
+          if (checkResult.isDuplicate) {
+            const confirmSubmit = confirm(
+              `이미 이 기기에서 참석 의사를 등록하셨습니다.\n그래도 다시 등록하시겠습니까?`
+            );
+            if (!confirmSubmit) {
+              return;
+            }
+          }
+        }
+      } catch (error) {
+        console.log("중복 체크 실패, 계속 진행:", error);
+      }
+
+      // Google Sheets에 데이터 전송
+      try {
+        const response = await fetch("/api/submit-attendance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            timestamp: dayjs().tz("Asia/Seoul").format("YYYY-MM-DD HH:mm:ss"),
+            name: dataToSubmit.name || "익명",
+            phone: dataToSubmit.phone || "",
+            willAttend: dataToSubmit.willAttend,
+            attendCount: dataToSubmit.willAttend ? 1 : 0,
+            userAgent: navigator.userAgent,
+            deviceId: currentDeviceId,
+          }),
+        });
+
+        if (response.ok) {
+          // 로컬 스토리지에 참석 정보 저장 (이름과 전화번호 포함)
+          localStorage.setItem("hasCheckedAttendance", "true");
+          localStorage.setItem("attendanceInfo", JSON.stringify(dataToSubmit));
+          localStorage.setItem("attendeeName", dataToSubmit.name);
+          localStorage.setItem("attendeePhone", dataToSubmit.phone || "");
+
+          setShowAttendanceModal(false);
+
+          // 성공 메시지 표시
+          alert(
+            dataToSubmit.willAttend
+              ? `${dataToSubmit.name}님의 참석 의사를 전달해주셔서 감사합니다! 💕`
+              : `${dataToSubmit.name}님, 알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝`
+          );
+        } else {
+          throw new Error("서버 오류");
+        }
+      } catch (error) {
+        console.error("참석 정보 전송 실패:", error);
+        alert("참석 정보 전송에 실패했습니다. 다시 시도해주세요.");
+      }
+    } else {
+      alert("참석 여부를 선택해주세요.");
+    }
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
+
+  // 마운트되기 전에는 아무것도 렌더링하지 않음
+  if (!mounted) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center">
+        <div className="w-full h-screen flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-500">로딩 중...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main
@@ -50,6 +350,89 @@ export default function ExclusiveLayout() {
         isMobileView ? "max-w-[430px] mx-auto shadow-2xl" : ""
       }`}
     >
+      {/* 참석 여부 체크 모달 - 클라이언트에서만 표시 */}
+      {mounted && showAttendanceModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full relative">
+            <button
+              onClick={() => setShowAttendanceModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <CloseIcon className="w-6 h-6" />
+            </button>
+
+            <div className="text-center mb-6">
+              <h2 className="text-xl font-serif mb-2">참석 여부 체크</h2>
+              <p className="text-sm text-gray-600">이태호 💕 박성혜</p>
+              <p className="text-xs text-gray-500 mt-2">
+                2025년 07월 19일 토요일 AM 11시 30분
+              </p>
+              <p className="text-xs text-gray-500">당산 그랜드컨벤션센터</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="mt-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  참석 여부 <span className="text-rose-500">*</span>
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    onClick={async () => {
+                      // 불참석으로 설정하고 바로 제출
+                      const updatedInfo = {
+                        name: "익명",
+                        phone: "",
+                        willAttend: false,
+                      };
+                      setAttendanceInfo(updatedInfo);
+
+                      // 바로 제출 처리
+                      await handleAttendanceSubmit(updatedInfo);
+                    }}
+                    className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
+                      attendanceInfo.willAttend === false
+                        ? "bg-gray-500 text-white border-gray-500"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    불참석
+                  </button>
+                  <button
+                    onClick={async () => {
+                      // 참석으로 설정하고 바로 제출
+                      const updatedInfo = {
+                        name: "익명",
+                        phone: "",
+                        willAttend: true,
+                      };
+                      setAttendanceInfo(updatedInfo);
+
+                      // 바로 제출 처리
+                      await handleAttendanceSubmit(updatedInfo);
+                    }}
+                    className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
+                      attendanceInfo.willAttend === true
+                        ? "bg-rose-500 text-white border-rose-500"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-rose-300"
+                    }`}
+                  >
+                    참석
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <p className="text-xs text-gray-500 text-center mb-4">
+                  특별한날 귀하신 그 발걸음을
+                  <br />
+                  참석 여부로 전달해 주세요.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 네비게이션 버튼 */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
         <div className="flex flex-col gap-2">
@@ -93,19 +476,7 @@ export default function ExclusiveLayout() {
           onClick={() => setIsMobileView(!isMobileView)}
           className="bg-black text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-            />
-          </svg>
+          <MobileIcon className="w-5 h-5" />
           <span className="text-sm">
             {isMobileView ? "데스크톱으로 보기" : "모바일로 보기"}
           </span>
@@ -261,7 +632,7 @@ export default function ExclusiveLayout() {
                       오전 11시 30분
                     </p>
                     <p className="text-sm lg:text-base text-gray-500 tracking-[0.05em]">
-                      당산 그랜드컨벤션센터 5층
+                      당산 그랜드컨벤션센터 3층 리젠시 홀
                     </p>
                   </div>
                 </div>
@@ -278,19 +649,7 @@ export default function ExclusiveLayout() {
                   className="inline-flex items-center px-8 py-4 bg-black text-white hover:bg-gray-900 transition-colors text-sm tracking-[0.15em] uppercase"
                 >
                   <span>View Gallery</span>
-                  <svg
-                    className="w-4 h-4 ml-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
+                  <ArrowRightIcon className="w-4 h-4 ml-3" />
                 </Link>
               </motion.div>
 
@@ -311,6 +670,42 @@ export default function ExclusiveLayout() {
           </div>
         </div>
       </section>
+
+      {/* 결혼식 시간이 되었을 때 */}
+      {isWeddingTime && (
+        <div className="text-center py-12 px-4">
+          <p className="text-lg md:text-xl text-gray-700 mb-8">
+            소중한 순간을 함께 나누어 주세요
+          </p>
+
+          {/* 버튼들 */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
+            <PhotoUploadButton
+              isWeddingTime={isWeddingTime}
+              onUploadClick={() => setShowUploadModal(true)}
+            />
+            <WeddingLiveButton />
+          </div>
+        </div>
+      )}
+
+      {/* 업로드된 사진 갤러리 */}
+      <UploadedPhotosGallery
+        isWeddingTime={isWeddingTime}
+        uploadedPhotos={uploadedPhotos}
+        isLoadingPhotos={isLoadingPhotos}
+      />
+
+      {/* 사진 업로드 모달 */}
+      <PhotoUploadModal
+        showModal={showUploadModal}
+        onClose={closeModal}
+        selectedFiles={selectedFiles}
+        isUploading={isUploading}
+        onFileSelect={handleFileSelect}
+        onRemoveFile={removeFile}
+        onUpload={handlePhotoUpload}
+      />
 
       <section className="w-full py-12 sm:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4">
@@ -446,199 +841,10 @@ export default function ExclusiveLayout() {
       </section>
 
       {/* 연락처 섹션 */}
-      <section className="py-40 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-20"
-          >
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
-                Contact
-              </h2>
-              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
-                Get in Touch
-              </p>
-            </div>
-
-            <div className="flex flex-row justify-center gap-8 sm:gap-16">
-              <div className="text-center space-y-8">
-                <div>
-                  <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
-                    신랑
-                  </p>
-                  <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                    이태호
-                  </p>
-                  <a
-                    href="tel:010-6226-1157"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
-                    aria-label="신랑에게 전화하기"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
-                      아버지
-                    </p>
-                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      이인수
-                    </p>
-                    <a
-                      href="tel:010-6226-1157"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
-                      aria-label="신랑 아버지께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div>
-                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
-                      어머니
-                    </p>
-                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      신성림
-                    </p>
-                    <a
-                      href="tel:010-7777-6402"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
-                      aria-label="신랑 어머니께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="text-center space-y-8">
-                <div>
-                  <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
-                    신부
-                  </p>
-                  <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                    박성혜
-                  </p>
-                  <a
-                    href="tel:010-2662-5517"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
-                    aria-label="신부에게 전화하기"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
-                      아버지
-                    </p>
-                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      박범수
-                    </p>
-                    <a
-                      href="tel:010-6226-1157"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
-                      aria-label="신부 아버지께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div>
-                    <p className="text-gray-600 mb-1 tracking-[0.1em] uppercase text-xs">
-                      어머니
-                    </p>
-                    <p className="text-gray-800 font-medium mb-2 tracking-[0.05em]">
-                      박정옥
-                    </p>
-                    <a
-                      href="tel:010-7777-6402"
-                      className="inline-flex items-center justify-center w-9 h-9 rounded-none bg-black text-white hover:bg-gray-900 transition-colors"
-                      aria-label="신부 어머니께 전화하기"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <ContactSection
+        groomFamily={contactData.groomFamily}
+        brideFamily={contactData.brideFamily}
+      />
 
       {/* 지도 섹션 */}
       <MapSection />

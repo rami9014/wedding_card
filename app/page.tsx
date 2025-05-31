@@ -6,6 +6,11 @@ import Map from "@/components/Map";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import MapSection from "@/components/MapSection";
+import PhotoUploadButton from "@/components/PhotoUploadButton";
+import WeddingLiveButton from "@/components/WeddingLiveButton";
+import PhotoUploadModal from "@/components/PhotoUploadModal";
+import UploadedPhotosGallery from "@/components/UploadedPhotosGallery";
+import { usePhotoUpload } from "@/hooks/usePhotoUpload";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -44,7 +49,7 @@ const galleryImages = [
 ];
 
 // 결혼식 날짜 설정
-const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
+const WEDDING_DATE = dayjs.tz("2025-05-19 11:30", "Asia/Seoul");
 
 function HomeComponent() {
   const [timeLeft, setTimeLeft] = useState({
@@ -56,10 +61,24 @@ function HomeComponent() {
   const [attendanceInfo, setAttendanceInfo] = useState({
     name: "",
     phone: "",
-    attendCount: 1,
     willAttend: null as boolean | null,
   });
   const [mounted, setMounted] = useState(false);
+  const [isWeddingTime, setIsWeddingTime] = useState(false);
+
+  // 사진 업로드 관련 훅 사용
+  const {
+    showUploadModal,
+    setShowUploadModal,
+    selectedFiles,
+    isUploading,
+    uploadedPhotos,
+    isLoadingPhotos,
+    handlePhotoUpload,
+    handleFileSelect,
+    removeFile,
+    closeModal,
+  } = usePhotoUpload(isWeddingTime);
 
   // 클라이언트에서만 실행되도록 보장
   useEffect(() => {
@@ -68,17 +87,17 @@ function HomeComponent() {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const now = new Date();
-      const difference = WEDDING_DATE.getTime() - now.getTime();
+      const now = dayjs();
+      const difference = WEDDING_DATE.diff(now, "ms");
+
+      // 결혼식 시간 체크 (7월 19일 오전 11시 30분)
+      // setIsWeddingTime(now.isAfter(WEDDING_DATE));
+      setIsWeddingTime(true); // 테스트용
 
       if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60)
-        );
+        const days = WEDDING_DATE.diff(now, "day");
+        const hours = WEDDING_DATE.diff(now, "hour") % 24;
+        const minutes = WEDDING_DATE.diff(now, "minute") % 60;
 
         setTimeLeft({ days, hours, minutes });
       }
@@ -127,6 +146,19 @@ function HomeComponent() {
       }, 1000);
     }
   }, [mounted]);
+
+  // 결혼식 후 자동으로 업로드 모달 표시
+  useEffect(() => {
+    if (mounted && isWeddingTime) {
+      const hasCheckedAttendance = localStorage.getItem("hasCheckedAttendance");
+      if (hasCheckedAttendance) {
+        const timer = setTimeout(() => {
+          setShowUploadModal(true);
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [mounted, isWeddingTime]);
 
   const handleAttendanceSubmit = async (
     submissionData?: typeof attendanceInfo
@@ -263,7 +295,7 @@ function HomeComponent() {
             name: dataToSubmit.name || "익명",
             phone: dataToSubmit.phone || "",
             willAttend: dataToSubmit.willAttend,
-            attendCount: dataToSubmit.willAttend ? dataToSubmit.attendCount : 0,
+            attendCount: dataToSubmit.willAttend ? 1 : 0,
             userAgent: navigator.userAgent,
             deviceId: currentDeviceId,
           }),
@@ -281,7 +313,7 @@ function HomeComponent() {
           // 성공 메시지 표시
           alert(
             dataToSubmit.willAttend
-              ? `${dataToSubmit.name}님의 참석 의사를 전달해주셔서 감사합니다! 💕 (${dataToSubmit.attendCount}명 참석)`
+              ? `${dataToSubmit.name}님의 참석 의사를 전달해주셔서 감사합니다! 💕`
               : `${dataToSubmit.name}님, 알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝`
           );
         } else {
@@ -382,28 +414,6 @@ function HomeComponent() {
                   placeholder="010-0000-0000 (선택사항)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  참석 인원
-                </label>
-                <select
-                  value={attendanceInfo.attendCount}
-                  onChange={(e) =>
-                    setAttendanceInfo((prev) => ({
-                      ...prev,
-                      attendCount: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
-                >
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      {num}명
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <div className="mt-6">
@@ -604,7 +614,7 @@ function HomeComponent() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-6 sm:mt-8">
+          <div className="text-center mt-8 sm:mt-12 space-y-4">
             <a
               href="/gallery"
               className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-rose-500 text-white rounded-full hover:bg-rose-600 transition-colors text-sm sm:text-base"
@@ -624,6 +634,37 @@ function HomeComponent() {
                 />
               </svg>
             </a>
+
+            {/* 결혼현장 보러가기 버튼 */}
+            <a
+              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 transition-colors text-sm sm:text-base"
+            >
+              <svg
+                className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>결혼현장 보러가기</span>
+            </a>
+
+            {/* 결혼식 시간 이후 사진 업로드 버튼 */}
+            {isWeddingTime && (
+              <PhotoUploadButton
+                isWeddingTime={isWeddingTime}
+                onUploadClick={() => setShowUploadModal(true)}
+              />
+            )}
           </div>
         </div>
       </section>
@@ -719,6 +760,13 @@ function HomeComponent() {
           </div>
         </div>
       </section>
+
+      {/* 업로드된 사진 갤러리 섹션 */}
+      <UploadedPhotosGallery
+        isWeddingTime={isWeddingTime}
+        uploadedPhotos={uploadedPhotos}
+        isLoadingPhotos={isLoadingPhotos}
+      />
 
       {/* 연락처 섹션 */}
       <section className="w-full py-12 sm:py-16 bg-white">
@@ -925,6 +973,17 @@ function HomeComponent() {
           </div>
         </div>
       </section>
+
+      {/* 사진 업로드 모달 */}
+      <PhotoUploadModal
+        showModal={showUploadModal}
+        onClose={closeModal}
+        selectedFiles={selectedFiles}
+        isUploading={isUploading}
+        onFileSelect={handleFileSelect}
+        onRemoveFile={removeFile}
+        onUpload={handlePhotoUpload}
+      />
     </main>
   );
 }

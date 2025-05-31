@@ -14,10 +14,6 @@ export async function POST(request: NextRequest) {
       deviceId,
     } = body;
 
-    // 이름과 연락처가 비어있을 때 기본값 설정
-    const finalName = name?.trim() || "익명";
-    const finalPhone = phone?.trim() || "미입력";
-
     // JWT 토큰으로 Google Sheets API 인증
     const accessToken = await getGoogleAccessToken();
 
@@ -60,8 +56,8 @@ export async function POST(request: NextRequest) {
           values: [
             [
               timestamp,
-              finalName,
-              finalPhone,
+              name,
+              phone,
               willAttend ? "참석" : "불참석",
               attendCount,
               userAgent,
