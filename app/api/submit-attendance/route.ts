@@ -14,6 +14,10 @@ export async function POST(request: NextRequest) {
       deviceId,
     } = body;
 
+    // 이름과 연락처가 비어있을 때 기본값 설정
+    const finalName = name?.trim() || "익명";
+    const finalPhone = phone?.trim() || "미입력";
+
     // JWT 토큰으로 Google Sheets API 인증
     const accessToken = await getGoogleAccessToken();
 
@@ -21,9 +25,15 @@ export async function POST(request: NextRequest) {
     const metadataResponse = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}`,
       {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+          "If-None-Match": "*",
         },
+        cache: "no-store",
       }
     );
 
@@ -42,13 +52,16 @@ export async function POST(request: NextRequest) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
         },
         body: JSON.stringify({
           values: [
             [
               timestamp,
-              name,
-              phone,
+              finalName,
+              finalPhone,
               willAttend ? "참석" : "불참석",
               attendCount,
               userAgent,

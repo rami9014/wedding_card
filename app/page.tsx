@@ -98,6 +98,28 @@ function HomeComponent() {
     if (!mounted) return; // 마운트되기 전에는 실행하지 않음
 
     const hasCheckedAttendance = localStorage.getItem("hasCheckedAttendance");
+
+    // 기존 참석 정보가 있으면 불러오기
+    const savedAttendanceInfo = localStorage.getItem("attendanceInfo");
+    const savedName = localStorage.getItem("attendeeName");
+    const savedPhone = localStorage.getItem("attendeePhone");
+
+    if (savedAttendanceInfo) {
+      try {
+        const parsedInfo = JSON.parse(savedAttendanceInfo);
+        setAttendanceInfo(parsedInfo);
+      } catch (error) {
+        console.log("저장된 참석 정보 파싱 실패:", error);
+      }
+    } else if (savedName) {
+      // 이전 버전 호환성을 위해 개별 저장된 정보도 확인
+      setAttendanceInfo((prev) => ({
+        ...prev,
+        name: savedName,
+        phone: savedPhone || "",
+      }));
+    }
+
     if (!hasCheckedAttendance) {
       // 페이지 로드 후 1초 뒤에 모달 표시
       setTimeout(() => {
@@ -112,7 +134,7 @@ function HomeComponent() {
     const dataToSubmit = submissionData || attendanceInfo;
 
     if (dataToSubmit.willAttend !== null) {
-      // Device ID 생성 (브라우저 fingerprint 기반)
+      // Device ID 생성 (강화된 브라우저 fingerprint 기반)
       const generateDeviceId = () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -120,13 +142,73 @@ function HomeComponent() {
         ctx!.font = "14px Arial";
         ctx!.fillText("Device fingerprint", 2, 2);
 
+        // 추가 브라우저 정보 수집
+        const getAdditionalFingerprint = () => {
+          const additional = [];
+
+          // 플랫폼 정보
+          additional.push(navigator.platform || "unknown");
+
+          // 하드웨어 동시성 (CPU 코어 수)
+          additional.push(navigator.hardwareConcurrency || "unknown");
+
+          // 메모리 정보 (있는 경우)
+          additional.push((navigator as any).deviceMemory || "unknown");
+
+          // 색상 깊이
+          additional.push(screen.colorDepth || "unknown");
+
+          // 픽셀 비율
+          additional.push(window.devicePixelRatio || "unknown");
+
+          // 사용 가능한 화면 크기
+          additional.push(`${screen.availWidth}x${screen.availHeight}`);
+
+          // 브라우저 플러그인 수 (있는 경우)
+          additional.push(navigator.plugins?.length || "unknown");
+
+          // 터치 지원 여부
+          additional.push("ontouchstart" in window ? "touch" : "no-touch");
+
+          // WebGL 정보
+          try {
+            const gl =
+              canvas.getContext("webgl") ||
+              canvas.getContext("experimental-webgl");
+            if (gl && gl instanceof WebGLRenderingContext) {
+              const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+              if (debugInfo) {
+                additional.push(
+                  gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || "unknown"
+                );
+                additional.push(
+                  gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) ||
+                    "unknown"
+                );
+              }
+            }
+          } catch (e) {
+            additional.push("webgl-error");
+          }
+
+          return additional.join("|");
+        };
+
         const fingerprint = [
           navigator.userAgent,
           navigator.language,
           screen.width + "x" + screen.height,
           new Date().getTimezoneOffset(),
           canvas.toDataURL(),
+          getAdditionalFingerprint(),
+          // 세션 시작 시간도 추가 (같은 세션 내에서는 동일)
+          sessionStorage.getItem("sessionStart") || Date.now().toString(),
         ].join("|");
+
+        // 세션 시작 시간 저장 (처음 방문시에만)
+        if (!sessionStorage.getItem("sessionStart")) {
+          sessionStorage.setItem("sessionStart", Date.now().toString());
+        }
 
         // 간단한 해시 생성
         let hash = 0;
@@ -137,6 +219,37 @@ function HomeComponent() {
         }
         return Math.abs(hash).toString(36);
       };
+
+      const currentDeviceId = generateDeviceId();
+
+      // 중복 참석 체크
+      try {
+        const checkResponse = await fetch("/api/check-duplicate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: dataToSubmit.name,
+            phone: dataToSubmit.phone,
+            deviceId: currentDeviceId,
+          }),
+        });
+
+        if (checkResponse.ok) {
+          const checkResult = await checkResponse.json();
+          if (checkResult.isDuplicate) {
+            const confirmSubmit = confirm(
+              `이미 이 기기에서 참석 의사를 등록하셨습니다.\n그래도 다시 등록하시겠습니까?`
+            );
+            if (!confirmSubmit) {
+              return;
+            }
+          }
+        }
+      } catch (error) {
+        console.log("중복 체크 실패, 계속 진행:", error);
+      }
 
       // Google Sheets에 데이터 전송
       try {
@@ -152,22 +265,24 @@ function HomeComponent() {
             willAttend: dataToSubmit.willAttend,
             attendCount: dataToSubmit.willAttend ? dataToSubmit.attendCount : 0,
             userAgent: navigator.userAgent,
-            deviceId: generateDeviceId(),
+            deviceId: currentDeviceId,
           }),
         });
 
         if (response.ok) {
-          // 로컬 스토리지에 참석 정보 저장
+          // 로컬 스토리지에 참석 정보 저장 (이름과 전화번호 포함)
           localStorage.setItem("hasCheckedAttendance", "true");
           localStorage.setItem("attendanceInfo", JSON.stringify(dataToSubmit));
+          localStorage.setItem("attendeeName", dataToSubmit.name);
+          localStorage.setItem("attendeePhone", dataToSubmit.phone || "");
 
           setShowAttendanceModal(false);
 
           // 성공 메시지 표시
           alert(
             dataToSubmit.willAttend
-              ? `참석 의사를 전달해주셔서 감사합니다! 💕 (${dataToSubmit.attendCount}명 참석)`
-              : "알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝"
+              ? `${dataToSubmit.name}님의 참석 의사를 전달해주셔서 감사합니다! 💕 (${dataToSubmit.attendCount}명 참석)`
+              : `${dataToSubmit.name}님, 알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝`
           );
         } else {
           throw new Error("서버 오류");
@@ -233,6 +348,42 @@ function HomeComponent() {
             </div>
 
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  이름 (선택사항)
+                </label>
+                <input
+                  type="text"
+                  value={attendanceInfo.name}
+                  onChange={(e) =>
+                    setAttendanceInfo((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
+                  placeholder="성함을 입력해주세요 (선택사항)"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  연락처 (선택사항)
+                </label>
+                <input
+                  type="tel"
+                  value={attendanceInfo.phone}
+                  onChange={(e) =>
+                    setAttendanceInfo((prev) => ({
+                      ...prev,
+                      phone: e.target.value,
+                    }))
+                  }
+                  placeholder="010-0000-0000 (선택사항)"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   참석 인원
@@ -308,6 +459,10 @@ function HomeComponent() {
                   특별한날 귀하신 그 발걸음을
                   <br />
                   참석 여부로 전달해 주세요.
+                  <br />
+                  <span className="text-gray-400 mt-2 block">
+                    익명으로도 참석 의사를 전달하실 수 있습니다.
+                  </span>
                 </p>
               </div>
             </div>
