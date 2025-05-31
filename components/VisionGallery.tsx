@@ -122,7 +122,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
             {yearThumbnails.map((item) => (
               <div
                 key={item.year}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-104 transition-transform duration-300"
+                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => setSelectedYear(item.year)}
               >
                 {item.thumbnail && (
@@ -146,7 +146,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
             {yearThumbnails.map((item) => (
               <div
                 key={item.year}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-104 transition-transform duration-300"
+                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => setSelectedYear(item.year)}
               >
                 {item.thumbnail && (
@@ -174,7 +174,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
             {seasonThumbnails.map((item) => (
               <div
                 key={item.id}
-                className="relative rounded-lg overflow-hidden cursor-pointer group hover:scale-104 transition-transform duration-300"
+                className="relative rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => setSelectedSeason(item.id)}
               >
                 {item.thumbnail && (
@@ -198,7 +198,7 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
             {seasonThumbnails.map((item) => (
               <div
                 key={item.id}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-104 transition-transform duration-300"
+                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => setSelectedSeason(item.id)}
               >
                 {item.thumbnail && (
