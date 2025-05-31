@@ -30,7 +30,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 // 결혼식 날짜 설정
-const WEDDING_DATE = dayjs.tz("2025-05-19 11:30", "Asia/Seoul");
+const WEDDING_DATE = dayjs.tz("2025-07-19 11:30", "Asia/Seoul");
 
 // 연락처 정보
 const contactData = {
