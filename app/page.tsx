@@ -7,7 +7,6 @@ import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import MapSection from "@/components/MapSection";
 import PhotoUploadButton from "@/components/PhotoUploadButton";
-import WeddingLiveButton from "@/components/WeddingLiveButton";
 import PhotoUploadModal from "@/components/PhotoUploadModal";
 import UploadedPhotosGallery from "@/components/UploadedPhotosGallery";
 import { usePhotoUpload } from "@/hooks/usePhotoUpload";
