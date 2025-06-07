@@ -66,7 +66,7 @@ function MapComponent({ latitude, longitude, address }: MapProps) {
       if (container) {
         const options = {
           center: new window.kakao.maps.LatLng(latitude, longitude),
-          level: 3,
+          level: 2,
         };
         const map = new window.kakao.maps.Map(container, options);
         const marker = new window.kakao.maps.Marker({
@@ -107,7 +107,7 @@ function MapComponent({ latitude, longitude, address }: MapProps) {
               <p className="text-gray-600 text-sm leading-relaxed">{address}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
               <a
                 href={`https://map.naver.com/v5/search/${encodeURIComponent(
                   address
@@ -141,6 +141,23 @@ function MapComponent({ latitude, longitude, address }: MapProps) {
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                 </svg>
                 카카오 지도
+              </a>
+              <a
+                href={`tmap://route?goalx=${longitude}&goaly=${latitude}&goalname=${encodeURIComponent(
+                  address
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-[#FF6B35] text-white py-3 px-4 rounded-lg hover:bg-opacity-90 transition-colors font-medium"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                </svg>
+                티맵
               </a>
             </div>
 
@@ -183,7 +200,7 @@ function MapComponent({ latitude, longitude, address }: MapProps) {
         <div className="text-center">
           <p className="text-gray-600 text-sm sm:text-base">{address}</p>
         </div>
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <a
             href={`https://map.naver.com/v5/search/${encodeURIComponent(
               address
@@ -203,6 +220,16 @@ function MapComponent({ latitude, longitude, address }: MapProps) {
             className="inline-block bg-[#FEE500] text-black text-center py-3 rounded-lg hover:bg-opacity-90 transition-colors"
           >
             카카오 지도에서 보기
+          </a>
+          <a
+            href={`tmap://route?goalx=${longitude}&goaly=${latitude}&goalname=${encodeURIComponent(
+              address
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#FF6B35] text-white text-center py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+          >
+            티맵에서 보기
           </a>
         </div>
       </div>

@@ -21,15 +21,9 @@ export async function POST(request: NextRequest) {
     const metadataResponse = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}`,
       {
-        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
-          Expires: "0",
-          "If-None-Match": "*",
         },
-        cache: "no-store",
       }
     );
 
@@ -48,9 +42,6 @@ export async function POST(request: NextRequest) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
-          Expires: "0",
         },
         body: JSON.stringify({
           values: [

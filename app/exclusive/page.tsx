@@ -24,6 +24,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import ContactSection from "../../components/ContactSection";
+import { ToastProvider, useToast } from "@/components/Toast";
 
 // dayjs 플러그인 로드
 dayjs.extend(utc);
@@ -48,7 +49,7 @@ const contactData = {
   },
 };
 
-export default function ExclusiveLayout() {
+function ExclusiveComponent() {
   const [isWeddingTime, setIsWeddingTime] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -77,6 +78,8 @@ export default function ExclusiveLayout() {
     removeFile,
     closeModal,
   } = usePhotoUpload(isWeddingTime);
+
+  const { showToast, showConfirm } = useToast();
 
   // 클라이언트에서만 실행되도록 보장
   useEffect(() => {
@@ -270,15 +273,28 @@ export default function ExclusiveLayout() {
         if (checkResponse.ok) {
           const checkResult = await checkResponse.json();
           if (checkResult.isDuplicate) {
-            const confirmSubmit = confirm(
-              `이미 이 기기에서 참석 의사를 등록하셨습니다.\n그래도 다시 등록하시겠습니까?`
-            );
-            if (!confirmSubmit) {
-              return;
-            }
+            await new Promise<void>((resolve, reject) => {
+              showConfirm(
+                `앗, 이미 소중한 마음을 전해주셨네요! 💝\n혹시 내용을 수정하고 싶으시다면 다시 등록하실 수 있어요.`,
+                () => {
+                  resolve();
+                },
+                () => {
+                  // 취소시 모달 닫기
+                  setShowAttendanceModal(false);
+                  reject(new Error("사용자가 취소했습니다"));
+                }
+              );
+            });
           }
         }
       } catch (error) {
+        if (
+          error instanceof Error &&
+          error.message === "사용자가 취소했습니다"
+        ) {
+          return; // 사용자가 취소한 경우 함수 종료
+        }
         console.log("중복 체크 실패, 계속 진행:", error);
       }
 
@@ -310,20 +326,21 @@ export default function ExclusiveLayout() {
           setShowAttendanceModal(false);
 
           // 성공 메시지 표시
-          alert(
+          showToast(
             dataToSubmit.willAttend
               ? `${dataToSubmit.name}님의 참석 의사를 전달해주셔서 감사합니다! 💕`
-              : `${dataToSubmit.name}님, 알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝`
+              : `${dataToSubmit.name}님, 알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝`,
+            "success"
           );
         } else {
           throw new Error("서버 오류");
         }
       } catch (error) {
         console.error("참석 정보 전송 실패:", error);
-        alert("참석 정보 전송에 실패했습니다. 다시 시도해주세요.");
+        showToast("참석 정보 전송에 실패했습니다. 다시 시도해주세요.", "error");
       }
     } else {
-      alert("참석 여부를 선택해주세요.");
+      showToast("참석 여부를 선택해주세요.", "error");
     }
   };
 
@@ -910,5 +927,13 @@ export default function ExclusiveLayout() {
         </div>
       </footer>
     </main>
+  );
+}
+
+export default function ExclusiveLayout() {
+  return (
+    <ToastProvider>
+      <ExclusiveComponent />
+    </ToastProvider>
   );
 }

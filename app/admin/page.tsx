@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { ToastProvider, useToast } from "@/components/Toast";
 
 // dayjs 플러그인 로드
 dayjs.extend(utc);
@@ -18,7 +19,8 @@ interface AttendanceData {
   deviceId: string;
 }
 
-export default function AdminPage() {
+function AdminComponent() {
+  const { showToast } = useToast();
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
   const [summary, setSummary] = useState({
     totalAttendees: 0,
@@ -87,7 +89,7 @@ export default function AdminPage() {
     } catch (error) {
       console.error("데이터 로드 실패:", error);
       // 사용자에게도 에러 표시
-      alert(`데이터 로드 실패: ${error}`);
+      showToast(`데이터 로드 실패: ${error}`, "error");
     }
   };
 
@@ -242,5 +244,13 @@ export default function AdminPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <ToastProvider>
+      <AdminComponent />
+    </ToastProvider>
   );
 }

@@ -15,8 +15,8 @@ export default function MapSection({ title = "LOCATION" }: MapSectionProps) {
           {title}
         </h2>
         <Map
-          latitude={37.5266}
-          longitude={126.8961}
+          latitude={37.5347454}
+          longitude={126.9006169}
           address="서울특별시 영등포구 양평로 58, 당산 그랜드컨벤션센터"
         />
       </div>

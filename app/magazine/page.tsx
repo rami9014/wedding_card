@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import MapSection from "@/components/MapSection";
+import { ToastProvider, useToast } from "@/components/Toast";
 
 interface GalleryImage {
   src: string;
@@ -12,12 +13,30 @@ interface GalleryImage {
 }
 
 const galleryImages: GalleryImage[] = [
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg", alt: "웨딩 사진 1" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg", alt: "웨딩 사진 2" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg", alt: "웨딩 사진 3" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg", alt: "웨딩 사진 4" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg", alt: "웨딩 사진 5" },
-  { src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg", alt: "웨딩 사진 6" },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg",
+    alt: "웨딩 사진 1",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg",
+    alt: "웨딩 사진 2",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg",
+    alt: "웨딩 사진 3",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg",
+    alt: "웨딩 사진 4",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg",
+    alt: "웨딩 사진 5",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg",
+    alt: "웨딩 사진 6",
+  },
 ];
 
 const WEDDING_DATE = new Date("2025-07-19T11:30:00+09:00");
@@ -66,7 +85,8 @@ const accounts = [
   },
 ];
 
-export default function MagazineLayout() {
+function MagazineComponent() {
+  const { showToast } = useToast();
   const [timeLeft, setTimeLeft] = React.useState({
     days: 0,
     hours: 0,
@@ -419,7 +439,7 @@ export default function MagazineLayout() {
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(account.number);
-                      alert("계좌번호가 복사되었습니다.");
+                      showToast("계좌번호가 복사되었습니다.", "success");
                     }}
                     className="text-sm text-gray-500 hover:text-gray-700"
                   >
@@ -432,5 +452,13 @@ export default function MagazineLayout() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function MagazineLayout() {
+  return (
+    <ToastProvider>
+      <MagazineComponent />
+    </ToastProvider>
   );
 }
