@@ -58,6 +58,7 @@ function ExclusiveComponent() {
     seconds: 0,
   });
   const [isMobileView, setIsMobileView] = React.useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [attendanceInfo, setAttendanceInfo] = useState({
@@ -84,6 +85,21 @@ function ExclusiveComponent() {
   // 클라이언트에서만 실행되도록 보장
   useEffect(() => {
     setMounted(true);
+
+    // 모바일 감지 함수
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg 브레이크포인트 (1024px)
+    };
+
+    // 초기 체크
+    checkMobile();
+
+    // 윈도우 리사이즈 이벤트 리스너
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
   }, []);
 
   useEffect(() => {
@@ -814,18 +830,33 @@ function ExclusiveComponent() {
             viewport={{ once: true }}
             className="space-y-20"
           >
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
-                Our Story
-              </h2>
-              <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
-                The Journey of Love
-              </p>
+            <div className="text-center space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
+                  Our Story
+                </h2>
+                <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
+                  The Journey of Love
+                </p>
+              </div>
+
+              {/* 갤러리 이동 버튼 */}
+              <div className="flex justify-center">
+                <Link
+                  href="/gallery"
+                  className="inline-flex items-center px-6 py-3 bg-rose-500 text-white hover:bg-rose-600 transition-colors rounded-full text-sm tracking-[0.1em] shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  <span>전체 갤러리 보기</span>
+                  <ArrowRightIcon className="w-4 h-4 ml-2" />
+                </Link>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              <div className="lg:col-span-8">
-                <div className="aspect-[16/9] relative rounded-none overflow-hidden">
+            {/* 조건부 렌더링 - 모바일과 데스크톱 구분 */}
+            {isMobile ? (
+              // 모바일 - 2열 그리드로 모든 사진 표시
+              <div className="grid grid-cols-2 gap-4">
+                <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
                     src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg"
                     alt="웨딩 스토리 1"
@@ -833,8 +864,6 @@ function ExclusiveComponent() {
                     className="object-cover"
                   />
                 </div>
-              </div>
-              <div className="lg:col-span-4 space-y-8">
                 <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
                     src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg"
@@ -851,6 +880,234 @@ function ExclusiveComponent() {
                     className="object-cover"
                   />
                 </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image12.jpg"
+                    alt="웨딩 스토리 4"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image13.jpg"
+                    alt="웨딩 스토리 5"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image14.jpg"
+                    alt="웨딩 스토리 6"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image15.jpg"
+                    alt="웨딩 스토리 7"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image16.jpg"
+                    alt="웨딩 스토리 8"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image17.jpg"
+                    alt="웨딩 스토리 9"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image18.jpg"
+                    alt="웨딩 스토리 10"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image19.jpg"
+                    alt="웨딩 스토리 11"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image20.jpg"
+                    alt="웨딩 스토리 12"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="aspect-square relative rounded-none overflow-hidden col-span-2">
+                  <Image
+                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg"
+                    alt="웨딩 스토리 13"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            ) : (
+              // 데스크톱 - 매거진 스타일 레이아웃
+              <>
+                {/* 첫 번째 행 */}
+                <div className="grid grid-cols-12 gap-4 mb-4">
+                  <div className="col-span-8">
+                    <div className="aspect-[16/9] relative rounded-none overflow-hidden">
+                      <Image
+                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg"
+                        alt="웨딩 스토리 1"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-span-4 space-y-4">
+                    <div className="aspect-square relative rounded-none overflow-hidden">
+                      <Image
+                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg"
+                        alt="웨딩 스토리 2"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="aspect-square relative rounded-none overflow-hidden">
+                      <Image
+                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image11.jpg"
+                        alt="웨딩 스토리 3"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 두 번째 행 */}
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="aspect-[3/4] relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image12.jpg"
+                      alt="웨딩 스토리 4"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-[3/4] relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image13.jpg"
+                      alt="웨딩 스토리 5"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-[3/4] relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image14.jpg"
+                      alt="웨딩 스토리 6"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* 세 번째 행 */}
+                <div className="grid grid-cols-12 gap-4 mb-4">
+                  <div className="col-span-4 space-y-4">
+                    <div className="aspect-square relative rounded-none overflow-hidden">
+                      <Image
+                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image15.jpg"
+                        alt="웨딩 스토리 7"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="aspect-square relative rounded-none overflow-hidden">
+                      <Image
+                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image16.jpg"
+                        alt="웨딩 스토리 8"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-span-8">
+                    <div className="aspect-square relative rounded-none overflow-hidden">
+                      <Image
+                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image17.jpg"
+                        alt="웨딩 스토리 9"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 네 번째 행 */}
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image18.jpg"
+                      alt="웨딩 스토리 10"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image19.jpg"
+                      alt="웨딩 스토리 11"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image20.jpg"
+                      alt="웨딩 스토리 12"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg"
+                      alt="웨딩 스토리 13"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="text-center mt-12">
+              <div className="space-y-4">
+                <p className="text-gray-600 text-sm">
+                  더 많은 아름다운 순간들을 만나보세요
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                  <Link
+                    href="/gallery"
+                    className="inline-flex items-center px-6 py-3 bg-rose-500 text-white hover:bg-rose-600 transition-colors rounded-full text-sm tracking-[0.1em] shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <span>전체 갤러리 보기</span>
+                    <ArrowRightIcon className="w-4 h-4 ml-3" />
+                  </Link>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -858,10 +1115,12 @@ function ExclusiveComponent() {
       </section>
 
       {/* 연락처 섹션 */}
-      <ContactSection
-        groomFamily={contactData.groomFamily}
-        brideFamily={contactData.brideFamily}
-      />
+      <div id="contact-section">
+        <ContactSection
+          groomFamily={contactData.groomFamily}
+          brideFamily={contactData.brideFamily}
+        />
+      </div>
 
       {/* 지도 섹션 */}
       <MapSection />
