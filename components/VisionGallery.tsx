@@ -88,33 +88,53 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
       </div>
 
       {/* 이미지 Swiper */}
-      {(selectedView === "all" || (selectedYear && selectedSeason)) && (
-        <Swiper
-          direction="vertical"
-          slidesPerView={1}
-          spaceBetween={0}
-          mousewheel
-          className="h-screen pt-16"
-        >
-          {filteredImages.map((img, i) => (
-            <SwiperSlide
-              key={i}
-              className="flex items-center justify-center h-screen"
-            >
-              <div className="relative w-full h-full">
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-contain h-full w-auto mx-auto"
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      {selectedView === "all" && (
+        <>
+          {/* 뒤로가기 버튼 - 이미지 뷰에서 */}
+          {(selectedYear || selectedSeason) && (
+            <div className="absolute top-20 left-4 z-10">
+              <button
+                onClick={() => {
+                  if (selectedSeason) {
+                    setSelectedSeason(null);
+                  } else if (selectedYear) {
+                    setSelectedYear(null);
+                  }
+                }}
+                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-sm transition-colors"
+              >
+                ← 뒤로가기
+              </button>
+            </div>
+          )}
+
+          <Swiper
+            direction="vertical"
+            slidesPerView={1}
+            spaceBetween={0}
+            mousewheel
+            className="h-screen pt-16"
+          >
+            {filteredImages.map((img, i) => (
+              <SwiperSlide
+                key={i}
+                className="flex items-center justify-center h-screen"
+              >
+                <div className="relative w-full h-full">
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-contain h-full w-auto mx-auto"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </>
       )}
 
-      {/* 연도/계절 썸네일 */}
+      {/* 연도 썸네일 */}
       {selectedView === "years" && !selectedYear && (
         <div className="h-screen pt-16 pb-20">
           {/* 세로가 긴 화면: 세로 3등분 (1열 3행) */}
@@ -123,7 +143,10 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
               <div
                 key={item.year}
                 className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
-                onClick={() => setSelectedYear(item.year)}
+                onClick={() => {
+                  setSelectedYear(item.year);
+                  setSelectedView("all");
+                }}
               >
                 {item.thumbnail && (
                   <Image
@@ -147,7 +170,10 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
               <div
                 key={item.year}
                 className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
-                onClick={() => setSelectedYear(item.year)}
+                onClick={() => {
+                  setSelectedYear(item.year);
+                  setSelectedView("all");
+                }}
               >
                 {item.thumbnail && (
                   <Image
@@ -167,6 +193,97 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
         </div>
       )}
 
+      {/* 연도 선택 후 계절 선택 */}
+      {selectedView === "years" && selectedYear && !selectedSeason && (
+        <div className="h-screen pt-16 pb-20">
+          {/* 뒤로가기 버튼 */}
+          <div className="absolute top-20 left-4 z-10">
+            <button
+              onClick={() => setSelectedYear(null)}
+              className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-sm transition-colors"
+            >
+              ← {selectedYear}년 뒤로
+            </button>
+          </div>
+
+          {/* 해당 연도의 계절별 썸네일 */}
+          <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden pt-16">
+            {seasons.map((season) => {
+              const seasonImage = filteredImages.find(
+                (img) => img.season === season.id
+              );
+              return (
+                <div
+                  key={season.id}
+                  className={`relative rounded-lg overflow-hidden transition-transform duration-300 ${
+                    seasonImage
+                      ? "cursor-pointer group hover:scale-105"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
+                  onClick={() => seasonImage && setSelectedSeason(season.id)}
+                >
+                  {seasonImage && (
+                    <Image
+                      src={seasonImage.src}
+                      alt={`${selectedYear}년 ${season.name}`}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {season.name}
+                  </div>
+                  {!seasonImage && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+                      <span className="text-gray-400 text-sm">이미지 없음</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="h-full w-full landscape:flex landscape:gap-3 landscape:px-3 portrait:hidden pt-16">
+            {seasons.map((season) => {
+              const seasonImage = filteredImages.find(
+                (img) => img.season === season.id
+              );
+              return (
+                <div
+                  key={season.id}
+                  className={`relative flex-1 rounded-lg overflow-hidden transition-transform duration-300 ${
+                    seasonImage
+                      ? "cursor-pointer group hover:scale-105"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
+                  onClick={() => seasonImage && setSelectedSeason(season.id)}
+                >
+                  {seasonImage && (
+                    <Image
+                      src={seasonImage.src}
+                      alt={`${selectedYear}년 ${season.name}`}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {season.name}
+                  </div>
+                  {!seasonImage && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+                      <span className="text-gray-400 text-sm">이미지 없음</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 계절 썸네일 */}
       {selectedView === "seasons" && !selectedSeason && (
         <div className="h-screen pt-16 pb-20">
           {/* 세로가 긴 화면: 2x2 그리드 */}
@@ -175,7 +292,10 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
               <div
                 key={item.id}
                 className="relative rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
-                onClick={() => setSelectedSeason(item.id)}
+                onClick={() => {
+                  setSelectedSeason(item.id);
+                  setSelectedView("all");
+                }}
               >
                 {item.thumbnail && (
                   <Image
@@ -199,7 +319,10 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
               <div
                 key={item.id}
                 className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
-                onClick={() => setSelectedSeason(item.id)}
+                onClick={() => {
+                  setSelectedSeason(item.id);
+                  setSelectedView("all");
+                }}
               >
                 {item.thumbnail && (
                   <Image

@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import Map from "@/components/Map";
 import MapSection from "@/components/MapSection";
 import PhotoUploadButton from "../../components/PhotoUploadButton";
-import WeddingLiveButton from "../../components/WeddingLiveButton";
 import PhotoUploadModal from "../../components/PhotoUploadModal";
 import UploadedPhotosGallery from "../../components/UploadedPhotosGallery";
 import { usePhotoUpload } from "../../hooks/usePhotoUpload";
@@ -30,8 +29,9 @@ import { ToastProvider, useToast } from "@/components/Toast";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-// 결혼식 날짜 설정
-const WEDDING_DATE = dayjs.tz("2025-07-19 11:30", "Asia/Seoul");
+// 결혼식 날짜 옵션
+const WEDDING_DATE_BEFORE = dayjs.tz("2025-07-19 11:30", "Asia/Seoul");
+const WEDDING_DATE_AFTER = dayjs.tz("2025-05-19 11:30", "Asia/Seoul");
 
 // 연락처 정보
 const contactData = {
@@ -50,6 +50,7 @@ const contactData = {
 };
 
 function ExclusiveComponent() {
+  const [weddingDate, setWeddingDate] = useState(WEDDING_DATE_AFTER); // 기본값은 이후 날짜
   const [isWeddingTime, setIsWeddingTime] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -59,7 +60,7 @@ function ExclusiveComponent() {
   });
   const [isMobileView, setIsMobileView] = React.useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(true);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [attendanceInfo, setAttendanceInfo] = useState({
     name: "",
@@ -84,8 +85,6 @@ function ExclusiveComponent() {
 
   // 클라이언트에서만 실행되도록 보장
   useEffect(() => {
-    setMounted(true);
-
     // 모바일 감지 함수
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024); // lg 브레이크포인트 (1024px)
@@ -105,16 +104,16 @@ function ExclusiveComponent() {
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = dayjs();
-      const difference = WEDDING_DATE.diff(now, "ms");
+      const difference = weddingDate.diff(now, "ms");
 
-      // 결혼식 시간 체크 (7월 19일 오전 11시 30분)
-      setIsWeddingTime(now.isAfter(WEDDING_DATE));
+      // 결혼식 시간 체크
+      setIsWeddingTime(now.isAfter(weddingDate));
 
       if (difference > 0) {
-        const days = WEDDING_DATE.diff(now, "day");
-        const hours = WEDDING_DATE.diff(now, "hour") % 24;
-        const minutes = WEDDING_DATE.diff(now, "minute") % 60;
-        const seconds = WEDDING_DATE.diff(now, "second") % 60;
+        const days = weddingDate.diff(now, "day");
+        const hours = weddingDate.diff(now, "hour") % 24;
+        const minutes = weddingDate.diff(now, "minute") % 60;
+        const seconds = weddingDate.diff(now, "second") % 60;
 
         setTimeLeft({ days, hours, minutes, seconds });
       }
@@ -127,7 +126,7 @@ function ExclusiveComponent() {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [weddingDate]);
 
   // 참석 여부 체크 모달 관리 - 결혼식 이전에만 표시
   useEffect(() => {
@@ -364,19 +363,6 @@ function ExclusiveComponent() {
     navigator.clipboard.writeText(text);
   };
 
-  // 마운트되기 전에는 아무것도 렌더링하지 않음
-  if (!mounted) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="w-full h-screen flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-gray-500">로딩 중...</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main
       className={`min-h-screen bg-white ${
@@ -468,6 +454,30 @@ function ExclusiveComponent() {
 
       {/* 네비게이션 버튼 */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
+        {/* 날짜 변경 버튼들 */}
+        <div className="flex flex-col gap-2 mb-4">
+          <button
+            onClick={() => setWeddingDate(WEDDING_DATE_BEFORE)}
+            className={`px-4 py-2 rounded-full shadow-lg transition-colors flex items-center gap-2 backdrop-blur-sm text-sm ${
+              weddingDate.isSame(WEDDING_DATE_BEFORE)
+                ? "bg-rose-500 text-white"
+                : "bg-white/80 text-black hover:bg-white/90"
+            }`}
+          >
+            <span>결혼식 이전</span>
+          </button>
+          <button
+            onClick={() => setWeddingDate(WEDDING_DATE_AFTER)}
+            className={`px-4 py-2 rounded-full shadow-lg transition-colors flex items-center gap-2 backdrop-blur-sm text-sm ${
+              weddingDate.isSame(WEDDING_DATE_AFTER)
+                ? "bg-rose-500 text-white"
+                : "bg-white/80 text-black hover:bg-white/90"
+            }`}
+          >
+            <span>결혼식 이후</span>
+          </button>
+        </div>
+
         <div className="flex flex-col gap-2">
           <Link
             href="/"
@@ -717,7 +727,6 @@ function ExclusiveComponent() {
               isWeddingTime={isWeddingTime}
               onUploadClick={() => setShowUploadModal(true)}
             />
-            <WeddingLiveButton />
           </div>
         </div>
       )}
