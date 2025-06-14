@@ -4,7 +4,9 @@ import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Zoom } from "swiper/modules";
 import "swiper/css";
+import "swiper/css/zoom";
 import SwipeVerticalIcon from "@mui/icons-material/SwipeVertical";
 interface GalleryImage {
   src: string;
@@ -217,6 +219,12 @@ export default function VisionGallery({
                 slidesPerView={1}
                 spaceBetween={0}
                 mousewheel
+                zoom={{
+                  maxRatio: 10,
+                  minRatio: 1,
+                  toggle: true,
+                }}
+                modules={[Zoom]}
                 className={isMobileChrome ? "h-full -mt-8 md:mt-0" : "h-full"}
                 style={
                   isMobileChrome
@@ -238,7 +246,7 @@ export default function VisionGallery({
                     key={i}
                     className="flex items-center justify-center h-full"
                   >
-                    <div className="relative w-full h-full">
+                    <div className="swiper-zoom-container relative w-full h-full">
                       <Image
                         src={img.src}
                         alt={img.alt}

@@ -2,6 +2,10 @@
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Zoom } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/zoom";
 
 interface Photo {
   id: string;
@@ -24,78 +28,23 @@ export default function UploadedPhotosGallery({
   isLoadingPhotos,
 }: UploadedPhotosGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const touchStartY = useRef<number>(0);
-  const touchEndY = useRef<number>(0);
-
-  const handlePrevImage = useCallback(() => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) => {
-      if (prev === null) return null;
-      return prev === 0 ? uploadedPhotos.length - 1 : prev - 1;
-    });
-  }, [selectedIndex, uploadedPhotos.length]);
-
-  const handleNextImage = useCallback(() => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) => {
-      if (prev === null) return null;
-      return prev === uploadedPhotos.length - 1 ? 0 : prev + 1;
-    });
-  }, [selectedIndex, uploadedPhotos.length]);
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (selectedIndex === null) return;
-      if (event.key === "ArrowUp") {
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
         event.preventDefault();
-        handlePrevImage();
+        swiperInstance?.slidePrev();
       }
-      if (event.key === "ArrowDown") {
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
         event.preventDefault();
-        handleNextImage();
+        swiperInstance?.slideNext();
       }
-      if (event.key === "ArrowLeft") handlePrevImage();
-      if (event.key === "ArrowRight") handleNextImage();
       if (event.key === "Escape") setSelectedIndex(null);
     },
-    [selectedIndex, handlePrevImage, handleNextImage]
+    [selectedIndex, swiperInstance]
   );
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-    touchEndY.current = e.touches[0].clientY; // 초기값 설정
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndY.current = e.touches[0].clientY;
-
-    // 스와이프 중일 때만 스크롤 방지
-    const touchDiff = Math.abs(touchStartY.current - touchEndY.current);
-    if (touchDiff > 10) {
-      // 10px 이상 움직였을 때만 스크롤 방지
-      e.preventDefault();
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchDiff = touchStartY.current - touchEndY.current;
-    const minSwipeDistance = 80; // 최소 스와이프 거리를 더 크게 설정
-
-    if (Math.abs(touchDiff) > minSwipeDistance) {
-      e.preventDefault(); // 스와이프로 인정될 때만 기본 동작 방지
-      if (touchDiff > 0) {
-        // 위로 스와이프 - 다음 사진
-        handleNextImage();
-      } else {
-        // 아래로 스와이프 - 이전 사진
-        handlePrevImage();
-      }
-    }
-
-    // 터치 값 초기화
-    touchStartY.current = 0;
-    touchEndY.current = 0;
-  };
 
   // 모달이 열릴 때 body 스크롤 방지
   useEffect(() => {
@@ -208,84 +157,158 @@ export default function UploadedPhotosGallery({
 
       {/* 모달 뷰어 */}
       {selectedIndex !== null && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center"
-          onClick={() => setSelectedIndex(null)}
-        >
-          <div
-            className="relative w-full h-full md:w-4/5 md:h-4/5"
-            onClick={(e) => e.stopPropagation()}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* 이전 버튼 */}
-            <button
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors md:block hidden"
-              onClick={handlePrevImage}
-            >
-              ‹
-            </button>
+        <div className="fixed inset-0 bg-black z-50">
+          {/* 헤더 */}
+          <div className="fixed top-0 left-0 right-0 z-20">
+            <div className="flex items-center justify-between px-4 py-2">
+              {/* 현재 위치 표시 */}
+              <div className="text-white text-sm">
+                {selectedIndex + 1} / {uploadedPhotos.length}
+              </div>
 
-            {/* 다음 버튼 */}
-            <button
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors md:block hidden"
-              onClick={handleNextImage}
-            >
-              ›
-            </button>
+              {/* 닫기 버튼 */}
+              <button
+                onClick={() => setSelectedIndex(null)}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
+              >
+                <span className="text-white text-lg">×</span>
+              </button>
+            </div>
+          </div>
 
-            {/* 위로 스와이프 안내 (모바일) */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white text-sm z-10 md:hidden flex items-center gap-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span>위아래로 스와이프</span>
+          {/* 위아래로 스와이프 안내 */}
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 text-white text-sm z-10 md:hidden flex items-center gap-2">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>위아래로 스와이프</span>
+          </div>
+
+          <div className="flex h-screen">
+            {/* 메인 이미지 영역 */}
+            <div className="flex-1 w-full">
+              <Swiper
+                direction="vertical"
+                slidesPerView={1}
+                spaceBetween={0}
+                mousewheel
+                zoom={{
+                  maxRatio: 3,
+                  minRatio: 1,
+                  toggle: true,
+                }}
+                modules={[Zoom]}
+                className="h-full"
+                style={{ height: "100dvh" }}
+                initialSlide={selectedIndex}
+                onSlideChange={(swiper) => {
+                  setSelectedIndex(swiper.activeIndex);
+                }}
+                onSwiper={setSwiperInstance}
+              >
+                {uploadedPhotos.map((photo, index) => (
+                  <SwiperSlide
+                    key={photo.id}
+                    className="flex items-center justify-center h-full"
+                  >
+                    <div className="swiper-zoom-container relative w-full h-full">
+                      {photo.fileType.startsWith("image/") ? (
+                        <Image
+                          src={photo.url}
+                          alt={photo.fileName}
+                          fill
+                          className="object-contain h-full w-auto mx-auto"
+                          priority={index === selectedIndex}
+                          sizes="100vw"
+                        />
+                      ) : photo.fileType.startsWith("video/") ? (
+                        <video
+                          src={photo.url}
+                          className="w-full h-full object-contain"
+                          controls
+                          autoPlay={index === selectedIndex}
+                          playsInline
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-white text-lg">
+                            미리보기 불가
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
 
-            {/* 닫기 버튼 */}
-            <button
-              className="absolute top-4 right-4 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
-              onClick={() => setSelectedIndex(null)}
-            >
-              ×
-            </button>
-
-            {/* 현재 위치 표시 */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm z-10">
-              {selectedIndex + 1} / {uploadedPhotos.length}
-            </div>
-
-            {/* 미디어 콘텐츠 */}
-            <div className="relative w-full h-full">
-              {uploadedPhotos[selectedIndex].fileType.startsWith("image/") ? (
-                <Image
-                  src={uploadedPhotos[selectedIndex].url}
-                  alt={uploadedPhotos[selectedIndex].fileName}
-                  fill
-                  className="object-contain"
-                  sizes="100vw"
-                  priority
-                />
-              ) : uploadedPhotos[selectedIndex].fileType.startsWith(
-                  "video/"
-                ) ? (
-                <video
-                  src={uploadedPhotos[selectedIndex].url}
-                  className="w-full h-full object-contain"
-                  controls
-                  autoPlay
-                  playsInline
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-white text-lg">미리보기 불가</span>
+            {/* 하단 썸네일 영역 */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 z-10 mt-1">
+              <div
+                className="p-2 h-full overflow-x-auto"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                <style jsx>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                <div className="flex gap-2 h-full">
+                  {uploadedPhotos.map((photo, index) => (
+                    <div
+                      key={photo.id}
+                      className={`relative aspect-square h-full flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                        selectedIndex === index
+                          ? "ring-2 ring-white shadow-lg transform scale-105"
+                          : "ring-1 ring-white/20 hover:ring-white/40"
+                      }`}
+                      onClick={() => swiperInstance?.slideTo(index)}
+                    >
+                      {photo.fileType.startsWith("image/") ? (
+                        <Image
+                          src={photo.url}
+                          alt={photo.fileName}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : photo.fileType.startsWith("video/") ? (
+                        <div className="relative w-full h-full">
+                          <video
+                            src={photo.url}
+                            className="w-full h-full object-cover"
+                            muted
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                            <div className="w-6 h-6 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                              <svg
+                                className="w-3 h-3 text-gray-700 ml-0.5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M6.5 5.5v9l7-4.5-7-4.5z" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full bg-gray-600 flex items-center justify-center">
+                          <span className="text-gray-300 text-xs">
+                            미리보기 불가
+                          </span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
+                      {selectedIndex === index && (
+                        <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
