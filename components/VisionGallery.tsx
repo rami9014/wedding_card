@@ -104,39 +104,67 @@ export default function VisionGallery({
   return (
     <div className="w-full h-screen bg-black text-white relative">
       {/* 헤더 */}
-      <div className="fixed top-0 left-0 right-0 z-20 bg-black/50 backdrop-blur-md">
-        <div className="flex justify-between items-center px-4 py-2">
-          <div className="text-sm font-light tracking-wider">GALLERY</div>
-          <button
-            onClick={() => router.back()}
-            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
-          >
-            <span className="text-lg">×</span>
-          </button>
+      <div className="fixed top-0 left-0 right-0 z-20">
+        <div className="flex items-center px-4 py-2 relative">
+          {/* 뒤로가기 버튼 */}
+          {selectedYear || selectedSeason ? (
+            <button
+              onClick={() => {
+                if (selectedSeason) {
+                  setSelectedSeason(null);
+                } else if (selectedYear) {
+                  setSelectedYear(null);
+                }
+              }}
+              className="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-full text-sm transition-colors"
+            >
+              ←
+            </button>
+          ) : (
+            <div className="px-3 py-1.5 text-sm opacity-0 pointer-events-none">
+              ←
+            </div>
+          )}
+
+          <div className="bg-[#4A4A4A] bg-opacity-80 backdrop-blur-md rounded-full px-3 py-1.5 flex gap-1 absolute left-1/2 transform -translate-x-1/2">
+            {[
+              { label: "All", key: "all" },
+              { label: "연도", key: "years" },
+              { label: "계절", key: "seasons" },
+            ].map((btn) => (
+              <button
+                key={btn.key}
+                onClick={() => {
+                  setSelectedView(btn.key as any);
+                  setSelectedYear(null);
+                  setSelectedSeason(null);
+                  setCurrentSlideIndex(0);
+                  swiperInstance?.slideTo(0);
+                }}
+                className={`px-3 py-1 rounded-full text-xs transition-colors ${
+                  selectedView === btn.key
+                    ? "bg-white text-black"
+                    : "text-white hover:bg-white/10"
+                }`}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-4">
+            <button
+              onClick={() => router.back()}
+              className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
+            >
+              <span className="text-lg">×</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* 이미지 Swiper */}
       {selectedView === "all" && (
         <>
-          {/* 뒤로가기 버튼 - 이미지 뷰에서 */}
-          {(selectedYear || selectedSeason) && (
-            <div className="absolute top-20 left-4 z-10">
-              <button
-                onClick={() => {
-                  if (selectedSeason) {
-                    setSelectedSeason(null);
-                  } else if (selectedYear) {
-                    setSelectedYear(null);
-                  }
-                }}
-                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-sm transition-colors"
-              >
-                ← 뒤로가기
-              </button>
-            </div>
-          )}
-
           {/* 스와이프 가이드 */}
           {showSwipeGuide && (
             <div className="absolute inset-0 z-30 flex flex-col items-center justify-center pointer-events-none">
@@ -168,7 +196,9 @@ export default function VisionGallery({
                 slidesPerView={1}
                 spaceBetween={0}
                 mousewheel
-                className="h-full portrait:-mt-8"
+                // className="h-full portrait:-mt-24"
+                // className="h-full portrait:-mt-4"
+                className="h-full mt-2 md:mt-0"
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
@@ -233,7 +263,7 @@ export default function VisionGallery({
             </div>
 
             {/* 하단 썸네일 영역 - 세로 화면용 */}
-            <div className="portrait:block landscape:hidden portrait:fixed portrait:bottom-20 portrait:left-0 portrait:right-0 portrait:bg-black/50 portrait:backdrop-blur-md portrait:border-t portrait:border-white/10 portrait:h-20 z-10">
+            <div className="portrait:block landscape:hidden portrait:fixed portrait:bottom-2 portrait:left-0 portrait:right-0 portrait:h-20 z-10">
               <div
                 className="p-2 h-full overflow-x-auto"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -470,35 +500,6 @@ export default function VisionGallery({
           </div>
         </div>
       )}
-
-      {/* 필터 메뉴 */}
-      <div className="fixed bottom-6 left-0 right-0 px-4 z-30">
-        <div className="bg-[#4A4A4A] bg-opacity-80 backdrop-blur-md rounded-full px-4 py-2.5 flex gap-2 max-w-sm mx-auto">
-          {[
-            { label: "All", key: "all" },
-            { label: "연도", key: "years" },
-            { label: "계절", key: "seasons" },
-          ].map((btn) => (
-            <button
-              key={btn.key}
-              onClick={() => {
-                setSelectedView(btn.key as any);
-                setSelectedYear(null);
-                setSelectedSeason(null);
-                setCurrentSlideIndex(0);
-                swiperInstance?.slideTo(0);
-              }}
-              className={`flex-1 px-3 py-1.5 rounded-full text-xs transition-colors ${
-                selectedView === btn.key
-                  ? "bg-white text-black"
-                  : "text-white hover:bg-white/10"
-              }`}
-            >
-              {btn.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
