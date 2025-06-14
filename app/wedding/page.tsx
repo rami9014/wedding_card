@@ -24,6 +24,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import ContactSection from "../../components/ContactSection";
 import { ToastProvider, useToast } from "@/components/Toast";
+import { mainImages } from "@/components/Images";
 
 // dayjs 플러그인 로드
 dayjs.extend(utc);
@@ -67,6 +68,21 @@ function ExclusiveComponent() {
     phone: "",
     willAttend: null as boolean | null,
   });
+  const [randomImages, setRandomImages] = useState<string[]>([]);
+
+  // mainImages를 직접 사용 (랜덤하게 셔플)
+  const galleryImageUrls = mainImages.map((img) => img.src);
+
+  // 랜덤 이미지 선택 함수
+  const getRandomImages = () => {
+    const shuffled = [...galleryImageUrls].sort(() => 0.5 - Math.random());
+    return shuffled;
+  };
+
+  // 컴포넌트 마운트 시 랜덤 이미지 설정 (접속할 때마다 랜덤하게)
+  useEffect(() => {
+    setRandomImages(getRandomImages()); // mainImages 전체를 랜덤하게 셔플
+  }, []);
 
   const {
     showUploadModal,
@@ -478,7 +494,7 @@ function ExclusiveComponent() {
           </button>
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <Link
             href="/"
             className="bg-white/80 text-black px-4 py-2 rounded-full shadow-lg hover:bg-white/90 transition-colors flex items-center gap-2 backdrop-blur-sm"
@@ -523,7 +539,7 @@ function ExclusiveComponent() {
           <span className="text-sm">
             {isMobileView ? "데스크톱으로 보기" : "모바일로 보기"}
           </span>
-        </button>
+        </button> */}
       </div>
 
       {/* 헤더 섹션 */}
@@ -555,12 +571,14 @@ function ExclusiveComponent() {
               transition={{ duration: 0.6 }}
               className="aspect-[3/4] relative rounded-none overflow-hidden"
             >
-              <Image
-                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg"
-                alt="웨딩 사진 1"
-                fill
-                className="object-cover"
-              />
+              {randomImages[0] && (
+                <Image
+                  src={`${randomImages[0]}`}
+                  alt="웨딩 사진 1"
+                  fill
+                  className="object-cover"
+                />
+              )}
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -568,12 +586,14 @@ function ExclusiveComponent() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="aspect-square relative rounded-none overflow-hidden"
             >
-              <Image
-                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg"
-                alt="웨딩 사진 2"
-                fill
-                className="object-cover"
-              />
+              {randomImages[1] && (
+                <Image
+                  src={`${randomImages[1]}`}
+                  alt="웨딩 사진 2"
+                  fill
+                  className="object-cover"
+                />
+              )}
             </motion.div>
             <div className="py-8 border-t border-b border-gray-200">
               <div className="text-2xl font-light tracking-[0.15em] text-rose-500 mb-4">
@@ -600,12 +620,14 @@ function ExclusiveComponent() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="aspect-[3/4] relative rounded-none overflow-hidden hidden lg:block"
             >
-              <Image
-                src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image8.jpg"
-                alt="웨딩 사진 8"
-                fill
-                className="object-cover"
-              />
+              {randomImages[6] && (
+                <Image
+                  src={randomImages[6]}
+                  alt="웨딩 사진 6"
+                  fill
+                  className="object-cover"
+                />
+              )}
             </motion.div>
           </div>
 
@@ -618,30 +640,36 @@ function ExclusiveComponent() {
               className="lg:sticky lg:top-32 space-y-12"
             >
               <div className="aspect-[3/4] relative rounded-none overflow-hidden">
-                <Image
-                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg"
-                  alt="메인 웨딩 사진"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+                {randomImages[2] && (
+                  <Image
+                    src={`https://d11ay48rmhjgmh.cloudfront.net/wedding/32.jpg`}
+                    alt="메인 웨딩 사진"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                )}
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg"
-                    alt="웨딩 사진 6"
-                    fill
-                    className="object-cover"
-                  />
+                  {randomImages[3] && (
+                    <Image
+                      src={randomImages[3]}
+                      alt="웨딩 사진 3"
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image7.jpg"
-                    alt="웨딩 사진 7"
-                    fill
-                    className="object-cover"
-                  />
+                  {randomImages[4] && (
+                    <Image
+                      src={randomImages[4]}
+                      alt="웨딩 사진 4"
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -702,12 +730,14 @@ function ExclusiveComponent() {
                 transition={{ duration: 0.6, delay: 0.6 }}
                 className="aspect-[3/4] relative rounded-none overflow-hidden hidden lg:block"
               >
-                <Image
-                  src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image8.jpg"
-                  alt="웨딩 사진 8"
-                  fill
-                  className="object-cover"
-                />
+                {randomImages[5] && (
+                  <Image
+                    src={randomImages[5]}
+                    alt="웨딩 사진 5"
+                    fill
+                    className="object-cover"
+                  />
+                )}
               </motion.div>
             </div>
           </div>
@@ -718,7 +748,16 @@ function ExclusiveComponent() {
       {isWeddingTime && (
         <div className="text-center py-12 px-4">
           <p className="text-lg md:text-xl text-gray-700 mb-8">
-            소중한 순간을 함께 나누어 주세요
+            이런 순간들을 담아주세요!
+          </p>
+          <p className="text-lg md:text-xl text-gray-700 mb-8">
+            1. 행복한 신랑&신부 사진
+          </p>
+          <p className="text-lg md:text-xl text-gray-700 mb-8">
+            2. 신랑&신부 행진
+          </p>
+          <p className="text-lg md:text-xl text-gray-700 mb-8">
+            3. 가족&친구들과 함께한 순간
           </p>
 
           {/* 버튼들 */}
@@ -863,111 +902,124 @@ function ExclusiveComponent() {
 
             {/* 조건부 렌더링 - 모바일과 데스크톱 구분 */}
             {isMobile ? (
-              // 모바일 - 2열 그리드로 모든 사진 표시
-              <div className="grid grid-cols-2 gap-4">
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg"
-                    alt="웨딩 스토리 1"
-                    fill
-                    className="object-cover"
-                  />
+              // 모바일 - 다양한 크기의 매거진 스타일 그리드
+              <div className="space-y-4">
+                {/* 첫 번째 섹션: 큰 이미지 + 작은 이미지들 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2 aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[7]}
+                      alt="웨딩 스토리 1"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[8]}
+                      alt="웨딩 스토리 2"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[9]}
+                      alt="웨딩 스토리 3"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg"
-                    alt="웨딩 스토리 2"
-                    fill
-                    className="object-cover"
-                  />
+
+                {/* 두 번째 섹션: 2개 큰 이미지 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[10]}
+                      alt="웨딩 스토리 4"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[11]}
+                      alt="웨딩 스토리 5"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
+
+                {/* 세 번째 섹션: 가로 긴 이미지 */}
+                <div className="aspect-[16/9] relative rounded-none overflow-hidden">
                   <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image11.jpg"
-                    alt="웨딩 스토리 3"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image12.jpg"
-                    alt="웨딩 스토리 4"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image13.jpg"
-                    alt="웨딩 스토리 5"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image14.jpg"
+                    src={randomImages[12]}
                     alt="웨딩 스토리 6"
                     fill
                     className="object-cover"
                   />
                 </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image15.jpg"
-                    alt="웨딩 스토리 7"
-                    fill
-                    className="object-cover"
-                  />
+
+                {/* 네 번째 섹션: 2개 정사각형 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[13]}
+                      alt="웨딩 스토리 7"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[14]}
+                      alt="웨딩 스토리 8"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
+
+                {/* 다섯 번째 섹션: 큰 정사각형 */}
                 <div className="aspect-square relative rounded-none overflow-hidden">
                   <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image16.jpg"
-                    alt="웨딩 스토리 8"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image17.jpg"
+                    src={randomImages[15]}
                     alt="웨딩 스토리 9"
                     fill
                     className="object-cover"
                   />
                 </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
+
+                {/* 여섯 번째 섹션: 가로 긴 이미지 */}
+                <div className="aspect-[16/9] relative rounded-none overflow-hidden">
                   <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image18.jpg"
+                    src={randomImages[16]}
                     alt="웨딩 스토리 10"
                     fill
                     className="object-cover"
                   />
                 </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image19.jpg"
-                    alt="웨딩 스토리 11"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="aspect-square relative rounded-none overflow-hidden">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image20.jpg"
-                    alt="웨딩 스토리 12"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="aspect-square relative rounded-none overflow-hidden col-span-2">
-                  <Image
-                    src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg"
-                    alt="웨딩 스토리 13"
-                    fill
-                    className="object-cover"
-                  />
+
+                {/* 일곱 번째 섹션: 2개 정사각형 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[17]}
+                      alt="웨딩 스토리 11"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="aspect-square relative rounded-none overflow-hidden">
+                    <Image
+                      src={randomImages[18]}
+                      alt="웨딩 스토리 12"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </div>
             ) : (
@@ -978,7 +1030,7 @@ function ExclusiveComponent() {
                   <div className="col-span-8">
                     <div className="aspect-[16/9] relative rounded-none overflow-hidden">
                       <Image
-                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg"
+                        src={randomImages[7]}
                         alt="웨딩 스토리 1"
                         fill
                         className="object-cover"
@@ -988,7 +1040,7 @@ function ExclusiveComponent() {
                   <div className="col-span-4 space-y-4">
                     <div className="aspect-square relative rounded-none overflow-hidden">
                       <Image
-                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg"
+                        src={randomImages[8]}
                         alt="웨딩 스토리 2"
                         fill
                         className="object-cover"
@@ -996,7 +1048,7 @@ function ExclusiveComponent() {
                     </div>
                     <div className="aspect-square relative rounded-none overflow-hidden">
                       <Image
-                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image11.jpg"
+                        src={randomImages[9]}
                         alt="웨딩 스토리 3"
                         fill
                         className="object-cover"
@@ -1009,7 +1061,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="aspect-[3/4] relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image12.jpg"
+                      src={randomImages[10]}
                       alt="웨딩 스토리 4"
                       fill
                       className="object-cover"
@@ -1017,7 +1069,7 @@ function ExclusiveComponent() {
                   </div>
                   <div className="aspect-[3/4] relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image13.jpg"
+                      src={randomImages[11]}
                       alt="웨딩 스토리 5"
                       fill
                       className="object-cover"
@@ -1025,7 +1077,7 @@ function ExclusiveComponent() {
                   </div>
                   <div className="aspect-[3/4] relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image14.jpg"
+                      src={randomImages[12]}
                       alt="웨딩 스토리 6"
                       fill
                       className="object-cover"
@@ -1038,7 +1090,7 @@ function ExclusiveComponent() {
                   <div className="col-span-4 space-y-4">
                     <div className="aspect-square relative rounded-none overflow-hidden">
                       <Image
-                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image15.jpg"
+                        src={randomImages[13]}
                         alt="웨딩 스토리 7"
                         fill
                         className="object-cover"
@@ -1046,7 +1098,7 @@ function ExclusiveComponent() {
                     </div>
                     <div className="aspect-square relative rounded-none overflow-hidden">
                       <Image
-                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image16.jpg"
+                        src={randomImages[14]}
                         alt="웨딩 스토리 8"
                         fill
                         className="object-cover"
@@ -1056,7 +1108,7 @@ function ExclusiveComponent() {
                   <div className="col-span-8">
                     <div className="aspect-square relative rounded-none overflow-hidden">
                       <Image
-                        src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image17.jpg"
+                        src={randomImages[15]}
                         alt="웨딩 스토리 9"
                         fill
                         className="object-cover"
@@ -1069,7 +1121,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-4 gap-4">
                   <div className="aspect-square relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image18.jpg"
+                      src={randomImages[16]}
                       alt="웨딩 스토리 10"
                       fill
                       className="object-cover"
@@ -1077,7 +1129,7 @@ function ExclusiveComponent() {
                   </div>
                   <div className="aspect-square relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image19.jpg"
+                      src={randomImages[17]}
                       alt="웨딩 스토리 11"
                       fill
                       className="object-cover"
@@ -1085,7 +1137,7 @@ function ExclusiveComponent() {
                   </div>
                   <div className="aspect-square relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image20.jpg"
+                      src={randomImages[18]}
                       alt="웨딩 스토리 12"
                       fill
                       className="object-cover"
@@ -1093,7 +1145,7 @@ function ExclusiveComponent() {
                   </div>
                   <div className="aspect-square relative rounded-none overflow-hidden">
                     <Image
-                      src="https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg"
+                      src={randomImages[19]}
                       alt="웨딩 스토리 13"
                       fill
                       className="object-cover"

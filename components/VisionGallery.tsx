@@ -40,6 +40,9 @@ export default function VisionGallery({
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const [isMobileChrome, setIsMobileChrome] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   // 브라우저 감지 및 스크롤 초기화
   useEffect(() => {
@@ -213,7 +216,7 @@ export default function VisionGallery({
 
           <div className="flex h-screen">
             {/* 메인 이미지 영역 */}
-            <div className="flex-1 portrait:w-full landscape:w-4/5">
+            <div className="flex-1 w-full">
               <Swiper
                 direction="vertical"
                 slidesPerView={1}
@@ -259,50 +262,29 @@ export default function VisionGallery({
               </Swiper>
             </div>
 
-            {/* 썸네일 영역 - 세로 화면: 하단, 가로 화면: 우측 */}
-            <div className="portrait:hidden landscape:block landscape:w-1/5 landscape:bg-black/50 landscape:backdrop-blur-md landscape:border-l landscape:border-white/10 z-10">
+            {/* 하단 썸네일 영역 - 모든 화면용 */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 z-10 mt-1">
               <div
-                className="p-2 h-full overflow-y-auto"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-              >
-                <style jsx>{`
-                  div::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
-                <div className="flex flex-col gap-2">
-                  {filteredImages.map((img, index) => (
-                    <div
-                      key={index}
-                      className={`relative aspect-square rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
-                        currentSlideIndex === index
-                          ? "ring-2 ring-white shadow-lg transform scale-105"
-                          : "ring-1 ring-white/20 hover:ring-white/40"
-                      }`}
-                      onClick={() => swiperInstance?.slideTo(index)}
-                    >
-                      <Image
-                        src={img.src}
-                        alt={img.alt}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
-                      {currentSlideIndex === index && (
-                        <div className="absolute top-1 right-1 w-3 h-3 bg-white rounded-full"></div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* 하단 썸네일 영역 - 세로 화면용 */}
-            {/* <div className="portrait:block landscape:hidden portrait:fixed portrait:bottom-2 portrait:left-0 portrait:right-0 portrait:h-20 z-10"> */}
-            <div className="portrait:block landscape:hidden portrait:absolute portrait:bottom-0 portrait:left-0 portrait:right-0 portrait:h-20 z-10 mt-1">
-              <div
-                className="p-2 h-full overflow-x-auto"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                className="p-2 h-full overflow-x-auto cursor-grab select-none"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  cursor: isDragging ? "grabbing" : "grab",
+                }}
+                onMouseDown={(e) => {
+                  setIsDragging(true);
+                  setStartX(e.pageX - e.currentTarget.offsetLeft);
+                  setScrollLeft(e.currentTarget.scrollLeft);
+                }}
+                onMouseMove={(e) => {
+                  if (!isDragging) return;
+                  e.preventDefault();
+                  const x = e.pageX - e.currentTarget.offsetLeft;
+                  const walk = (x - startX) * 2;
+                  e.currentTarget.scrollLeft = scrollLeft - walk;
+                }}
+                onMouseUp={() => setIsDragging(false)}
+                onMouseLeave={() => setIsDragging(false)}
               >
                 <style jsx>{`
                   div::-webkit-scrollbar {

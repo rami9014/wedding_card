@@ -1,0 +1,511 @@
+export const mainImages = [
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/1.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/2.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/3.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/4.JPG",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/5.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/6.JPG",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/7.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/8.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/9.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/10.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/11.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/12.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/13.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/14.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/15.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/16.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/17.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/18.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/19.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/20.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/21.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/22.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/23.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/24.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/25.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/26.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/27.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/28.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/29.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/30.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/31.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/32.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg",
+  },
+  {
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image24.jpg",
+  },
+];
+
+export const galleryImages = [
+  // 2023년
+  // 봄 (3월~5월)
+  {
+    id: "2023-spring-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg",
+    alt: "웨딩 사진 1",
+    year: 2023,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2023-spring-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg",
+    alt: "웨딩 사진 2",
+    year: 2023,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2023-spring-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg",
+    alt: "웨딩 사진 3",
+    year: 2023,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2023-spring-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg",
+    alt: "웨딩 사진 4",
+    year: 2023,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  // 여름 (6월~8월)
+  {
+    id: "2023-summer-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg",
+    alt: "웨딩 사진 5",
+    year: 2023,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2023-summer-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg",
+    alt: "웨딩 사진 6",
+    year: 2023,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2023-summer-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image7.jpg",
+    alt: "웨딩 사진 7",
+    year: 2023,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2023-summer-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image8.jpg",
+    alt: "웨딩 사진 8",
+    year: 2023,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  // 가을 (9월~11월)
+  {
+    id: "2023-autumn-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg",
+    alt: "웨딩 사진 9",
+    year: 2023,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2023-autumn-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg",
+    alt: "웨딩 사진 10",
+    year: 2023,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2023-autumn-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image11.jpg",
+    alt: "웨딩 사진 11",
+    year: 2023,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2023-autumn-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image12.jpg",
+    alt: "웨딩 사진 12",
+    year: 2023,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  // 겨울 (12월~2월)
+  {
+    id: "2023-winter-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image13.jpg",
+    alt: "웨딩 사진 13",
+    year: 2023,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2023-winter-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image14.jpg",
+    alt: "웨딩 사진 14",
+    year: 2023,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2023-winter-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image15.jpg",
+    alt: "웨딩 사진 15",
+    year: 2023,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2023-winter-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image16.jpg",
+    alt: "웨딩 사진 16",
+    year: 2023,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+
+  // 2024년
+  // 봄 (3월~5월)
+  {
+    id: "2024-spring-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image17.jpg",
+    alt: "웨딩 사진 17",
+    year: 2024,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2024-spring-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image18.jpg",
+    alt: "웨딩 사진 18",
+    year: 2024,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2024-spring-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image19.jpg",
+    alt: "웨딩 사진 19",
+    year: 2024,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2024-spring-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image20.jpg",
+    alt: "웨딩 사진 20",
+    year: 2024,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  // 여름 (6월~8월)
+  {
+    id: "2024-summer-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image21.jpg",
+    alt: "웨딩 사진 21",
+    year: 2024,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2024-summer-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image22.jpg",
+    alt: "웨딩 사진 22",
+    year: 2024,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2024-summer-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image23.jpg",
+    alt: "웨딩 사진 23",
+    year: 2024,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2024-summer-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image24.jpg",
+    alt: "웨딩 사진 24",
+    year: 2024,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  // 2024년 가을 (9월~11월)
+  {
+    id: "2024-autumn-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image1.jpg",
+    alt: "웨딩 사진 25",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2024-autumn-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image2.jpg",
+    alt: "웨딩 사진 26",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2024-autumn-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image3.jpg",
+    alt: "웨딩 사진 27",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2024-autumn-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image4.jpg",
+    alt: "웨딩 사진 28",
+    year: 2024,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  // 2024년 겨울 (12월~2월)
+  {
+    id: "2024-winter-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image5.jpg",
+    alt: "웨딩 사진 29",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2024-winter-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image6.jpg",
+    alt: "웨딩 사진 30",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2024-winter-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image7.jpg",
+    alt: "웨딩 사진 31",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2024-winter-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image8.jpg",
+    alt: "웨딩 사진 32",
+    year: 2024,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+
+  // 2025년
+  // 봄 (3월~5월)
+  {
+    id: "2025-spring-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image9.jpg",
+    alt: "웨딩 사진 33",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2025-spring-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image10.jpg",
+    alt: "웨딩 사진 34",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2025-spring-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image11.jpg",
+    alt: "웨딩 사진 35",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  {
+    id: "2025-spring-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image12.jpg",
+    alt: "웨딩 사진 36",
+    year: 2025,
+    season: "spring",
+    seasonKr: "봄",
+  },
+  // 여름 (6월~8월)
+  {
+    id: "2025-summer-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image13.jpg",
+    alt: "웨딩 사진 37",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2025-summer-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image14.jpg",
+    alt: "웨딩 사진 38",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2025-summer-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image15.jpg",
+    alt: "웨딩 사진 39",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  {
+    id: "2025-summer-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image16.jpg",
+    alt: "웨딩 사진 40",
+    year: 2025,
+    season: "summer",
+    seasonKr: "여름",
+  },
+  // 가을 (9월~11월)
+  {
+    id: "2025-autumn-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image17.jpg",
+    alt: "웨딩 사진 41",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2025-autumn-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image18.jpg",
+    alt: "웨딩 사진 42",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2025-autumn-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image19.jpg",
+    alt: "웨딩 사진 43",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  {
+    id: "2025-autumn-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image20.jpg",
+    alt: "웨딩 사진 44",
+    year: 2025,
+    season: "autumn",
+    seasonKr: "가을",
+  },
+  // 겨울 (12월~2월)
+  {
+    id: "2025-winter-1",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image21.jpg",
+    alt: "웨딩 사진 45",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2025-winter-2",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image22.jpg",
+    alt: "웨딩 사진 46",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2025-winter-3",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image23.jpg",
+    alt: "웨딩 사진 47",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+  {
+    id: "2025-winter-4",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/image24.jpg",
+    alt: "웨딩 사진 48",
+    year: 2025,
+    season: "winter",
+    seasonKr: "겨울",
+  },
+];
