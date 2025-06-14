@@ -198,7 +198,7 @@ export default function VisionGallery({
                 mousewheel
                 // className="h-full portrait:-mt-24"
                 // className="h-full portrait:-mt-4"
-                className="h-full mt-2 md:mt-0"
+                className="h-full"
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
