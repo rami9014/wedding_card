@@ -203,7 +203,7 @@ export default function VisionGallery({
                 className="h-full"
                 style={{
                   height: "100dvh",
-                  marginTop: "-2dvh",
+                  marginTop: "-4dvh",
                 }}
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
