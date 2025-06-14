@@ -6,6 +6,16 @@ const path = require("path");
 // Remove this if you're not using Fullcalendar features
 
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/wedding",
+        permanent: false, // 개발 중에는 false, 운영 시에는 true 고려
+      },
+    ];
+  },
+
   // sourceMap 사용안함
   productionBrowserSourceMaps: false,
   // 이미지 형식 변경

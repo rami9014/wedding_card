@@ -29,6 +29,22 @@ export default function UploadedPhotosGallery({
 }: UploadedPhotosGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+
+  // 썸네일 스크롤 함수
+  const scrollToThumbnail = useCallback((index: number) => {
+    if (thumbnailContainerRef.current) {
+      const thumbnailWidth = 80; // h-20 = 80px + gap
+      const containerWidth = thumbnailContainerRef.current.clientWidth;
+      const scrollLeft =
+        thumbnailWidth * index - containerWidth / 2 + thumbnailWidth / 2;
+
+      thumbnailContainerRef.current.scrollTo({
+        left: Math.max(0, scrollLeft),
+        behavior: "smooth",
+      });
+    }
+  }, []);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -207,6 +223,7 @@ export default function UploadedPhotosGallery({
                 initialSlide={selectedIndex}
                 onSlideChange={(swiper) => {
                   setSelectedIndex(swiper.activeIndex);
+                  scrollToThumbnail(swiper.activeIndex);
                 }}
                 onSwiper={setSwiperInstance}
               >
@@ -249,6 +266,7 @@ export default function UploadedPhotosGallery({
             {/* 하단 썸네일 영역 */}
             <div className="absolute bottom-0 left-0 right-0 h-20 z-10 mt-1">
               <div
+                ref={thumbnailContainerRef}
                 className="p-2 h-full overflow-x-auto"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >

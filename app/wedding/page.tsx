@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -25,6 +25,10 @@ import utc from "dayjs/plugin/utc";
 import ContactSection from "../../components/ContactSection";
 import { ToastProvider, useToast } from "@/components/Toast";
 import { mainImages } from "@/components/Images";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Zoom } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/zoom";
 
 // dayjs 플러그인 로드
 dayjs.extend(utc);
@@ -69,9 +73,19 @@ function ExclusiveComponent() {
     willAttend: null as boolean | null,
   });
   const [randomImages, setRandomImages] = useState<string[]>([]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-  // mainImages를 직접 사용 (랜덤하게 셔플)
-  const galleryImageUrls = mainImages.map((img) => img.src);
+  // mainImages를 직접 사용 (랜덤하게 셔플) - 32.jpg 제외
+  const galleryImageUrls = mainImages
+    .map((img) => img.src)
+    .filter((src) => !src.includes("32.jpg"));
 
   // 랜덤 이미지 선택 함수
   const getRandomImages = () => {
@@ -98,6 +112,59 @@ function ExclusiveComponent() {
   } = usePhotoUpload(isWeddingTime);
 
   const { showToast, showConfirm } = useToast();
+
+  // 썸네일 스크롤 함수
+  const scrollToThumbnail = useCallback((index: number) => {
+    if (thumbnailContainerRef.current) {
+      const thumbnailWidth = 80; // h-20 = 80px + gap
+      const containerWidth = thumbnailContainerRef.current.clientWidth;
+      const scrollLeft =
+        thumbnailWidth * index - containerWidth / 2 + thumbnailWidth / 2;
+
+      thumbnailContainerRef.current.scrollTo({
+        left: Math.max(0, scrollLeft),
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  // 갤러리 모달 키보드 핸들러
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (selectedImageIndex === null) return;
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        event.preventDefault();
+        swiperInstance?.slidePrev();
+      }
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        event.preventDefault();
+        swiperInstance?.slideNext();
+      }
+      if (event.key === "Escape") setSelectedImageIndex(null);
+    },
+    [selectedImageIndex, swiperInstance]
+  );
+
+  // 갤러리 모달이 열릴 때 body 스크롤 방지
+  useEffect(() => {
+    if (selectedImageIndex !== null) {
+      // body 스크롤 막기
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        // body 스크롤 복원
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.width = "";
+
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [selectedImageIndex, handleKeyDown]);
 
   // 클라이언트에서만 실행되도록 보장
   useEffect(() => {
@@ -806,7 +873,7 @@ function ExclusiveComponent() {
                 <div className="pl-4 border-l-2 border-rose-200">
                   <p className="text-rose-500 font-medium mb-2">태호</p>
                   <p className="whitespace-pre-line">
-                    {`2022년 여름, 공통 친구의 소개로 처음 만났어요.
+                    {`2023년 여름, 회사에서 처음 얘기를 나눴어요.
                     그때의 설렘이 지금도 생생합니다.`}
                   </p>
                 </div>
@@ -906,7 +973,10 @@ function ExclusiveComponent() {
               <div className="space-y-4">
                 {/* 첫 번째 섹션: 큰 이미지 + 작은 이미지들 */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2 aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="col-span-2 aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(7)}
+                  >
                     <Image
                       src={randomImages[7]}
                       alt="웨딩 스토리 1"
@@ -914,7 +984,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(8)}
+                  >
                     <Image
                       src={randomImages[8]}
                       alt="웨딩 스토리 2"
@@ -922,7 +995,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(9)}
+                  >
                     <Image
                       src={randomImages[9]}
                       alt="웨딩 스토리 3"
@@ -934,7 +1010,10 @@ function ExclusiveComponent() {
 
                 {/* 두 번째 섹션: 2개 큰 이미지 */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(10)}
+                  >
                     <Image
                       src={randomImages[10]}
                       alt="웨딩 스토리 4"
@@ -942,7 +1021,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(11)}
+                  >
                     <Image
                       src={randomImages[11]}
                       alt="웨딩 스토리 5"
@@ -953,7 +1035,10 @@ function ExclusiveComponent() {
                 </div>
 
                 {/* 세 번째 섹션: 가로 긴 이미지 */}
-                <div className="aspect-[16/9] relative rounded-none overflow-hidden">
+                <div
+                  className="aspect-[16/9] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setSelectedImageIndex(12)}
+                >
                   <Image
                     src={randomImages[12]}
                     alt="웨딩 스토리 6"
@@ -962,9 +1047,12 @@ function ExclusiveComponent() {
                   />
                 </div>
 
-                {/* 네 번째 섹션: 2개 정사각형 */}
+                {/* 네 번째 섹션: 2개 세로 긴 이미지 */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(13)}
+                  >
                     <Image
                       src={randomImages[13]}
                       alt="웨딩 스토리 7"
@@ -972,7 +1060,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(14)}
+                  >
                     <Image
                       src={randomImages[14]}
                       alt="웨딩 스토리 8"
@@ -983,7 +1074,10 @@ function ExclusiveComponent() {
                 </div>
 
                 {/* 다섯 번째 섹션: 큰 정사각형 */}
-                <div className="aspect-square relative rounded-none overflow-hidden">
+                <div
+                  className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setSelectedImageIndex(15)}
+                >
                   <Image
                     src={randomImages[15]}
                     alt="웨딩 스토리 9"
@@ -993,10 +1087,13 @@ function ExclusiveComponent() {
                 </div>
 
                 {/* 여섯 번째 섹션: 가로 긴 이미지 */}
-                <div className="aspect-[16/9] relative rounded-none overflow-hidden">
+                <div
+                  className="aspect-[16/9] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setSelectedImageIndex(18)}
+                >
                   <Image
-                    src={randomImages[16]}
-                    alt="웨딩 스토리 10"
+                    src={randomImages[18]}
+                    alt="웨딩 스토리 12"
                     fill
                     className="object-cover"
                   />
@@ -1004,18 +1101,24 @@ function ExclusiveComponent() {
 
                 {/* 일곱 번째 섹션: 2개 정사각형 */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(19)}
+                  >
                     <Image
-                      src={randomImages[17]}
-                      alt="웨딩 스토리 11"
+                      src={randomImages[19]}
+                      alt="웨딩 스토리 13"
                       fill
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(20)}
+                  >
                     <Image
-                      src={randomImages[18]}
-                      alt="웨딩 스토리 12"
+                      src={randomImages[20] || randomImages[7]}
+                      alt="웨딩 스토리 14"
                       fill
                       className="object-cover"
                     />
@@ -1028,7 +1131,10 @@ function ExclusiveComponent() {
                 {/* 첫 번째 행 */}
                 <div className="grid grid-cols-12 gap-4 mb-4">
                   <div className="col-span-8">
-                    <div className="aspect-[16/9] relative rounded-none overflow-hidden">
+                    <div
+                      className="aspect-[16/9] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setSelectedImageIndex(7)}
+                    >
                       <Image
                         src={randomImages[7]}
                         alt="웨딩 스토리 1"
@@ -1038,7 +1144,10 @@ function ExclusiveComponent() {
                     </div>
                   </div>
                   <div className="col-span-4 space-y-4">
-                    <div className="aspect-square relative rounded-none overflow-hidden">
+                    <div
+                      className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setSelectedImageIndex(8)}
+                    >
                       <Image
                         src={randomImages[8]}
                         alt="웨딩 스토리 2"
@@ -1046,7 +1155,10 @@ function ExclusiveComponent() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="aspect-square relative rounded-none overflow-hidden">
+                    <div
+                      className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setSelectedImageIndex(9)}
+                    >
                       <Image
                         src={randomImages[9]}
                         alt="웨딩 스토리 3"
@@ -1059,7 +1171,10 @@ function ExclusiveComponent() {
 
                 {/* 두 번째 행 */}
                 <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="aspect-[3/4] relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(10)}
+                  >
                     <Image
                       src={randomImages[10]}
                       alt="웨딩 스토리 4"
@@ -1067,7 +1182,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-[3/4] relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(11)}
+                  >
                     <Image
                       src={randomImages[11]}
                       alt="웨딩 스토리 5"
@@ -1075,7 +1193,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-[3/4] relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(12)}
+                  >
                     <Image
                       src={randomImages[12]}
                       alt="웨딩 스토리 6"
@@ -1088,7 +1209,10 @@ function ExclusiveComponent() {
                 {/* 세 번째 행 */}
                 <div className="grid grid-cols-12 gap-4 mb-4">
                   <div className="col-span-4 space-y-4">
-                    <div className="aspect-square relative rounded-none overflow-hidden">
+                    <div
+                      className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setSelectedImageIndex(13)}
+                    >
                       <Image
                         src={randomImages[13]}
                         alt="웨딩 스토리 7"
@@ -1096,7 +1220,10 @@ function ExclusiveComponent() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="aspect-square relative rounded-none overflow-hidden">
+                    <div
+                      className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setSelectedImageIndex(14)}
+                    >
                       <Image
                         src={randomImages[14]}
                         alt="웨딩 스토리 8"
@@ -1106,7 +1233,10 @@ function ExclusiveComponent() {
                     </div>
                   </div>
                   <div className="col-span-8">
-                    <div className="aspect-square relative rounded-none overflow-hidden">
+                    <div
+                      className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setSelectedImageIndex(15)}
+                    >
                       <Image
                         src={randomImages[15]}
                         alt="웨딩 스토리 9"
@@ -1119,7 +1249,10 @@ function ExclusiveComponent() {
 
                 {/* 네 번째 행 */}
                 <div className="grid grid-cols-4 gap-4">
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(16)}
+                  >
                     <Image
                       src={randomImages[16]}
                       alt="웨딩 스토리 10"
@@ -1127,7 +1260,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(17)}
+                  >
                     <Image
                       src={randomImages[17]}
                       alt="웨딩 스토리 11"
@@ -1135,7 +1271,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(18)}
+                  >
                     <Image
                       src={randomImages[18]}
                       alt="웨딩 스토리 12"
@@ -1143,7 +1282,10 @@ function ExclusiveComponent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="aspect-square relative rounded-none overflow-hidden">
+                  <div
+                    className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setSelectedImageIndex(19)}
+                  >
                     <Image
                       src={randomImages[19]}
                       alt="웨딩 스토리 13"
@@ -1226,6 +1368,142 @@ function ExclusiveComponent() {
           </motion.div>
         </div>
       </section>
+
+      {/* 갤러리 모달 뷰어 */}
+      {selectedImageIndex !== null && randomImages[selectedImageIndex] && (
+        <div className="fixed inset-0 bg-black z-50">
+          {/* 헤더 */}
+          <div className="fixed top-0 left-0 right-0 z-20">
+            <div className="flex items-center justify-between px-4 py-2">
+              {/* 현재 위치 표시 */}
+              <div className="text-white text-sm">
+                {selectedImageIndex + 1} / {randomImages.length}
+              </div>
+
+              {/* 닫기 버튼 */}
+              <button
+                onClick={() => setSelectedImageIndex(null)}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
+              >
+                <span className="text-white text-lg">×</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 위아래로 스와이프 안내 */}
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 text-white text-sm z-10 md:hidden flex items-center gap-2">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>위아래로 스와이프</span>
+          </div>
+
+          <div className="flex h-screen">
+            {/* 메인 이미지 영역 */}
+            <div className="flex-1 w-full">
+              <Swiper
+                direction="vertical"
+                slidesPerView={1}
+                spaceBetween={0}
+                mousewheel
+                zoom={{
+                  maxRatio: 3,
+                  minRatio: 1,
+                  toggle: true,
+                }}
+                modules={[Zoom]}
+                className="h-full"
+                style={{ height: "100dvh" }}
+                initialSlide={selectedImageIndex}
+                onSlideChange={(swiper) => {
+                  setSelectedImageIndex(swiper.activeIndex);
+                  scrollToThumbnail(swiper.activeIndex);
+                }}
+                onSwiper={setSwiperInstance}
+              >
+                {randomImages.map((imageSrc, index) => (
+                  <SwiperSlide
+                    key={index}
+                    className="flex items-center justify-center h-full"
+                  >
+                    <div className="swiper-zoom-container relative w-full h-full">
+                      <Image
+                        src={imageSrc}
+                        alt={`웨딩 갤러리 ${index + 1}`}
+                        fill
+                        className="object-contain h-full w-auto mx-auto"
+                        priority={index === selectedImageIndex}
+                        sizes="100vw"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+
+            {/* 하단 썸네일 영역 */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 z-10 mt-1">
+              <div
+                ref={thumbnailContainerRef}
+                className="p-2 h-full overflow-x-auto cursor-grab select-none"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  cursor: isDragging ? "grabbing" : "grab",
+                }}
+                onMouseDown={(e) => {
+                  setIsDragging(true);
+                  setStartX(e.pageX - e.currentTarget.offsetLeft);
+                  setScrollLeft(e.currentTarget.scrollLeft);
+                }}
+                onMouseMove={(e) => {
+                  if (!isDragging) return;
+                  e.preventDefault();
+                  const x = e.pageX - e.currentTarget.offsetLeft;
+                  const walk = (x - startX) * 2;
+                  e.currentTarget.scrollLeft = scrollLeft - walk;
+                }}
+                onMouseUp={() => setIsDragging(false)}
+                onMouseLeave={() => setIsDragging(false)}
+              >
+                <style jsx>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                <div className="flex gap-2 h-full">
+                  {randomImages.map((imageSrc, index) => (
+                    <div
+                      key={index}
+                      className={`relative aspect-square h-full flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                        selectedImageIndex === index
+                          ? "ring-2 ring-white shadow-lg transform scale-105"
+                          : "ring-1 ring-white/20 hover:ring-white/40"
+                      }`}
+                      onClick={() => swiperInstance?.slideTo(index)}
+                    >
+                      <Image
+                        src={imageSrc}
+                        alt={`썸네일 ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
+                      {selectedImageIndex === index && (
+                        <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 푸터 */}
       <footer className="py-20 bg-white">

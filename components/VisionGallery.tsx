@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -43,6 +49,7 @@ export default function VisionGallery({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
 
   // 브라우저 감지 및 스크롤 초기화
   useEffect(() => {
@@ -68,6 +75,21 @@ export default function VisionGallery({
     }, 3000);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  // 썸네일 스크롤 함수
+  const scrollToThumbnail = useCallback((index: number) => {
+    if (thumbnailContainerRef.current) {
+      const thumbnailWidth = 80; // h-20 = 80px + gap
+      const containerWidth = thumbnailContainerRef.current.clientWidth;
+      const scrollLeft =
+        thumbnailWidth * index - containerWidth / 2 + thumbnailWidth / 2;
+
+      thumbnailContainerRef.current.scrollTo({
+        left: Math.max(0, scrollLeft),
+        behavior: "smooth",
+      });
+    }
   }, []);
 
   const years = useMemo(
@@ -189,7 +211,9 @@ export default function VisionGallery({
       </div>
 
       {/* 이미지 Swiper */}
-      {selectedView === "all" && (
+      {(selectedView === "all" ||
+        (selectedView === "years" && selectedYear && selectedSeason) ||
+        (selectedView === "seasons" && selectedSeason && selectedYear)) && (
         <>
           {/* 스와이프 가이드 */}
           {showSwipeGuide && (
@@ -240,6 +264,7 @@ export default function VisionGallery({
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
+                  scrollToThumbnail(swiper.activeIndex);
                 }}
                 onTouchStart={() => setShowSwipeGuide(false)}
                 onSwiper={setSwiperInstance}
@@ -265,6 +290,7 @@ export default function VisionGallery({
             {/* 하단 썸네일 영역 - 모든 화면용 */}
             <div className="absolute bottom-0 left-0 right-0 h-20 z-10 mt-1">
               <div
+                ref={thumbnailContainerRef}
                 className="p-2 h-full overflow-x-auto cursor-grab select-none"
                 style={{
                   scrollbarWidth: "none",
@@ -332,7 +358,6 @@ export default function VisionGallery({
                 className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => {
                   setSelectedYear(item.year);
-                  setSelectedView("all");
                 }}
               >
                 {item.thumbnail && (
@@ -359,7 +384,6 @@ export default function VisionGallery({
                 className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => {
                   setSelectedYear(item.year);
-                  setSelectedView("all");
                 }}
               >
                 {item.thumbnail && (
@@ -471,7 +495,6 @@ export default function VisionGallery({
                 className="relative rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => {
                   setSelectedSeason(item.id);
-                  setSelectedView("all");
                 }}
               >
                 {item.thumbnail && (
@@ -498,7 +521,6 @@ export default function VisionGallery({
                 className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
                 onClick={() => {
                   setSelectedSeason(item.id);
-                  setSelectedView("all");
                 }}
               >
                 {item.thumbnail && (
@@ -515,6 +537,90 @@ export default function VisionGallery({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* 계절 선택 후 연도 선택 */}
+      {selectedView === "seasons" && selectedSeason && !selectedYear && (
+        <div className="h-screen pt-16 pb-20">
+          {/* 해당 계절의 연도별 썸네일 */}
+          <div className="h-full w-full portrait:flex portrait:flex-col portrait:gap-1 portrait:px-1 landscape:hidden pt-16">
+            {years.map((year) => {
+              const yearImage = images.find(
+                (img) => img.season === selectedSeason && img.year === year
+              );
+              return (
+                <div
+                  key={year}
+                  className={`relative flex-1 rounded-lg overflow-hidden transition-transform duration-300 ${
+                    yearImage
+                      ? "cursor-pointer group hover:scale-105"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
+                  onClick={() => yearImage && setSelectedYear(year)}
+                >
+                  {yearImage && (
+                    <Image
+                      src={yearImage.src}
+                      alt={`${year}년 ${
+                        seasons.find((s) => s.id === selectedSeason)?.name
+                      }`}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {year}
+                  </div>
+                  {!yearImage && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+                      <span className="text-gray-400 text-sm">이미지 없음</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="h-full w-full landscape:flex landscape:gap-1 landscape:px-1 portrait:hidden pt-16">
+            {years.map((year) => {
+              const yearImage = images.find(
+                (img) => img.season === selectedSeason && img.year === year
+              );
+              return (
+                <div
+                  key={year}
+                  className={`relative flex-1 rounded-lg overflow-hidden transition-transform duration-300 ${
+                    yearImage
+                      ? "cursor-pointer group hover:scale-105"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
+                  onClick={() => yearImage && setSelectedYear(year)}
+                >
+                  {yearImage && (
+                    <Image
+                      src={yearImage.src}
+                      alt={`${year}년 ${
+                        seasons.find((s) => s.id === selectedSeason)?.name
+                      }`}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {year}
+                  </div>
+                  {!yearImage && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+                      <span className="text-gray-400 text-sm">이미지 없음</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

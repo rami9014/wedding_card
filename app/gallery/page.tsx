@@ -1,6 +1,6 @@
 "use client";
 
-import { mainImages } from "@/components/Images";
+import { galleryImages } from "@/components/Images";
 import VisionGallery from "@/components/VisionGallery";
 
 // 갤러리 이미지 목록
@@ -24,20 +24,10 @@ const thumbnailConfig = {
 
 export default function GalleryPage() {
   // mainImages를 VisionGallery에서 사용할 수 있는 형태로 변환
-  const transformedImages = mainImages.map((img, index) => ({
-    src: img.src,
-    alt: `웨딩 사진 ${index + 1}`,
-    year: 2024, // 모든 이미지를 2024년으로 설정
-    season: "all", // 모든 이미지를 "all" 시즌으로 설정
-    seasonKr: "전체",
-  }));
 
   return (
     <main className="min-h-screen">
-      <VisionGallery
-        images={transformedImages}
-        thumbnailConfig={thumbnailConfig}
-      />
+      <VisionGallery images={galleryImages} thumbnailConfig={thumbnailConfig} />
     </main>
   );
 }
