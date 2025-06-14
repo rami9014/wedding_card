@@ -39,7 +39,7 @@ export default function VisionGallery({
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const [isMobileChrome, setIsMobileChrome] = useState(false);
 
-  // 브라우저 감지
+  // 브라우저 감지 및 스크롤 초기화
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
     const isMobile =
@@ -49,6 +49,11 @@ export default function VisionGallery({
     const isChrome = /chrome/i.test(userAgent) && !/edg/i.test(userAgent);
 
     setIsMobileChrome(isMobile && isChrome);
+
+    // 페이지 로드 시 스크롤을 최상단으로 설정
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0; // Safari용 추가
+    document.documentElement.scrollTop = 0; // IE/Edge용 추가
   }, []);
 
   // 3초 후 자동으로 가이드 숨기기
