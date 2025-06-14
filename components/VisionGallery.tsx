@@ -102,7 +102,10 @@ export default function VisionGallery({
   }, [images, thumbnailConfig]);
 
   return (
-    <div className="w-full h-screen bg-black text-white relative">
+    <div
+      className="w-full h-screen bg-black text-white relative"
+      style={{ height: "100dvh" }}
+    >
       {/* 헤더 */}
       <div className="fixed top-0 left-0 right-0 z-20">
         <div className="flex items-center px-4 py-2 relative">
@@ -196,10 +199,12 @@ export default function VisionGallery({
                 slidesPerView={1}
                 spaceBetween={0}
                 mousewheel
-                // className="h-full portrait:-mt-24"
-                // className="h-full portrait:-mt-4"
-                // className="h-full
-                className="h-full -mt-8 md:mt-0"
+                // className="h-full -mt-8 md:mt-0"
+                className="h-full"
+                style={{
+                  height: "100dvh",
+                  marginTop: "-2dvh",
+                }}
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
