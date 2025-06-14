@@ -196,7 +196,10 @@ export default function VisionGallery({
                 slidesPerView={1}
                 spaceBetween={0}
                 mousewheel
-                className="h-screen mt-1"
+                // className="h-full portrait:-mt-24"
+                // className="h-full portrait:-mt-4"
+                // className="h-full
+                className="h-full -mt-8 md:mt-0"
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
@@ -261,7 +264,8 @@ export default function VisionGallery({
             </div>
 
             {/* 하단 썸네일 영역 - 세로 화면용 */}
-            <div className="portrait:block landscape:hidden portrait:absolute portrait:bottom-0 portrait:left-0 portrait:right-0 portrait:h-20 z-10 mt-2">
+            {/* <div className="portrait:block landscape:hidden portrait:fixed portrait:bottom-2 portrait:left-0 portrait:right-0 portrait:h-20 z-10"> */}
+            <div className="portrait:block landscape:hidden portrait:absolute portrait:bottom-0 portrait:left-0 portrait:right-0 portrait:h-20 z-10 mt-1">
               <div
                 className="p-2 h-full overflow-x-auto"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
