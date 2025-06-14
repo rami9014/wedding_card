@@ -37,6 +37,19 @@ export default function VisionGallery({
   const [showSwipeGuide, setShowSwipeGuide] = useState(true);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
+  const [isMobileChrome, setIsMobileChrome] = useState(false);
+
+  // 브라우저 감지
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile =
+      /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+        userAgent
+      );
+    const isChrome = /chrome/i.test(userAgent) && !/edg/i.test(userAgent);
+
+    setIsMobileChrome(isMobile && isChrome);
+  }, []);
 
   // 3초 후 자동으로 가이드 숨기기
   useEffect(() => {
@@ -199,12 +212,15 @@ export default function VisionGallery({
                 slidesPerView={1}
                 spaceBetween={0}
                 mousewheel
-                // className="h-full -mt-8 md:mt-0"
-                className="h-full"
-                style={{
-                  height: "100dvh",
-                  marginTop: "-4dvh",
-                }}
+                className={isMobileChrome ? "h-full -mt-8 md:mt-0" : "h-full"}
+                style={
+                  isMobileChrome
+                    ? {}
+                    : {
+                        height: "100dvh",
+                        marginTop: "-2dvh",
+                      }
+                }
                 onSlideChange={(swiper) => {
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
