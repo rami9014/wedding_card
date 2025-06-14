@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-
+import SwipeVerticalIcon from "@mui/icons-material/SwipeVertical";
 interface GalleryImage {
   src: string;
   alt: string;
@@ -14,17 +14,38 @@ interface GalleryImage {
   seasonKr: string;
 }
 
-interface VisionGalleryProps {
-  images: GalleryImage[];
+interface ThumbnailConfig {
+  years: Record<number, string>;
+  seasons: Record<string, string>;
 }
 
-export default function VisionGallery({ images }: VisionGalleryProps) {
+interface VisionGalleryProps {
+  images: GalleryImage[];
+  thumbnailConfig?: ThumbnailConfig;
+}
+
+export default function VisionGallery({
+  images,
+  thumbnailConfig,
+}: VisionGalleryProps) {
   const router = useRouter();
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedSeason, setSelectedSeason] = useState<string | null>(null);
   const [selectedView, setSelectedView] = useState<"all" | "years" | "seasons">(
     "all"
   );
+  const [showSwipeGuide, setShowSwipeGuide] = useState(true);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
+
+  // 3초 후 자동으로 가이드 숨기기
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSwipeGuide(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const years = useMemo(
     () =>
@@ -52,31 +73,39 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
 
   const yearThumbnails = useMemo(() => {
     return years.map((year) => {
-      const yearImage = images.find((img) => img.year === year);
+      const configuredThumbnail = thumbnailConfig?.years[year];
+      const yearImage = configuredThumbnail
+        ? { src: configuredThumbnail }
+        : images.find((img) => img.year === year);
+
       return {
         year,
         thumbnail: yearImage?.src,
         hasImages: !!yearImage,
       };
     });
-  }, [years, images]);
+  }, [years, images, thumbnailConfig]);
 
   const seasonThumbnails = useMemo(() => {
     return seasons.map((season) => {
-      const seasonImage = images.find((img) => img.season === season.id);
+      const configuredThumbnail = thumbnailConfig?.seasons[season.id];
+      const seasonImage = configuredThumbnail
+        ? { src: configuredThumbnail }
+        : images.find((img) => img.season === season.id);
+
       return {
         ...season,
         thumbnail: seasonImage?.src,
         hasImages: !!seasonImage,
       };
     });
-  }, [images]);
+  }, [images, thumbnailConfig]);
 
   return (
     <div className="w-full h-screen bg-black text-white relative">
       {/* 헤더 */}
       <div className="fixed top-0 left-0 right-0 z-20 bg-black/50 backdrop-blur-md">
-        <div className="flex justify-between items-center px-4 py-4">
+        <div className="flex justify-between items-center px-4 py-2">
           <div className="text-sm font-light tracking-wider">GALLERY</div>
           <button
             onClick={() => router.back()}
@@ -108,29 +137,139 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
             </div>
           )}
 
-          <Swiper
-            direction="vertical"
-            slidesPerView={1}
-            spaceBetween={0}
-            mousewheel
-            className="h-screen pt-16"
-          >
-            {filteredImages.map((img, i) => (
-              <SwiperSlide
-                key={i}
-                className="flex items-center justify-center h-screen"
-              >
-                <div className="relative w-full h-full">
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    className="object-contain h-full w-auto mx-auto"
+          {/* 스와이프 가이드 */}
+          {showSwipeGuide && (
+            <div className="absolute inset-0 z-30 flex flex-col items-center justify-center pointer-events-none">
+              <div className="flex flex-col items-center gap-6 animate-pulse">
+                {/* 스와이프 아이콘 */}
+                <div className="flex items-center justify-center animate-bounce">
+                  <SwipeVerticalIcon
+                    sx={{
+                      fontSize: 120,
+                      color: "white",
+                      filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.3))",
+                    }}
                   />
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+
+                {/* 스와이프 텍스트 */}
+                <div className="text-white text-lg font-medium bg-black/70 px-6 py-3 rounded-full backdrop-blur-md border border-white/20">
+                  위아래로 스와이프하세요
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex h-screen">
+            {/* 메인 이미지 영역 */}
+            <div className="flex-1 portrait:w-full landscape:w-4/5">
+              <Swiper
+                direction="vertical"
+                slidesPerView={1}
+                spaceBetween={0}
+                mousewheel
+                className="h-full portrait:-mt-8"
+                onSlideChange={(swiper) => {
+                  setShowSwipeGuide(false);
+                  setCurrentSlideIndex(swiper.activeIndex);
+                }}
+                onTouchStart={() => setShowSwipeGuide(false)}
+                onSwiper={setSwiperInstance}
+              >
+                {filteredImages.map((img, i) => (
+                  <SwiperSlide
+                    key={i}
+                    className="flex items-center justify-center h-full"
+                  >
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-contain h-full w-auto mx-auto"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+
+            {/* 썸네일 영역 - 세로 화면: 하단, 가로 화면: 우측 */}
+            <div className="portrait:hidden landscape:block landscape:w-1/5 landscape:bg-black/50 landscape:backdrop-blur-md landscape:border-l landscape:border-white/10 z-10">
+              <div
+                className="p-2 h-full overflow-y-auto"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                <style jsx>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                <div className="flex flex-col gap-2">
+                  {filteredImages.map((img, index) => (
+                    <div
+                      key={index}
+                      className={`relative aspect-square rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                        currentSlideIndex === index
+                          ? "ring-2 ring-white shadow-lg transform scale-105"
+                          : "ring-1 ring-white/20 hover:ring-white/40"
+                      }`}
+                      onClick={() => swiperInstance?.slideTo(index)}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
+                      {currentSlideIndex === index && (
+                        <div className="absolute top-1 right-1 w-3 h-3 bg-white rounded-full"></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 하단 썸네일 영역 - 세로 화면용 */}
+            <div className="portrait:block landscape:hidden portrait:fixed portrait:bottom-20 portrait:left-0 portrait:right-0 portrait:bg-black/50 portrait:backdrop-blur-md portrait:border-t portrait:border-white/10 portrait:h-20 z-10">
+              <div
+                className="p-2 h-full overflow-x-auto"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                <style jsx>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                <div className="flex gap-2 h-full">
+                  {filteredImages.map((img, index) => (
+                    <div
+                      key={index}
+                      className={`relative aspect-square h-full flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                        currentSlideIndex === index
+                          ? "ring-2 ring-white shadow-lg transform scale-105"
+                          : "ring-1 ring-white/20 hover:ring-white/40"
+                      }`}
+                      onClick={() => swiperInstance?.slideTo(index)}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
+                      {currentSlideIndex === index && (
+                        <div className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </>
       )}
 
@@ -196,16 +335,6 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
       {/* 연도 선택 후 계절 선택 */}
       {selectedView === "years" && selectedYear && !selectedSeason && (
         <div className="h-screen pt-16 pb-20">
-          {/* 뒤로가기 버튼 */}
-          <div className="absolute top-20 left-4 z-10">
-            <button
-              onClick={() => setSelectedYear(null)}
-              className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-sm transition-colors"
-            >
-              ← {selectedYear}년 뒤로
-            </button>
-          </div>
-
           {/* 해당 연도의 계절별 썸네일 */}
           <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden pt-16">
             {seasons.map((season) => {
@@ -356,6 +485,8 @@ export default function VisionGallery({ images }: VisionGalleryProps) {
                 setSelectedView(btn.key as any);
                 setSelectedYear(null);
                 setSelectedSeason(null);
+                setCurrentSlideIndex(0);
+                swiperInstance?.slideTo(0);
               }}
               className={`flex-1 px-3 py-1.5 rounded-full text-xs transition-colors ${
                 selectedView === btn.key
