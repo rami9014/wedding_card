@@ -30,6 +30,7 @@ export default function UploadedPhotosGallery({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+  const [savedScrollPosition, setSavedScrollPosition] = useState(0);
 
   // 썸네일 스크롤 함수
   const scrollToThumbnail = useCallback((index: number) => {
@@ -65,9 +66,14 @@ export default function UploadedPhotosGallery({
   // 모달이 열릴 때 body 스크롤 방지
   useEffect(() => {
     if (selectedIndex !== null) {
+      // 현재 스크롤 위치 저장
+      const currentScrollY = window.scrollY;
+      setSavedScrollPosition(currentScrollY);
+
       // body 스크롤 막기
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
+      document.body.style.top = `-${currentScrollY}px`;
       document.body.style.width = "100%";
 
       window.addEventListener("keydown", handleKeyDown);
@@ -76,7 +82,11 @@ export default function UploadedPhotosGallery({
         // body 스크롤 복원
         document.body.style.overflow = "";
         document.body.style.position = "";
+        document.body.style.top = "";
         document.body.style.width = "";
+
+        // 저장된 스크롤 위치로 복원
+        window.scrollTo(0, currentScrollY);
 
         window.removeEventListener("keydown", handleKeyDown);
       };

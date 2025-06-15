@@ -55,7 +55,17 @@ const contactData = {
 };
 
 function ExclusiveComponent() {
-  const [weddingDate, setWeddingDate] = useState(WEDDING_DATE_AFTER); // 기본값은 이후 날짜
+  // URL 파라미터에 따라 초기 결혼식 날짜 설정
+  const getInitialWeddingDate = () => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const testParam = urlParams.get("test");
+      return testParam === "true" ? WEDDING_DATE_AFTER : WEDDING_DATE_BEFORE;
+    }
+    return WEDDING_DATE_BEFORE; // 서버사이드에서는 기본값
+  };
+
+  const [weddingDate, setWeddingDate] = useState(getInitialWeddingDate());
   const [isWeddingTime, setIsWeddingTime] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -81,6 +91,7 @@ function ExclusiveComponent() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [savedScrollPosition, setSavedScrollPosition] = useState(0);
 
   // mainImages를 직접 사용 (랜덤하게 셔플) - 32.jpg 제외
   const galleryImageUrls = mainImages
@@ -96,6 +107,27 @@ function ExclusiveComponent() {
   // 컴포넌트 마운트 시 랜덤 이미지 설정 (접속할 때마다 랜덤하게)
   useEffect(() => {
     setRandomImages(getRandomImages()); // mainImages 전체를 랜덤하게 셔플
+  }, []);
+
+  // URL 파라미터 변경 감지
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const testParam = urlParams.get("test");
+      const newWeddingDate =
+        testParam === "true" ? WEDDING_DATE_AFTER : WEDDING_DATE_BEFORE;
+      setWeddingDate(newWeddingDate);
+    };
+
+    // 초기 설정
+    handleUrlChange();
+
+    // popstate 이벤트 리스너 (뒤로가기/앞으로가기 시)
+    window.addEventListener("popstate", handleUrlChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+    };
   }, []);
 
   const {
@@ -148,9 +180,14 @@ function ExclusiveComponent() {
   // 갤러리 모달이 열릴 때 body 스크롤 방지
   useEffect(() => {
     if (selectedImageIndex !== null) {
+      // 현재 스크롤 위치 저장
+      const currentScrollY = window.scrollY;
+      setSavedScrollPosition(currentScrollY);
+
       // body 스크롤 막기
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
+      document.body.style.top = `-${currentScrollY}px`;
       document.body.style.width = "100%";
 
       window.addEventListener("keydown", handleKeyDown);
@@ -159,7 +196,11 @@ function ExclusiveComponent() {
         // body 스크롤 복원
         document.body.style.overflow = "";
         document.body.style.position = "";
+        document.body.style.top = "";
         document.body.style.width = "";
+
+        // 저장된 스크롤 위치로 복원
+        window.scrollTo(0, currentScrollY);
 
         window.removeEventListener("keydown", handleKeyDown);
       };
