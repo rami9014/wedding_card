@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-const notoSansKr = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
-});
 
 export const metadata: Metadata = {
   title: "이태호 ❤️ 박성혜 결혼식에 초대합니다",
@@ -19,7 +13,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={notoSansKr.className}>
+    <html
+      lang="ko"
+      style={{
+        fontFamily:
+          '"Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif',
+      }}
+    >
       <body>
         {children}
         <div id="portal"></div>

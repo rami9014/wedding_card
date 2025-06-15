@@ -13,8 +13,18 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        sans: ["var(--font-noto-sans)", "sans-serif"],
-        inter: ["var(--font-inter)", "sans-serif"],
+        sans: [
+          '"Apple SD Gothic Neo"',
+          '"Malgun Gothic"',
+          '"맑은 고딕"',
+          "sans-serif",
+        ],
+        apple: [
+          '"Apple SD Gothic Neo"',
+          '"Malgun Gothic"',
+          '"맑은 고딕"',
+          "sans-serif",
+        ],
       },
     },
   },

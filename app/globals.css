@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +9,12 @@
   --background-rgb: 255, 255, 255;
 }
 
+* {
+  font-family: "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+  font-family: "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
 }
