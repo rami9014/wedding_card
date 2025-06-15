@@ -65,6 +65,7 @@ function ExclusiveComponent() {
   };
 
   const [weddingDate, setWeddingDate] = useState(getInitialWeddingDate());
+  const [isTestMode, setIsTestMode] = useState(false);
   const [isWeddingTime, setIsWeddingTime] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -116,6 +117,7 @@ function ExclusiveComponent() {
       const newWeddingDate =
         testParam === "true" ? WEDDING_DATE_AFTER : WEDDING_DATE_BEFORE;
       setWeddingDate(newWeddingDate);
+      setIsTestMode(testParam === "true");
     };
 
     // 초기 설정
@@ -577,29 +579,31 @@ function ExclusiveComponent() {
 
       {/* 네비게이션 버튼 */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
-        {/* 날짜 변경 버튼들 */}
-        <div className="flex flex-col gap-2 mb-4">
-          <button
-            onClick={() => setWeddingDate(WEDDING_DATE_BEFORE)}
-            className={`px-4 py-2 rounded-full shadow-lg transition-colors flex items-center gap-2 backdrop-blur-sm text-sm ${
-              weddingDate.isSame(WEDDING_DATE_BEFORE)
-                ? "bg-rose-500 text-white"
-                : "bg-white/80 text-black hover:bg-white/90"
-            }`}
-          >
-            <span>결혼식 이전</span>
-          </button>
-          <button
-            onClick={() => setWeddingDate(WEDDING_DATE_AFTER)}
-            className={`px-4 py-2 rounded-full shadow-lg transition-colors flex items-center gap-2 backdrop-blur-sm text-sm ${
-              weddingDate.isSame(WEDDING_DATE_AFTER)
-                ? "bg-rose-500 text-white"
-                : "bg-white/80 text-black hover:bg-white/90"
-            }`}
-          >
-            <span>결혼식 이후</span>
-          </button>
-        </div>
+        {/* 날짜 변경 버튼들 - test=true 파라미터가 있을 때만 표시 */}
+        {isTestMode && (
+          <div className="flex flex-col gap-2 mb-4">
+            <button
+              onClick={() => setWeddingDate(WEDDING_DATE_BEFORE)}
+              className={`px-4 py-2 rounded-full shadow-lg transition-colors flex items-center gap-2 backdrop-blur-sm text-sm ${
+                weddingDate.isSame(WEDDING_DATE_BEFORE)
+                  ? "bg-rose-500 text-white"
+                  : "bg-white/80 text-black hover:bg-white/90"
+              }`}
+            >
+              <span>결혼식 이전</span>
+            </button>
+            <button
+              onClick={() => setWeddingDate(WEDDING_DATE_AFTER)}
+              className={`px-4 py-2 rounded-full shadow-lg transition-colors flex items-center gap-2 backdrop-blur-sm text-sm ${
+                weddingDate.isSame(WEDDING_DATE_AFTER)
+                  ? "bg-rose-500 text-white"
+                  : "bg-white/80 text-black hover:bg-white/90"
+              }`}
+            >
+              <span>결혼식 이후</span>
+            </button>
+          </div>
+        )}
 
         {/* <div className="flex flex-col gap-2">
           <Link
