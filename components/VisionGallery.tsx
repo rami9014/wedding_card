@@ -148,7 +148,7 @@ export default function VisionGallery({
 
   return (
     <div
-      className="w-full h-screen bg-black text-white relative"
+      className="w-full h-screen bg-black text-white relative font-apple"
       style={{ height: "100dvh" }}
     >
       {/* 헤더 */}

@@ -100,7 +100,7 @@ export default function UploadedPhotosGallery({
 
   if (isLoadingPhotos) {
     return (
-      <section className="py-12 bg-neutral-50">
+      <section className="py-12 bg-neutral-50 font-apple">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500"></div>
@@ -113,7 +113,7 @@ export default function UploadedPhotosGallery({
 
   if (uploadedPhotos.length === 0) {
     return (
-      <section className="py-12 bg-neutral-50">
+      <section className="py-12 bg-neutral-50 font-apple">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h2 className="text-2xl font-serif mb-4">업로드된 사진</h2>
           <p className="text-gray-500">아직 업로드된 사진이 없습니다.</p>
@@ -127,7 +127,7 @@ export default function UploadedPhotosGallery({
 
   return (
     <>
-      <section className="py-12 bg-neutral-50">
+      <section className="py-12 bg-neutral-50 font-apple">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-serif mb-2">업로드된 사진</h2>
@@ -183,7 +183,7 @@ export default function UploadedPhotosGallery({
 
       {/* 모달 뷰어 */}
       {selectedIndex !== null && (
-        <div className="fixed inset-0 bg-black z-50">
+        <div className="fixed inset-0 bg-black z-50 font-apple">
           {/* 헤더 */}
           <div className="fixed top-0 left-0 right-0 z-20">
             <div className="flex items-center justify-between px-4 py-2">

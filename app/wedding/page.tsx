@@ -29,7 +29,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/zoom";
-
 // dayjs 플러그인 로드
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -489,14 +488,14 @@ function ExclusiveComponent() {
 
   return (
     <main
-      className={`min-h-screen bg-white ${
+      className={`min-h-screen bg-white font-apple ${
         isMobileView ? "max-w-[430px] mx-auto shadow-2xl" : ""
       }`}
     >
       {/* 참석 여부 체크 모달 - 클라이언트에서만 표시 */}
       {mounted && showAttendanceModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full relative">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full relative font-apple">
             <button
               onClick={() => setShowAttendanceModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -929,7 +928,7 @@ function ExclusiveComponent() {
         onUpload={handlePhotoUpload}
       />
 
-      <section className="w-full py-12 sm:py-16 bg-white">
+      <section className="w-full py-12 sm:py-16 bg-white font-apple">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-xl sm:text-2xl font-serif text-center mb-3 sm:mb-4">
             Our Story
@@ -1010,7 +1009,7 @@ function ExclusiveComponent() {
       </section>
 
       {/* 매거진 스타일 갤러리 섹션 */}
-      <section className="py-40 bg-white">
+      <section className="py-40 bg-white font-apple">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1403,7 +1402,7 @@ function ExclusiveComponent() {
       <MapSection />
 
       {/* 계좌번호 섹션 */}
-      <section className="py-40 bg-neutral-50">
+      <section className="py-40 bg-neutral-50 font-apple">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1464,7 +1463,7 @@ function ExclusiveComponent() {
 
       {/* 갤러리 모달 뷰어 */}
       {selectedImageIndex !== null && randomImages[selectedImageIndex] && (
-        <div className="fixed inset-0 bg-black z-50">
+        <div className="fixed inset-0 bg-black z-50 font-apple">
           {/* 헤더 */}
           <div className="fixed top-0 left-0 right-0 z-20">
             <div className="flex items-center justify-between px-4 py-2">
@@ -1599,7 +1598,7 @@ function ExclusiveComponent() {
       )}
 
       {/* 푸터 */}
-      <footer className="py-20 bg-white">
+      <footer className="py-20 bg-white font-apple">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

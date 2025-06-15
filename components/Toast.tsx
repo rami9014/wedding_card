@@ -116,7 +116,7 @@ export function Toast({
 
   if (type === "confirm") {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 font-apple">
         <div
           className={`bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full transition-all duration-300 transform ${
             isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
@@ -151,7 +151,7 @@ export function Toast({
 
   return (
     <div
-      className={`fixed top-6 right-6 z-50 flex items-center gap-4 px-6 py-4 rounded-xl shadow-xl transition-all duration-300 transform max-w-md ${
+      className={`fixed top-6 right-6 z-50 flex items-center gap-4 px-6 py-4 rounded-xl shadow-xl transition-all duration-300 transform max-w-md font-apple ${
         isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       } ${getToastStyles()}`}
     >

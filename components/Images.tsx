@@ -1359,7 +1359,7 @@ export const galleryImages = [
   },
   {
     id: "2023-spring-45",
-    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_46.DNG",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_46.jpg",
     year: 2023,
     season: "autumn",
     seasonKr: "가을",
@@ -1367,7 +1367,7 @@ export const galleryImages = [
   },
   {
     id: "2023-spring-45",
-    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_47.DNG",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_47.jpg",
     year: 2023,
     season: "autumn",
     seasonKr: "가을",
@@ -1375,7 +1375,7 @@ export const galleryImages = [
   },
   {
     id: "2023-spring-45",
-    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_48.DNG",
+    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_48.jpg",
     year: 2023,
     season: "winter",
     seasonKr: "겨울",

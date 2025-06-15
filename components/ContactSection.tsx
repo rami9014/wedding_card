@@ -35,7 +35,7 @@ export default function ContactSection({
   subtitleColor = "text-gray-500 tracking-[0.1em] uppercase text-sm",
 }: ContactSectionProps) {
   return (
-    <section className={`py-40 ${backgroundColor}`}>
+    <section className={`py-40 ${backgroundColor} font-apple`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
