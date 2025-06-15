@@ -49,8 +49,8 @@ const contactData = {
   brideFamily: {
     title: "신부",
     main: { name: "박성혜", phone: "010-2899-1467" },
-    father: { name: "박범수", phone: "010-6226-1157" },
-    mother: { name: "박정옥", phone: "010-7777-6402" },
+    father: { name: "박범수", phone: "010-5339-1467" },
+    mother: { name: "박정옥", phone: "010-9495-1467" },
   },
 };
 
@@ -1380,7 +1380,8 @@ function ExclusiveComponent() {
               </p>
             </div>
 
-            <div className="max-w-lg mx-auto">
+            <div className="max-w-lg mx-auto space-y-6">
+              {/* 신랑측 계좌번호 */}
               <div className="bg-white p-8 space-y-4">
                 <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
                   신랑측 계좌번호
@@ -1397,18 +1398,18 @@ function ExclusiveComponent() {
                   </button>
                 </div>
               </div>
-            </div>
-            <div className="max-w-lg mx-auto">
+
+              {/* 신부측 계좌번호 */}
               <div className="bg-white p-8 space-y-4">
                 <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
                   신부측 계좌번호
                 </p>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-800 tracking-[0.05em]">
-                    신한은행 110-452-570231
+                    하나은행 102-910774-73507
                   </p>
                   <button
-                    onClick={() => copyToClipboard("110-452-570231")}
+                    onClick={() => copyToClipboard("102-910774-73507")}
                     className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
                   >
                     Copy
