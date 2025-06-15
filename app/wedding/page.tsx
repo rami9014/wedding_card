@@ -43,12 +43,12 @@ const contactData = {
   groomFamily: {
     title: "신랑",
     main: { name: "이태호", phone: "010-6226-1157" },
-    father: { name: "이인수", phone: "010-6226-1157" },
-    mother: { name: "신성림", phone: "010-7777-6402" },
+    father: { name: "이인수", phone: "010-2392-1400" },
+    mother: { name: "신성림", phone: "010-7688-2777" },
   },
   brideFamily: {
     title: "신부",
-    main: { name: "박성혜", phone: "010-2662-5517" },
+    main: { name: "박성혜", phone: "010-2899-1467" },
     father: { name: "박범수", phone: "010-6226-1157" },
     mother: { name: "박정옥", phone: "010-7777-6402" },
   },
@@ -85,7 +85,7 @@ function ExclusiveComponent() {
   // mainImages를 직접 사용 (랜덤하게 셔플) - 32.jpg 제외
   const galleryImageUrls = mainImages
     .map((img) => img.src)
-    .filter((src) => !src.includes("32.jpg"));
+    .filter((src) => !src.includes("m_26.jpg"));
 
   // 랜덤 이미지 선택 함수
   const getRandomImages = () => {
@@ -244,7 +244,7 @@ function ExclusiveComponent() {
         // 페이지 로드 후 1초 뒤에 모달 표시
         setTimeout(() => {
           setShowAttendanceModal(true);
-        }, 1000);
+        }, 300);
       }
     }
   }, [mounted, isWeddingTime]);
@@ -255,7 +255,7 @@ function ExclusiveComponent() {
       // 결혼식 이후에는 바로 업로드 모달 표시 (참석 체크 여부와 관계없이)
       const timer = setTimeout(() => {
         setShowUploadModal(true);
-      }, 1000);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [mounted, isWeddingTime, setShowUploadModal]);
@@ -426,8 +426,8 @@ function ExclusiveComponent() {
           // 성공 메시지 표시
           showToast(
             dataToSubmit.willAttend
-              ? `${dataToSubmit.name}님의 참석 의사를 전달해주셔서 감사합니다! 💕`
-              : `${dataToSubmit.name}님, 알려주셔서 감사합니다. 마음만으로도 충분합니다. 💝`,
+              ? ` 참석 의사를 전달해주셔서 감사합니다! 💕`
+              : ` 알려주셔서 감사합니다. 마음만으로도 충분히 감사합니다. 💝`,
             "success"
           );
         } else {
@@ -709,7 +709,7 @@ function ExclusiveComponent() {
               <div className="aspect-[3/4] relative rounded-none overflow-hidden">
                 {randomImages[2] && (
                   <Image
-                    src={`https://d11ay48rmhjgmh.cloudfront.net/wedding/32.jpg`}
+                    src={`https://d11ay48rmhjgmh.cloudfront.net/wedding/m_26.jpg`}
                     alt="메인 웨딩 사진"
                     fill
                     className="object-cover"
@@ -813,28 +813,61 @@ function ExclusiveComponent() {
 
       {/* 결혼식 시간이 되었을 때 */}
       {isWeddingTime && (
-        <div className="text-center py-12 px-4">
-          <p className="text-lg md:text-xl text-gray-700 mb-8">
-            이런 순간들을 담아주세요!
-          </p>
-          <p className="text-lg md:text-xl text-gray-700 mb-8">
-            1. 행복한 신랑&신부 사진
-          </p>
-          <p className="text-lg md:text-xl text-gray-700 mb-8">
-            2. 신랑&신부 행진
-          </p>
-          <p className="text-lg md:text-xl text-gray-700 mb-8">
-            3. 가족&친구들과 함께한 순간
-          </p>
+        <section className="py-40 bg-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center space-y-12"
+            >
+              {/* 헤더 */}
+              <div className="space-y-6">
+                <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
+                  Capture the Moment
+                </h2>
+                <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
+                  Share Our Special Day
+                </p>
+                <div className="w-16 h-0.5 bg-rose-500 mx-auto" />
+              </div>
 
-          {/* 버튼들 */}
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
-            <PhotoUploadButton
-              isWeddingTime={isWeddingTime}
-              onUploadClick={() => setShowUploadModal(true)}
-            />
+              {/* 메인 메시지 */}
+              <div className="space-y-8">
+                <p className="text-xl font-serif text-gray-700 tracking-[0.05em] leading-relaxed mb-12">
+                  이런 순간들을 담아주세요!
+                </p>
+
+                <div className="space-y-6">
+                  <p className="text-lg font-light text-gray-700 tracking-[0.02em]">
+                    1. 행복한 신랑&신부 사진
+                  </p>
+                  <p className="text-lg font-light text-gray-700 tracking-[0.02em]">
+                    2. 신랑&신부 행진
+                  </p>
+                  <p className="text-lg font-light text-gray-700 tracking-[0.02em]">
+                    3. 가족&친구들과 함께한 순간
+                  </p>
+                </div>
+              </div>
+
+              {/* 업로드 버튼 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="pt-8"
+              >
+                <PhotoUploadButton
+                  isWeddingTime={isWeddingTime}
+                  onUploadClick={() => setShowUploadModal(true)}
+                />
+              </motion.div>
+            </motion.div>
           </div>
-        </div>
+        </section>
       )}
 
       {/* 업로드된 사진 갤러리 */}
@@ -1354,10 +1387,28 @@ function ExclusiveComponent() {
                 </p>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-800 tracking-[0.05em]">
-                    신한은행 111-455-555555
+                    신한은행 110-452-570231
                   </p>
                   <button
-                    onClick={() => copyToClipboard("111-455-555555")}
+                    onClick={() => copyToClipboard("110-452-570231")}
+                    className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-lg mx-auto">
+              <div className="bg-white p-8 space-y-4">
+                <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
+                  신부측 계좌번호
+                </p>
+                <div className="flex justify-between items-center">
+                  <p className="text-gray-800 tracking-[0.05em]">
+                    신한은행 110-452-570231
+                  </p>
+                  <button
+                    onClick={() => copyToClipboard("110-452-570231")}
                     className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
                   >
                     Copy

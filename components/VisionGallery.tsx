@@ -28,7 +28,7 @@ interface ThumbnailConfig {
 }
 
 interface VisionGalleryProps {
-  images: GalleryImage[];
+  images: any[];
   thumbnailConfig?: ThumbnailConfig;
 }
 
