@@ -3,6 +3,16 @@
 import { galleryImages, mainImages } from "@/components/Images";
 import VisionGallery from "@/components/VisionGallery";
 
+// Fisher-Yates 셔플 알고리즘
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 // 갤러리 이미지 목록
 
 // 썸네일 설정 - 원하는 이미지를 썸네일로 지정
@@ -23,9 +33,9 @@ const thumbnailConfig = {
 };
 
 export default function GalleryPage() {
-  // mainImages를 VisionGallery에서 사용할 수 있는 형태로 변환
+  // 이미지 배열을 합치고 랜덤하게 섞기
+  const images = shuffleArray([...galleryImages, ...mainImages]);
 
-  const images = [...galleryImages, ...mainImages];
   return (
     <main className="min-h-screen">
       <VisionGallery images={images} thumbnailConfig={thumbnailConfig} />
