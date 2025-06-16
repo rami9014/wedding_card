@@ -59,9 +59,9 @@ export default function VisionGallery({
       /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
         userAgent
       );
-    const isChrome = /chrome/i.test(userAgent) && !/edg/i.test(userAgent);
+    // const isChrome = /chrome/i.test(userAgent) && !/edg/i.test(userAgent);
 
-    setIsMobileChrome(isMobile && isChrome);
+    setIsMobileChrome(isMobile);
 
     // 페이지 로드 시 스크롤을 최상단으로 설정
     window.scrollTo(0, 0);
@@ -253,17 +253,24 @@ export default function VisionGallery({
                   addSlidesBefore: 3,
                   cache: true,
                 }}
-                zoom={{
-                  maxRatio: 10,
-                  minRatio: 1,
-                  toggle: true,
-                }}
-                touchRatio={1}
-                touchAngle={45}
-                resistance={true}
-                resistanceRatio={0.85}
-                touchStartPreventDefault={false}
-                touchMoveStopPropagation={false}
+                // zoom={isMobileChrome ? {
+                //   maxRatio: 10,
+                //   minRatio: 1,
+                //   toggle: true,
+                // } : false}
+                zoom={
+                  {
+                    maxRatio: 10,
+                    minRatio: 1,
+                    toggle: true,
+                  }
+                }
+                touchRatio={isMobileChrome ? 1 : undefined}
+                touchAngle={isMobileChrome ? 45 : undefined}
+                resistance={isMobileChrome ? true : undefined}
+                resistanceRatio={isMobileChrome ? 0.85 : undefined}
+                touchStartPreventDefault={isMobileChrome ? false : undefined}
+                touchMoveStopPropagation={isMobileChrome ? false : undefined}
                 modules={[Zoom, Virtual]}
                 className={isMobileChrome ? "h-full -mt-8 md:mt-0" : "h-full"}
                 style={
