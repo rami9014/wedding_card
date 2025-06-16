@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "이태호 ❤️ 박성혜 결혼식에 초대합니다",
@@ -75,8 +76,9 @@ export default function RootLayout({
       <body>
         {children}
         <div id="portal"></div>
+        <SpeedInsights />
+        <Analytics />
       </body>
-      <SpeedInsights />
     </html>
   );
 }
