@@ -148,7 +148,7 @@ export default function VisionGallery({
 
   return (
     <div
-      className="w-full h-screen bg-black text-white relative font-apple"
+      className="w-full h-screen bg-black text-white relative"
       style={{ height: "100dvh" }}
     >
       {/* 헤더 */}
@@ -278,7 +278,9 @@ export default function VisionGallery({
                       <Image
                         src={img.src}
                         alt={img.alt}
-                        fill
+                        width={1920}
+                        height={1080}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                         className="object-contain h-full w-auto mx-auto"
                       />
                     </div>
@@ -331,8 +333,10 @@ export default function VisionGallery({
                       <Image
                         src={img.src}
                         alt={img.alt}
-                        fill
-                        className="object-cover"
+                        width={80}
+                        height={80}
+                        sizes="80px"
+                        className="object-cover w-full h-full"
                       />
                       <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
                       {currentSlideIndex === index && (
@@ -349,13 +353,13 @@ export default function VisionGallery({
 
       {/* 연도 썸네일 */}
       {selectedView === "years" && !selectedYear && (
-        <div className="h-screen pt-16 pb-20">
+        <div className="h-screen pt-16">
           {/* 세로가 긴 화면: 세로 3등분 (1열 3행) */}
           <div className="h-full w-full portrait:flex portrait:flex-col portrait:gap-1 portrait:px-1 landscape:hidden">
             {yearThumbnails.map((item) => (
               <div
                 key={item.year}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
+                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                 onClick={() => {
                   setSelectedYear(item.year);
                 }}
@@ -364,8 +368,10 @@ export default function VisionGallery({
                   <Image
                     src={item.thumbnail}
                     alt={String(item.year)}
-                    fill
-                    className="object-cover"
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                    className="object-cover w-full h-full"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -381,7 +387,7 @@ export default function VisionGallery({
             {yearThumbnails.map((item) => (
               <div
                 key={item.year}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
+                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                 onClick={() => {
                   setSelectedYear(item.year);
                 }}
@@ -390,8 +396,10 @@ export default function VisionGallery({
                   <Image
                     src={item.thumbnail}
                     alt={String(item.year)}
-                    fill
-                    className="object-cover"
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                    className="object-cover w-full h-full"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -406,9 +414,9 @@ export default function VisionGallery({
 
       {/* 연도 선택 후 계절 선택 */}
       {selectedView === "years" && selectedYear && !selectedSeason && (
-        <div className="h-screen pt-16 pb-20">
+        <div className="h-screen pt-16">
           {/* 해당 연도의 계절별 썸네일 */}
-          <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden pt-16">
+          <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden">
             {seasons.map((season) => {
               const seasonImage = filteredImages.find(
                 (img) => img.season === season.id
@@ -427,8 +435,10 @@ export default function VisionGallery({
                     <Image
                       src={seasonImage.src}
                       alt={`${selectedYear}년 ${season.name}`}
-                      fill
-                      className="object-cover"
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -445,7 +455,7 @@ export default function VisionGallery({
             })}
           </div>
 
-          <div className="h-full w-full landscape:flex landscape:gap-3 landscape:px-3 portrait:hidden pt-16">
+          <div className="h-full w-full landscape:flex landscape:gap-3 landscape:px-3 portrait:hidden">
             {seasons.map((season) => {
               const seasonImage = filteredImages.find(
                 (img) => img.season === season.id
@@ -464,8 +474,10 @@ export default function VisionGallery({
                     <Image
                       src={seasonImage.src}
                       alt={`${selectedYear}년 ${season.name}`}
-                      fill
-                      className="object-cover"
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -486,13 +498,13 @@ export default function VisionGallery({
 
       {/* 계절 썸네일 */}
       {selectedView === "seasons" && !selectedSeason && (
-        <div className="h-screen pt-16 pb-20">
+        <div className="h-screen pt-16">
           {/* 세로가 긴 화면: 2x2 그리드 */}
           <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden">
             {seasonThumbnails.map((item) => (
               <div
                 key={item.id}
-                className="relative rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
+                className="relative rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                 onClick={() => {
                   setSelectedSeason(item.id);
                 }}
@@ -501,8 +513,10 @@ export default function VisionGallery({
                   <Image
                     src={item.thumbnail}
                     alt={item.name}
-                    fill
-                    className="object-cover"
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                    className="object-cover w-full h-full"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -518,7 +532,7 @@ export default function VisionGallery({
             {seasonThumbnails.map((item) => (
               <div
                 key={item.id}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group  transition-transform duration-300"
+                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                 onClick={() => {
                   setSelectedSeason(item.id);
                 }}
@@ -527,8 +541,10 @@ export default function VisionGallery({
                   <Image
                     src={item.thumbnail}
                     alt={item.name}
-                    fill
-                    className="object-cover"
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                    className="object-cover w-full h-full"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -543,9 +559,9 @@ export default function VisionGallery({
 
       {/* 계절 선택 후 연도 선택 */}
       {selectedView === "seasons" && selectedSeason && !selectedYear && (
-        <div className="h-screen pt-16 pb-20">
+        <div className="h-screen pt-16">
           {/* 해당 계절의 연도별 썸네일 */}
-          <div className="h-full w-full portrait:flex portrait:flex-col portrait:gap-1 portrait:px-1 landscape:hidden pt-16">
+          <div className="h-full w-full portrait:flex portrait:flex-col portrait:gap-1 portrait:px-1 landscape:hidden">
             {years.map((year) => {
               const yearImage = images.find(
                 (img) => img.season === selectedSeason && img.year === year
@@ -566,8 +582,10 @@ export default function VisionGallery({
                       alt={`${year}년 ${
                         seasons.find((s) => s.id === selectedSeason)?.name
                       }`}
-                      fill
-                      className="object-cover"
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -584,7 +602,7 @@ export default function VisionGallery({
             })}
           </div>
 
-          <div className="h-full w-full landscape:flex landscape:gap-1 landscape:px-1 portrait:hidden pt-16">
+          <div className="h-full w-full landscape:flex landscape:gap-1 landscape:px-1 portrait:hidden">
             {years.map((year) => {
               const yearImage = images.find(
                 (img) => img.season === selectedSeason && img.year === year
@@ -605,8 +623,10 @@ export default function VisionGallery({
                       alt={`${year}년 ${
                         seasons.find((s) => s.id === selectedSeason)?.name
                       }`}
-                      fill
-                      className="object-cover"
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
