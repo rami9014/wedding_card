@@ -253,6 +253,17 @@ export default function VisionGallery({
                   addSlidesBefore: 3,
                   cache: true,
                 }}
+                zoom={{
+                  maxRatio: 10,
+                  minRatio: 1,
+                  toggle: true,
+                }}
+                touchRatio={1}
+                touchAngle={45}
+                resistance={true}
+                resistanceRatio={0.85}
+                touchStartPreventDefault={false}
+                touchMoveStopPropagation={false}
                 modules={[Zoom, Virtual]}
                 className={isMobileChrome ? "h-full -mt-8 md:mt-0" : "h-full"}
                 style={
