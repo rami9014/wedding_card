@@ -10,9 +10,10 @@ import React, {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Zoom } from "swiper/modules";
+import { Zoom, Virtual } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/zoom";
+import "swiper/css/virtual";
 import SwipeVerticalIcon from "@mui/icons-material/SwipeVertical";
 interface GalleryImage {
   src: string;
@@ -246,12 +247,13 @@ export default function VisionGallery({
                 slidesPerView={1}
                 spaceBetween={0}
                 mousewheel
-                zoom={{
-                  maxRatio: 10,
-                  minRatio: 1,
-                  toggle: true,
+                virtual={{
+                  enabled: true,
+                  addSlidesAfter: 3,
+                  addSlidesBefore: 3,
+                  cache: true,
                 }}
-                modules={[Zoom]}
+                modules={[Zoom, Virtual]}
                 className={isMobileChrome ? "h-full -mt-8 md:mt-0" : "h-full"}
                 style={
                   isMobileChrome
@@ -272,16 +274,18 @@ export default function VisionGallery({
                 {filteredImages.map((img, i) => (
                   <SwiperSlide
                     key={i}
+                    virtualIndex={i}
                     className="flex items-center justify-center h-full"
                   >
-                    <div className="swiper-zoom-container relative w-full h-full">
+                    <div className="swiper-zoom-container relative w-full h-full flex items-center justify-center">
                       <Image
                         src={img.src}
                         alt={img.alt}
                         width={1920}
                         height={1080}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                        className="object-contain h-full w-auto mx-auto"
+                        className="object-contain max-h-full max-w-full"
+                        loading="lazy"
                       />
                     </div>
                   </SwiperSlide>
@@ -337,6 +341,7 @@ export default function VisionGallery({
                         height={80}
                         sizes="80px"
                         className="object-cover w-full h-full"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors" />
                       {currentSlideIndex === index && (
@@ -372,6 +377,7 @@ export default function VisionGallery({
                     height={600}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     className="object-cover w-full h-full"
+                    loading="lazy"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -400,6 +406,7 @@ export default function VisionGallery({
                     height={600}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     className="object-cover w-full h-full"
+                    loading="lazy"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -439,6 +446,7 @@ export default function VisionGallery({
                       height={600}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                       className="object-cover w-full h-full"
+                      loading="lazy"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -478,6 +486,7 @@ export default function VisionGallery({
                       height={600}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                       className="object-cover w-full h-full"
+                      loading="lazy"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -517,6 +526,7 @@ export default function VisionGallery({
                     height={600}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     className="object-cover w-full h-full"
+                    loading="lazy"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -545,6 +555,7 @@ export default function VisionGallery({
                     height={600}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     className="object-cover w-full h-full"
+                    loading="lazy"
                   />
                 )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -586,6 +597,7 @@ export default function VisionGallery({
                       height={600}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                       className="object-cover w-full h-full"
+                      loading="lazy"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -627,6 +639,7 @@ export default function VisionGallery({
                       height={600}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                       className="object-cover w-full h-full"
+                      loading="lazy"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />

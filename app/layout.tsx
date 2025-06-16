@@ -25,13 +25,13 @@ export const metadata: Metadata = {
       "2025년 7월 19일 토요일 오전 11시 30분, 당산 그랜드컨벤션센터에서 열리는 저희의 결혼식에 초대합니다.",
     images: [
       {
-        url: "https://d11ay48rmhjgmh.cloudfront.net/wedding/meta.png",
+        url: "https://d11ay48rmhjgmh.cloudfront.net/wedding/thumb.png",
         width: 1200,
         height: 630,
         alt: "이태호 ❤️ 박성혜 결혼식 사진",
       },
       {
-        url: "https://d11ay48rmhjgmh.cloudfront.net/wedding/meta.png",
+        url: "https://d11ay48rmhjgmh.cloudfront.net/wedding/thumb.png",
         width: 800,
         height: 600,
         alt: "이태호 ❤️ 박성혜 결혼식 사진",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "이태호 ❤️ 박성혜 결혼식에 초대합니다",
     description: "2025년 7월 19일 토요일 오전 11시 30분, 당산 그랜드컨벤션센터",
-    images: ["https://d11ay48rmhjgmh.cloudfront.net/wedding/meta.png"],
+    images: ["https://d11ay48rmhjgmh.cloudfront.net/wedding/thumb.png"],
     creator: "@wedding_taeho_sunghye",
   },
 };
