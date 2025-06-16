@@ -1373,14 +1373,14 @@ export const galleryImages = [
     seasonKr: "가을",
     alt: "웨딩",
   },
-  {
-    id: "2023-spring-45",
-    src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_48.jpg",
-    year: 2023,
-    season: "winter",
-    seasonKr: "겨울",
-    alt: "웨딩",
-  },
+  // {
+  //   id: "2023-spring-45",
+  //   src: "https://d11ay48rmhjgmh.cloudfront.net/wedding/o_48.jpg",
+  //   year: 2023,
+  //   season: "winter",
+  //   seasonKr: "겨울",
+  //   alt: "웨딩",
+  // },
 ];
 
 // 2023 봄: 45개

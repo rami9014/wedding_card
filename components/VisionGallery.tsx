@@ -372,60 +372,64 @@ export default function VisionGallery({
         <div className="h-screen pt-16">
           {/* 세로가 긴 화면: 세로 3등분 (1열 3행) */}
           <div className="h-full w-full portrait:flex portrait:flex-col portrait:gap-1 portrait:px-1 landscape:hidden">
-            {yearThumbnails.map((item) => (
-              <div
-                key={item.year}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
-                onClick={() => {
-                  setSelectedYear(item.year);
-                }}
-              >
-                {item.thumbnail && (
-                  <Image
-                    src={item.thumbnail}
-                    alt={String(item.year)}
-                    width={800}
-                    height={600}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    className="object-cover w-full h-full"
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                  {item.year}
+            {yearThumbnails
+              .filter(item => item.hasImages)
+              .map((item) => (
+                <div
+                  key={item.year}
+                  className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
+                  onClick={() => {
+                    setSelectedYear(item.year);
+                  }}
+                >
+                  {item.thumbnail && (
+                    <Image
+                      src={item.thumbnail}
+                      alt={String(item.year)}
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {item.year}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* 가로가 긴 화면: 가로 3등분 (3열 1행) */}
           <div className="h-full w-full landscape:flex landscape:gap-1 landscape:px-1 portrait:hidden">
-            {yearThumbnails.map((item) => (
-              <div
-                key={item.year}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
-                onClick={() => {
-                  setSelectedYear(item.year);
-                }}
-              >
-                {item.thumbnail && (
-                  <Image
-                    src={item.thumbnail}
-                    alt={String(item.year)}
-                    width={800}
-                    height={600}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    className="object-cover w-full h-full"
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                  {item.year}
+            {yearThumbnails
+              .filter(item => item.hasImages)
+              .map((item) => (
+                <div
+                  key={item.year}
+                  className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
+                  onClick={() => {
+                    setSelectedYear(item.year);
+                  }}
+                >
+                  {item.thumbnail && (
+                    <Image
+                      src={item.thumbnail}
+                      alt={String(item.year)}
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {item.year}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       )}
@@ -435,83 +439,79 @@ export default function VisionGallery({
         <div className="h-screen pt-16">
           {/* 해당 연도의 계절별 썸네일 */}
           <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden">
-            {seasons.map((season) => {
-              const seasonImage = filteredImages.find(
-                (img) => img.season === season.id
-              );
-              return (
-                <div
-                  key={season.id}
-                  className={`relative rounded-lg overflow-hidden transition-transform duration-300 ${
-                    seasonImage
-                      ? "cursor-pointer group hover:scale-105"
-                      : "opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={() => seasonImage && setSelectedSeason(season.id)}
-                >
-                  {seasonImage && (
-                    <Image
-                      src={seasonImage.src}
-                      alt={`${selectedYear}년 ${season.name}`}
-                      width={800}
-                      height={600}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                      className="object-cover w-full h-full"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                    {season.name}
-                  </div>
-                  {!seasonImage && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-                      <span className="text-gray-400 text-sm">이미지 없음</span>
+            {seasons
+              .filter(season => {
+                const seasonImage = filteredImages.find(
+                  (img) => img.season === season.id
+                );
+                return !!seasonImage;
+              })
+              .map((season) => {
+                const seasonImage = filteredImages.find(
+                  (img) => img.season === season.id
+                );
+                return (
+                  <div
+                    key={season.id}
+                    className="relative rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
+                    onClick={() => setSelectedSeason(season.id)}
+                  >
+                    {seasonImage && (
+                      <Image
+                        src={seasonImage.src}
+                        alt={`${selectedYear}년 ${season.name}`}
+                        width={800}
+                        height={600}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                        className="object-cover w-full h-full"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                    <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                      {season.name}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
           </div>
 
           <div className="h-full w-full landscape:flex landscape:gap-3 landscape:px-3 portrait:hidden">
-            {seasons.map((season) => {
-              const seasonImage = filteredImages.find(
-                (img) => img.season === season.id
-              );
-              return (
-                <div
-                  key={season.id}
-                  className={`relative flex-1 rounded-lg overflow-hidden transition-transform duration-300 ${
-                    seasonImage
-                      ? "cursor-pointer group hover:scale-105"
-                      : "opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={() => seasonImage && setSelectedSeason(season.id)}
-                >
-                  {seasonImage && (
-                    <Image
-                      src={seasonImage.src}
-                      alt={`${selectedYear}년 ${season.name}`}
-                      width={800}
-                      height={600}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                      className="object-cover w-full h-full"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                    {season.name}
-                  </div>
-                  {!seasonImage && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-                      <span className="text-gray-400 text-sm">이미지 없음</span>
+            {seasons
+              .filter(season => {
+                const seasonImage = filteredImages.find(
+                  (img) => img.season === season.id
+                );
+                return !!seasonImage;
+              })
+              .map((season) => {
+                const seasonImage = filteredImages.find(
+                  (img) => img.season === season.id
+                );
+                return (
+                  <div
+                    key={season.id}
+                    className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
+                    onClick={() => setSelectedSeason(season.id)}
+                  >
+                    {seasonImage && (
+                      <Image
+                        src={seasonImage.src}
+                        alt={`${selectedYear}년 ${season.name}`}
+                        width={800}
+                        height={600}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                        className="object-cover w-full h-full"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                    <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                      {season.name}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
           </div>
         </div>
       )}
@@ -521,60 +521,64 @@ export default function VisionGallery({
         <div className="h-screen pt-16">
           {/* 세로가 긴 화면: 2x2 그리드 */}
           <div className="h-full w-full portrait:grid portrait:grid-cols-2 portrait:grid-rows-2 portrait:gap-3 portrait:px-3 landscape:hidden">
-            {seasonThumbnails.map((item) => (
-              <div
-                key={item.id}
-                className="relative rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
-                onClick={() => {
-                  setSelectedSeason(item.id);
-                }}
-              >
-                {item.thumbnail && (
-                  <Image
-                    src={item.thumbnail}
-                    alt={item.name}
-                    width={800}
-                    height={600}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    className="object-cover w-full h-full"
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                  {item.name}
+            {seasonThumbnails
+              .filter(item => item.hasImages)
+              .map((item) => (
+                <div
+                  key={item.id}
+                  className="relative rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
+                  onClick={() => {
+                    setSelectedSeason(item.id);
+                  }}
+                >
+                  {item.thumbnail && (
+                    <Image
+                      src={item.thumbnail}
+                      alt={item.name}
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {item.name}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* 가로가 긴 화면: 가로 4등분 (4열 1행) */}
           <div className="h-full w-full landscape:flex landscape:gap-3 landscape:px-3 portrait:hidden">
-            {seasonThumbnails.map((item) => (
-              <div
-                key={item.id}
-                className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
-                onClick={() => {
-                  setSelectedSeason(item.id);
-                }}
-              >
-                {item.thumbnail && (
-                  <Image
-                    src={item.thumbnail}
-                    alt={item.name}
-                    width={800}
-                    height={600}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    className="object-cover w-full h-full"
-                    loading="lazy"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                  {item.name}
+            {seasonThumbnails
+              .filter(item => item.hasImages)
+              .map((item) => (
+                <div
+                  key={item.id}
+                  className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
+                  onClick={() => {
+                    setSelectedSeason(item.id);
+                  }}
+                >
+                  {item.thumbnail && (
+                    <Image
+                      src={item.thumbnail}
+                      alt={item.name}
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      className="object-cover w-full h-full"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                    {item.name}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       )}
@@ -584,87 +588,83 @@ export default function VisionGallery({
         <div className="h-screen pt-16">
           {/* 해당 계절의 연도별 썸네일 */}
           <div className="h-full w-full portrait:flex portrait:flex-col portrait:gap-1 portrait:px-1 landscape:hidden">
-            {years.map((year) => {
-              const yearImage = images.find(
-                (img) => img.season === selectedSeason && img.year === year
-              );
-              return (
-                <div
-                  key={year}
-                  className={`relative flex-1 rounded-lg overflow-hidden transition-transform duration-300 ${
-                    yearImage
-                      ? "cursor-pointer group hover:scale-105"
-                      : "opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={() => yearImage && setSelectedYear(year)}
-                >
-                  {yearImage && (
-                    <Image
-                      src={yearImage.src}
-                      alt={`${year}년 ${
-                        seasons.find((s) => s.id === selectedSeason)?.name
-                      }`}
-                      width={800}
-                      height={600}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                      className="object-cover w-full h-full"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                    {year}
-                  </div>
-                  {!yearImage && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-                      <span className="text-gray-400 text-sm">이미지 없음</span>
+            {years
+              .filter(year => {
+                const yearImage = images.find(
+                  (img) => img.season === selectedSeason && img.year === year
+                );
+                return !!yearImage;
+              })
+              .map((year) => {
+                const yearImage = images.find(
+                  (img) => img.season === selectedSeason && img.year === year
+                );
+                return (
+                  <div
+                    key={year}
+                    className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
+                    onClick={() => setSelectedYear(year)}
+                  >
+                    {yearImage && (
+                      <Image
+                        src={yearImage.src}
+                        alt={`${year}년 ${
+                          seasons.find((s) => s.id === selectedSeason)?.name
+                        }`}
+                        width={800}
+                        height={600}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                        className="object-cover w-full h-full"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                    <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                      {year}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
           </div>
 
           <div className="h-full w-full landscape:flex landscape:gap-1 landscape:px-1 portrait:hidden">
-            {years.map((year) => {
-              const yearImage = images.find(
-                (img) => img.season === selectedSeason && img.year === year
-              );
-              return (
-                <div
-                  key={year}
-                  className={`relative flex-1 rounded-lg overflow-hidden transition-transform duration-300 ${
-                    yearImage
-                      ? "cursor-pointer group hover:scale-105"
-                      : "opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={() => yearImage && setSelectedYear(year)}
-                >
-                  {yearImage && (
-                    <Image
-                      src={yearImage.src}
-                      alt={`${year}년 ${
-                        seasons.find((s) => s.id === selectedSeason)?.name
-                      }`}
-                      width={800}
-                      height={600}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                      className="object-cover w-full h-full"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                  <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
-                    {year}
-                  </div>
-                  {!yearImage && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-                      <span className="text-gray-400 text-sm">이미지 없음</span>
+            {years
+              .filter(year => {
+                const yearImage = images.find(
+                  (img) => img.season === selectedSeason && img.year === year
+                );
+                return !!yearImage;
+              })
+              .map((year) => {
+                const yearImage = images.find(
+                  (img) => img.season === selectedSeason && img.year === year
+                );
+                return (
+                  <div
+                    key={year}
+                    className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
+                    onClick={() => setSelectedYear(year)}
+                  >
+                    {yearImage && (
+                      <Image
+                        src={yearImage.src}
+                        alt={`${year}년 ${
+                          seasons.find((s) => s.id === selectedSeason)?.name
+                        }`}
+                        width={800}
+                        height={600}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                        className="object-cover w-full h-full"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                    <div className="absolute bottom-2 left-2 text-white text-lg font-bold drop-shadow-lg">
+                      {year}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
           </div>
         </div>
       )}
