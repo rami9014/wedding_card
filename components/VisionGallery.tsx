@@ -15,6 +15,8 @@ import "swiper/css";
 import "swiper/css/zoom";
 import "swiper/css/virtual";
 import SwipeVerticalIcon from "@mui/icons-material/SwipeVertical";
+import { track } from "@vercel/analytics";
+
 interface GalleryImage {
   src: string;
   alt: string;
@@ -147,6 +149,88 @@ export default function VisionGallery({
     });
   }, [images, thumbnailConfig]);
 
+  // 세션 시간 추적
+  useEffect(() => {
+    const startTime = Date.now();
+    return () => {
+      const duration = Date.now() - startTime;
+      track('Gallery Session Duration', {
+        duration,
+        imagesViewed: currentSlideIndex + 1,
+        totalImages: filteredImages.length
+      });
+    };
+  }, []);
+
+  // 이미지 조회 추적
+  useEffect(() => {
+    if (currentSlideIndex !== undefined) {
+      track('Gallery Image View', {
+        imageIndex: currentSlideIndex,
+        imageSrc: filteredImages[currentSlideIndex]?.src,
+        year: filteredImages[currentSlideIndex]?.year,
+        season: filteredImages[currentSlideIndex]?.season
+      });
+    }
+  }, [currentSlideIndex, filteredImages]);
+
+  // 뷰 변경 추적
+  const handleViewChange = (view: "all" | "years" | "seasons") => {
+    track('Gallery View Change', {
+      from: selectedView,
+      to: view
+    });
+    setSelectedView(view);
+    setSelectedYear(null);
+    setSelectedSeason(null);
+    setCurrentSlideIndex(0);
+    swiperInstance?.slideTo(0);
+  };
+
+  // 연도/계절 선택 추적
+  const handleYearSelect = (year: number) => {
+    track('Gallery Year Select', {
+      year,
+      previousYear: selectedYear
+    });
+    setSelectedYear(year);
+  };
+
+  const handleSeasonSelect = (season: string) => {
+    track('Gallery Season Select', {
+      season,
+      previousSeason: selectedSeason
+    });
+    setSelectedSeason(season);
+  };
+
+  // 이미지 줌 추적
+  const handleZoom = (scale: number) => {
+    track('Gallery Image Zoom', {
+      scale,
+      imageIndex: currentSlideIndex,
+      imageSrc: filteredImages[currentSlideIndex]?.src
+    });
+  };
+
+  // 스와이프 추적
+  const handleSwipe = (direction: 'up' | 'down') => {
+    track('Gallery Swipe', {
+      direction,
+      fromIndex: currentSlideIndex,
+      toIndex: currentSlideIndex + (direction === 'up' ? 1 : -1)
+    });
+  };
+
+  // 썸네일 클릭 추적
+  const handleThumbnailClick = (index: number) => {
+    track('Gallery Thumbnail Click', {
+      fromIndex: currentSlideIndex,
+      toIndex: index,
+      imageSrc: filteredImages[index]?.src
+    });
+  };
+
   return (
     <div
       className="w-full h-screen bg-black text-white relative"
@@ -160,8 +244,10 @@ export default function VisionGallery({
             <button
               onClick={() => {
                 if (selectedSeason) {
+                  track('Gallery Navigation', { action: 'Back from Season' });
                   setSelectedSeason(null);
                 } else if (selectedYear) {
+                  track('Gallery Navigation', { action: 'Back from Year' });
                   setSelectedYear(null);
                 }
               }}
@@ -183,13 +269,7 @@ export default function VisionGallery({
             ].map((btn) => (
               <button
                 key={btn.key}
-                onClick={() => {
-                  setSelectedView(btn.key as any);
-                  setSelectedYear(null);
-                  setSelectedSeason(null);
-                  setCurrentSlideIndex(0);
-                  swiperInstance?.slideTo(0);
-                }}
+                onClick={() => handleViewChange(btn.key as any)}
                 className={`px-3 py-1 rounded-full text-xs transition-colors ${
                   selectedView === btn.key
                     ? "bg-white text-black"
@@ -285,9 +365,11 @@ export default function VisionGallery({
                   setShowSwipeGuide(false);
                   setCurrentSlideIndex(swiper.activeIndex);
                   scrollToThumbnail(swiper.activeIndex);
+                  handleSwipe(swiper.activeIndex > currentSlideIndex ? 'up' : 'down');
                 }}
                 onTouchStart={() => setShowSwipeGuide(false)}
                 onSwiper={setSwiperInstance}
+                onZoomChange={(swiper, scale) => handleZoom(scale)}
               >
                 {filteredImages.map((img, i) => (
                   <SwiperSlide
@@ -350,7 +432,10 @@ export default function VisionGallery({
                           ? "ring-2 ring-white shadow-lg transform scale-105"
                           : "ring-1 ring-white/20 hover:ring-white/40"
                       }`}
-                      onClick={() => swiperInstance?.slideTo(index)}
+                      onClick={() => {
+                        swiperInstance?.slideTo(index);
+                        handleThumbnailClick(index);
+                      }}
                     >
                       <Image
                         src={img.src}
@@ -386,7 +471,7 @@ export default function VisionGallery({
                   key={item.year}
                   className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                   onClick={() => {
-                    setSelectedYear(item.year);
+                    handleYearSelect(item.year);
                   }}
                 >
                   {item.thumbnail && (
@@ -417,7 +502,7 @@ export default function VisionGallery({
                   key={item.year}
                   className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                   onClick={() => {
-                    setSelectedYear(item.year);
+                    handleYearSelect(item.year);
                   }}
                 >
                   {item.thumbnail && (
@@ -461,7 +546,7 @@ export default function VisionGallery({
                   <div
                     key={season.id}
                     className="relative rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
-                    onClick={() => setSelectedSeason(season.id)}
+                    onClick={() => handleSeasonSelect(season.id)}
                   >
                     {seasonImage && (
                       <Image
@@ -499,7 +584,7 @@ export default function VisionGallery({
                   <div
                     key={season.id}
                     className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
-                    onClick={() => setSelectedSeason(season.id)}
+                    onClick={() => handleSeasonSelect(season.id)}
                   >
                     {seasonImage && (
                       <Image
@@ -535,7 +620,7 @@ export default function VisionGallery({
                   key={item.id}
                   className="relative rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                   onClick={() => {
-                    setSelectedSeason(item.id);
+                    handleSeasonSelect(item.id);
                   }}
                 >
                   {item.thumbnail && (
@@ -566,7 +651,7 @@ export default function VisionGallery({
                   key={item.id}
                   className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group transition-transform duration-300"
                   onClick={() => {
-                    setSelectedSeason(item.id);
+                    handleSeasonSelect(item.id);
                   }}
                 >
                   {item.thumbnail && (
@@ -610,7 +695,7 @@ export default function VisionGallery({
                   <div
                     key={year}
                     className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
-                    onClick={() => setSelectedYear(year)}
+                    onClick={() => handleYearSelect(year)}
                   >
                     {yearImage && (
                       <Image
@@ -650,7 +735,7 @@ export default function VisionGallery({
                   <div
                     key={year}
                     className="relative flex-1 rounded-lg overflow-hidden cursor-pointer group hover:scale-105 transition-transform duration-300"
-                    onClick={() => setSelectedYear(year)}
+                    onClick={() => handleYearSelect(year)}
                   >
                     {yearImage && (
                       <Image

@@ -29,6 +29,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/zoom";
+import { track } from "@vercel/analytics";
 // dayjs 플러그인 로드
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -302,12 +303,18 @@ function ExclusiveComponent() {
     }
   }, [mounted, isWeddingTime, setShowUploadModal]);
 
+  // 참석 여부 제출 추적
   const handleAttendanceSubmit = async (
     submissionData?: typeof attendanceInfo
   ) => {
     const dataToSubmit = submissionData || attendanceInfo;
 
     if (dataToSubmit.willAttend !== null) {
+      track('Wedding Attendance Submit', {
+        willAttend: dataToSubmit.willAttend,
+        hasName: !!dataToSubmit.name,
+        hasPhone: !!dataToSubmit.phone
+      });
       // Device ID 생성 (강화된 브라우저 fingerprint 기반)
       const generateDeviceId = () => {
         const canvas = document.createElement("canvas");
@@ -484,9 +491,58 @@ function ExclusiveComponent() {
     }
   };
 
-  const copyToClipboard = (text: string) => {
+  // 연락처 복사 추적
+  const copyToClipboard = (text: string, type: string) => {
+    track('Contact Copy', {
+      type,
+      text
+    });
     navigator.clipboard.writeText(text);
   };
+
+  // 갤러리 이미지 클릭 추적
+  const handleGalleryImageClick = (index: number) => {
+    const imageSrc = randomImages[index];
+    const fileName = imageSrc.split('/').pop() || '';
+    track('Gallery Image Click', {
+      fileName,
+      imageSrc
+    });
+    setSelectedImageIndex(index);
+  };
+
+  // 페이지 스크롤 추적
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollPercentage = (scrollPosition / (documentHeight - windowHeight)) * 100;
+
+      if (scrollPercentage > 25 && scrollPercentage <= 50) {
+        track('Page Scroll', { section: '25-50%' });
+      } else if (scrollPercentage > 50 && scrollPercentage <= 75) {
+        track('Page Scroll', { section: '50-75%' });
+      } else if (scrollPercentage > 75) {
+        track('Page Scroll', { section: '75-100%' });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 페이지 방문 시간 추적
+  useEffect(() => {
+    const startTime = Date.now();
+    return () => {
+      const duration = Date.now() - startTime;
+      track('Page Visit Duration', {
+        duration,
+        path: window.location.pathname
+      });
+    };
+  }, []);
 
   return (
     <main
@@ -1052,7 +1108,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-2 gap-4">
                   <div
                     className="col-span-2 aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(7)}
+                    onClick={() => handleGalleryImageClick(7)}
                   >
                     <Image
                       src={randomImages[7]}
@@ -1063,7 +1119,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(8)}
+                    onClick={() => handleGalleryImageClick(8)}
                   >
                     <Image
                       src={randomImages[8]}
@@ -1074,7 +1130,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(9)}
+                    onClick={() => handleGalleryImageClick(9)}
                   >
                     <Image
                       src={randomImages[9]}
@@ -1089,7 +1145,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-2 gap-4">
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(10)}
+                    onClick={() => handleGalleryImageClick(10)}
                   >
                     <Image
                       src={randomImages[10]}
@@ -1100,7 +1156,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(11)}
+                    onClick={() => handleGalleryImageClick(11)}
                   >
                     <Image
                       src={randomImages[11]}
@@ -1114,7 +1170,7 @@ function ExclusiveComponent() {
                 {/* 세 번째 섹션: 가로 긴 이미지 */}
                 <div
                   className="aspect-[16/9] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                  onClick={() => setSelectedImageIndex(12)}
+                  onClick={() => handleGalleryImageClick(12)}
                 >
                   <Image
                     src={randomImages[12]}
@@ -1128,7 +1184,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-2 gap-4">
                   <div
                     className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(13)}
+                    onClick={() => handleGalleryImageClick(13)}
                   >
                     <Image
                       src={randomImages[13]}
@@ -1139,7 +1195,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(14)}
+                    onClick={() => handleGalleryImageClick(14)}
                   >
                     <Image
                       src={randomImages[14]}
@@ -1153,7 +1209,7 @@ function ExclusiveComponent() {
                 {/* 다섯 번째 섹션: 큰 정사각형 */}
                 <div
                   className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                  onClick={() => setSelectedImageIndex(15)}
+                  onClick={() => handleGalleryImageClick(15)}
                 >
                   <Image
                     src={randomImages[15]}
@@ -1166,7 +1222,7 @@ function ExclusiveComponent() {
                 {/* 여섯 번째 섹션: 가로 긴 이미지 */}
                 <div
                   className="aspect-[16/9] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                  onClick={() => setSelectedImageIndex(18)}
+                  onClick={() => handleGalleryImageClick(18)}
                 >
                   <Image
                     src={randomImages[18]}
@@ -1180,7 +1236,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-2 gap-4">
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(19)}
+                    onClick={() => handleGalleryImageClick(19)}
                   >
                     <Image
                       src={randomImages[19]}
@@ -1191,7 +1247,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(20)}
+                    onClick={() => handleGalleryImageClick(20)}
                   >
                     <Image
                       src={randomImages[20] || randomImages[7]}
@@ -1210,7 +1266,7 @@ function ExclusiveComponent() {
                   <div className="col-span-8">
                     <div
                       className="aspect-[16/9] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setSelectedImageIndex(7)}
+                      onClick={() => handleGalleryImageClick(7)}
                     >
                       <Image
                         src={randomImages[7]}
@@ -1223,7 +1279,7 @@ function ExclusiveComponent() {
                   <div className="col-span-4 space-y-4">
                     <div
                       className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setSelectedImageIndex(8)}
+                      onClick={() => handleGalleryImageClick(8)}
                     >
                       <Image
                         src={randomImages[8]}
@@ -1234,7 +1290,7 @@ function ExclusiveComponent() {
                     </div>
                     <div
                       className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setSelectedImageIndex(9)}
+                      onClick={() => handleGalleryImageClick(9)}
                     >
                       <Image
                         src={randomImages[9]}
@@ -1250,7 +1306,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div
                     className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(10)}
+                    onClick={() => handleGalleryImageClick(10)}
                   >
                     <Image
                       src={randomImages[10]}
@@ -1261,7 +1317,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(11)}
+                    onClick={() => handleGalleryImageClick(11)}
                   >
                     <Image
                       src={randomImages[11]}
@@ -1272,7 +1328,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-[3/4] relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(12)}
+                    onClick={() => handleGalleryImageClick(12)}
                   >
                     <Image
                       src={randomImages[12]}
@@ -1288,7 +1344,7 @@ function ExclusiveComponent() {
                   <div className="col-span-4 space-y-4">
                     <div
                       className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setSelectedImageIndex(13)}
+                      onClick={() => handleGalleryImageClick(13)}
                     >
                       <Image
                         src={randomImages[13]}
@@ -1299,7 +1355,7 @@ function ExclusiveComponent() {
                     </div>
                     <div
                       className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setSelectedImageIndex(14)}
+                      onClick={() => handleGalleryImageClick(14)}
                     >
                       <Image
                         src={randomImages[14]}
@@ -1312,7 +1368,7 @@ function ExclusiveComponent() {
                   <div className="col-span-8">
                     <div
                       className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setSelectedImageIndex(15)}
+                      onClick={() => handleGalleryImageClick(15)}
                     >
                       <Image
                         src={randomImages[15]}
@@ -1328,7 +1384,7 @@ function ExclusiveComponent() {
                 <div className="grid grid-cols-4 gap-4">
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(16)}
+                    onClick={() => handleGalleryImageClick(16)}
                   >
                     <Image
                       src={randomImages[16]}
@@ -1339,7 +1395,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(17)}
+                    onClick={() => handleGalleryImageClick(17)}
                   >
                     <Image
                       src={randomImages[17]}
@@ -1350,7 +1406,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(18)}
+                    onClick={() => handleGalleryImageClick(18)}
                   >
                     <Image
                       src={randomImages[18]}
@@ -1361,7 +1417,7 @@ function ExclusiveComponent() {
                   </div>
                   <div
                     className="aspect-square relative rounded-none overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setSelectedImageIndex(19)}
+                    onClick={() => handleGalleryImageClick(19)}
                   >
                     <Image
                       src={randomImages[19]}
@@ -1435,7 +1491,7 @@ function ExclusiveComponent() {
                     신한은행 110-452-570231
                   </p>
                   <button
-                    onClick={() => copyToClipboard("110-452-570231")}
+                    onClick={() => copyToClipboard("110-452-570231", "groom")}
                     className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
                   >
                     Copy
@@ -1453,7 +1509,7 @@ function ExclusiveComponent() {
                     하나은행 102-910774-73507
                   </p>
                   <button
-                    onClick={() => copyToClipboard("102-910774-73507")}
+                    onClick={() => copyToClipboard("102-910774-73507", "bride")}
                     className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
                   >
                     Copy
