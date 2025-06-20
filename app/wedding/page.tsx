@@ -30,6 +30,7 @@ import { Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/zoom";
 import { track } from "@vercel/analytics";
+import Divider from "@mui/material/Divider";
 // dayjs 플러그인 로드
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -1473,7 +1474,7 @@ function ExclusiveComponent() {
           >
             <div className="text-center space-y-4">
               <h2 className="text-4xl font-light tracking-[0.2em] uppercase">
-                Gift
+                마음 전하실 곳
               </h2>
               <p className="text-gray-500 tracking-[0.1em] uppercase text-sm">
                 With Gratitude
@@ -1484,11 +1485,26 @@ function ExclusiveComponent() {
               {/* 신랑측 계좌번호 */}
               <div className="bg-white p-8 space-y-4">
                 <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
-                  신랑측 계좌번호
+                  신랑 이태호
                 </p>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-800 tracking-[0.05em]">
                     신한은행 110-452-570231
+                  </p>
+                  <button
+                    onClick={() => copyToClipboard("110-452-570231", "groom")}
+                    className="text-black hover:text-gray-600 transition-colors uppercase text-sm tracking-[0.1em]"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <Divider/>
+                <p className="text-gray-600 mb-2 tracking-[0.1em] uppercase text-sm">
+                  아버지 이인수
+                </p>
+                <div className="flex justify-between items-center">
+                  <p className="text-gray-800 tracking-[0.05em]">
+                    국민은행  823-21-0009-422
                   </p>
                   <button
                     onClick={() => copyToClipboard("110-452-570231", "groom")}
@@ -1516,6 +1532,7 @@ function ExclusiveComponent() {
                   </button>
                 </div>
               </div>
+              
             </div>
           </motion.div>
         </div>
