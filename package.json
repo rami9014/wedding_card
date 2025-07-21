@@ -16,7 +16,6 @@
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
     "@types/jsonwebtoken": "^9.0.9",
-    "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "autoprefixer": "^10.4.20",
     "aws-sdk": "^2.1692.0",

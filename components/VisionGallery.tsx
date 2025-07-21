@@ -15,7 +15,7 @@ import "swiper/css";
 import "swiper/css/zoom";
 import "swiper/css/virtual";
 import SwipeVerticalIcon from "@mui/icons-material/SwipeVertical";
-import { track } from "@vercel/analytics";
+// import { track } from "@vercel/analytics";
 
 interface GalleryImage {
   src: string;
@@ -154,32 +154,32 @@ export default function VisionGallery({
     const startTime = Date.now();
     return () => {
       const duration = Date.now() - startTime;
-      track('Gallery Session Duration', {
-        duration,
-        imagesViewed: currentSlideIndex + 1,
-        totalImages: filteredImages.length
-      });
+      // track('Gallery Session Duration', {
+      //   duration,
+      //   imagesViewed: currentSlideIndex + 1,
+      //   totalImages: filteredImages.length
+      // });
     };
   }, []);
 
   // 이미지 조회 추적
   useEffect(() => {
     if (currentSlideIndex !== undefined) {
-      track('Gallery Image View', {
-        imageIndex: currentSlideIndex,
-        imageSrc: filteredImages[currentSlideIndex]?.src,
-        year: filteredImages[currentSlideIndex]?.year,
-        season: filteredImages[currentSlideIndex]?.season
-      });
+      // track('Gallery Image View', {
+      //   imageIndex: currentSlideIndex,
+      //   imageSrc: filteredImages[currentSlideIndex]?.src,
+      //   year: filteredImages[currentSlideIndex]?.year,
+      //   season: filteredImages[currentSlideIndex]?.season
+      // });
     }
   }, [currentSlideIndex, filteredImages]);
 
   // 뷰 변경 추적
   const handleViewChange = (view: "all" | "years" | "seasons") => {
-    track('Gallery View Change', {
-      from: selectedView,
-      to: view
-    });
+    // track('Gallery View Change', {
+    //   from: selectedView,
+    //   to: view
+    // });
     setSelectedView(view);
     setSelectedYear(null);
     setSelectedSeason(null);
@@ -189,46 +189,46 @@ export default function VisionGallery({
 
   // 연도/계절 선택 추적
   const handleYearSelect = (year: number) => {
-    track('Gallery Year Select', {
-      year,
-      previousYear: selectedYear
-    });
+    // track('Gallery Year Select', {
+    //   year,
+    //   previousYear: selectedYear
+    // });
     setSelectedYear(year);
   };
 
   const handleSeasonSelect = (season: string) => {
-    track('Gallery Season Select', {
-      season,
-      previousSeason: selectedSeason
-    });
+    // track('Gallery Season Select', {
+    //   season,
+    //   previousSeason: selectedSeason
+    // });
     setSelectedSeason(season);
   };
 
   // 이미지 줌 추적
   const handleZoom = (scale: number) => {
-    track('Gallery Image Zoom', {
-      scale,
-      imageIndex: currentSlideIndex,
-      imageSrc: filteredImages[currentSlideIndex]?.src
-    });
+    // track('Gallery Image Zoom', {
+    //   scale,
+    //   imageIndex: currentSlideIndex,
+    //   imageSrc: filteredImages[currentSlideIndex]?.src
+    // });
   };
 
   // 스와이프 추적
   const handleSwipe = (direction: 'up' | 'down') => {
-    track('Gallery Swipe', {
-      direction,
-      fromIndex: currentSlideIndex,
-      toIndex: currentSlideIndex + (direction === 'up' ? 1 : -1)
-    });
+    // track('Gallery Swipe', {
+    //   direction,
+    //   fromIndex: currentSlideIndex,
+    //   toIndex: currentSlideIndex + (direction === 'up' ? 1 : -1)
+    // });
   };
 
   // 썸네일 클릭 추적
   const handleThumbnailClick = (index: number) => {
-    track('Gallery Thumbnail Click', {
-      fromIndex: currentSlideIndex,
-      toIndex: index,
-      imageSrc: filteredImages[index]?.src
-    });
+    // track('Gallery Thumbnail Click', {
+    //   fromIndex: currentSlideIndex,
+    //   toIndex: index,
+    //   imageSrc: filteredImages[index]?.src
+    // });
   };
 
   return (
@@ -244,10 +244,10 @@ export default function VisionGallery({
             <button
               onClick={() => {
                 if (selectedSeason) {
-                  track('Gallery Navigation', { action: 'Back from Season' });
+                  // track('Gallery Navigation', { action: 'Back from Season' });
                   setSelectedSeason(null);
                 } else if (selectedYear) {
-                  track('Gallery Navigation', { action: 'Back from Year' });
+                  // track('Gallery Navigation', { action: 'Back from Year' });
                   setSelectedYear(null);
                 }
               }}

@@ -29,7 +29,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/zoom";
-import { track } from "@vercel/analytics";
 import Divider from "@mui/material/Divider";
 // dayjs 플러그인 로드
 dayjs.extend(utc);
@@ -311,11 +310,11 @@ function ExclusiveComponent() {
     const dataToSubmit = submissionData || attendanceInfo;
 
     if (dataToSubmit.willAttend !== null) {
-      track('Wedding Attendance Submit', {
-        willAttend: dataToSubmit.willAttend,
-        hasName: !!dataToSubmit.name,
-        hasPhone: !!dataToSubmit.phone
-      });
+      // track('Wedding Attendance Submit', {
+      //   willAttend: dataToSubmit.willAttend,
+      //   hasName: !!dataToSubmit.name,
+      //   hasPhone: !!dataToSubmit.phone
+      // });
       // Device ID 생성 (강화된 브라우저 fingerprint 기반)
       const generateDeviceId = () => {
         const canvas = document.createElement("canvas");
@@ -494,10 +493,10 @@ function ExclusiveComponent() {
 
   // 연락처 복사 추적
   const copyToClipboard = (text: string, type: string) => {
-    track('Contact Copy', {
-      type,
-      text
-    });
+    // track('Contact Copy', {
+    //   type,
+    //   text
+    // });
     navigator.clipboard.writeText(text);
   };
 
@@ -505,10 +504,10 @@ function ExclusiveComponent() {
   const handleGalleryImageClick = (index: number) => {
     const imageSrc = randomImages[index];
     const fileName = imageSrc.split('/').pop() || '';
-    track('Gallery Image Click', {
-      fileName,
-      imageSrc
-    });
+    // track('Gallery Image Click', {
+    //   fileName,
+    //   imageSrc
+    // });
     setSelectedImageIndex(index);
   };
 
@@ -521,11 +520,11 @@ function ExclusiveComponent() {
       const scrollPercentage = (scrollPosition / (documentHeight - windowHeight)) * 100;
 
       if (scrollPercentage > 25 && scrollPercentage <= 50) {
-        track('Page Scroll', { section: '25-50%' });
+        // track('Page Scroll', { section: '25-50%' });
       } else if (scrollPercentage > 50 && scrollPercentage <= 75) {
-        track('Page Scroll', { section: '50-75%' });
+        // track('Page Scroll', { section: '50-75%' });
       } else if (scrollPercentage > 75) {
-        track('Page Scroll', { section: '75-100%' });
+        // track('Page Scroll', { section: '75-100%' });
       }
     };
 
@@ -538,10 +537,10 @@ function ExclusiveComponent() {
     const startTime = Date.now();
     return () => {
       const duration = Date.now() - startTime;
-      track('Page Visit Duration', {
-        duration,
-        path: window.location.pathname
-      });
+      // track('Page Visit Duration', {
+      //   duration,
+      //   path: window.location.pathname
+      // });
     };
   }, []);
 
